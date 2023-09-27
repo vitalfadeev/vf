@@ -62,12 +62,7 @@ class Game
 
             Runtime.terminate();
         }
-        catch (Throwable o)
-        {
-            import std.string;
-            import std.utf;
-            MessageBox( NULL, o.toString.toUTF16z, "Error", MB_OK | MB_ICONEXCLAMATION );
-        }
+        catch (Throwable o) { o.show_throwable; }
     }
 
     Window new_window()

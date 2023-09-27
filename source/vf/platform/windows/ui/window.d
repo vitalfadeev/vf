@@ -137,14 +137,7 @@ class Window
                         _vf_windows[i].event( hwnd, message, wParam, lParam );
                 }
             } 
-            catch (Throwable o) {
-                import std.string;
-                import std.utf;
-                try { auto s = o.toString.toUTF16z; 
-                    MessageBox( NULL, s, "Error", MB_OK | MB_ICONEXCLAMATION );
-                }
-                catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
-            }
+            catch (Throwable o) { o.show_throwable; }
         }
     }
 
@@ -181,14 +174,7 @@ class Window
             WindowManager.vf_window( hwnd ).draw( Drawer( hdc ) );
             EndPaint( hwnd, &ps ) ;
         } 
-        catch (Throwable o) {
-            import std.string;
-            import std.utf;
-            try { auto s = o.toString.toUTF16z; 
-                MessageBox( NULL, s, "Error", MB_OK | MB_ICONEXCLAMATION );
-            }
-            catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
-        }
+        catch (Throwable o) { o.show_throwable; }
 
         return 0;
     }
@@ -212,4 +198,16 @@ struct Drawer
     {
         //
     }
+}
+
+
+nothrow
+void show_throwable( Throwable o )
+{
+    import std.string;
+    import std.utf;
+    try { auto s = o.toString.toUTF16z; 
+        MessageBox( NULL, s, "Error", MB_OK | MB_ICONEXCLAMATION );
+    }
+    catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
 }
