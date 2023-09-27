@@ -5,6 +5,7 @@ import core.sys.windows.windows;
 import vf.types;
 
 
+
 class Window
 {
     HWND hwnd;
@@ -64,6 +65,9 @@ class Window
         if ( hwnd == NULL )
             throw new WindowsException( "Unable to create window"  );
 
+        // Link HWND -> Window
+        WindowManager.register( hwnd, this );
+
         // Show
         ShowWindow( hwnd, iCmdShow );
         UpdateWindow( hwnd ); 
@@ -74,6 +78,39 @@ class Window
     void _create_renderer()
     {
         //
+    }
+
+    static
+    struct WindowManager
+    {
+        static HWND[] _os_windows;
+        static T[]    _vf_windows;
+
+        static
+        T vf_window( HWND hwnd )
+        {
+            import std.algorithm.searching : countUntil;
+            auto i = _os_windows.countUntil( hwnd );
+
+            return _vf_windows[i];
+        }
+
+        static 
+        void register( HWND hwnd, Window _this )
+        {
+            _os_windows ~= hwnd;
+            _vf_windows ~= _this;
+        }
+
+        static nothrow
+        void unregister( HWND hwnd )
+        {
+            import std.algorithm.searching : countUntil;
+            import std.algorithm.mutation : remove;
+            auto i = _os_windows.countUntil( hwnd );
+            _os_windows = _os_windows.remove( i );
+            _vf_windows = _vf_windows.remove( i );
+        }
     }
 
     static
@@ -112,6 +149,8 @@ class Window
     static
     auto on_WM_DESTROY( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
     {
+        WindowManager.unregister( hwnd );
+
         PostQuitMessage(0);
         return 0;
     }
