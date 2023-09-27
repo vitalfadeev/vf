@@ -19,6 +19,12 @@ class Window
         _create_renderer();
     }
 
+    //
+    void event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
+    {
+        //
+    }
+
     // private
     private
     void _create_window( PX size, string name )
@@ -111,6 +117,24 @@ class Window
             _os_windows = _os_windows.remove( i );
             _vf_windows = _vf_windows.remove( i );
         }
+
+        static nothrow
+        void event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
+        {
+            try {
+                import std.algorithm.searching : countUntil;
+                auto i = _os_windows.countUntil( hwnd );
+                if ( i != -1 )
+                    _vf_windows[i].event( hwnd, message, wParam, lParam );
+            } catch (Throwable o) {
+                import std.string;
+                import std.utf;
+                try { auto s = o.toString.toUTF16z; 
+                    MessageBox( NULL, s, "Error", MB_OK | MB_ICONEXCLAMATION );
+                }
+                catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
+            }
+        }
     }
 
     static
@@ -123,6 +147,7 @@ class Window
             case WM_PAINT  : { return on_WM_PAINT(   hwnd, message, wParam, lParam ); }
             case WM_DESTROY: { return on_WM_DESTROY( hwnd, message, wParam, lParam ); }
             default:
+                WindowManager.event( hwnd, message, wParam, lParam );
                 return DefWindowProc( hwnd, message, wParam, lParam );
         }
     }
