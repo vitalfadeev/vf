@@ -35,7 +35,7 @@ import std.functional : toDelegate;
 import core.sys.windows.windows;
 import vf;
 
-struct Game
+class Game
 {
     static
     Pool    pool;
@@ -51,8 +51,8 @@ struct Game
         {
             Runtime.initialize();
 
-            auto window = new DLWindow();
-            
+            auto window = new_window();
+
             foreach( e; pool )
             {
                 TranslateMessage( &e );
@@ -69,33 +69,9 @@ struct Game
             MessageBox( NULL, o.toString.toUTF16z, "Error", MB_OK | MB_ICONEXCLAMATION );
         }
     }
-}
 
-
-class DLWindow : Window
-{
-    import core.sys.windows.windows;
-
-    override
-    void event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
+    Window new_window()
     {
-        writeln( message );
+        return new Window();            
     }
 }
-
-
-//
-void init_windows_native()
-{
-    //
-}
-
-
-
-//
-static
-this()
-{
-    init_windows_native();
-}
-
