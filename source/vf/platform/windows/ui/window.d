@@ -13,7 +13,7 @@ class Window
     alias T = typeof(this);
 
 
-    this( PX size=PX(640,480), string name="SDL2 Window" )
+    this( PX size=PX(640,480), string name="Windows Window" )
     {
         _create_window( size, name );
         _create_renderer();
@@ -28,10 +28,10 @@ class Window
         HINSTANCE hInstance = GetModuleHandle(NULL);
         int       iCmdShow = 0;
         
-        auto className = toUTF16z( "Window" );
+        auto className = toUTF16z( "vfwindow" );
         WNDCLASS wndClass;
 
-        // Window
+        // Create Window Class
         wndClass.style         = CS_HREDRAW | CS_VREDRAW;
         wndClass.lpfnWndProc   = &WindowProc;
         wndClass.cbClsExtra    = 0;
@@ -43,11 +43,11 @@ class Window
         wndClass.lpszMenuName  = null;
         wndClass.lpszClassName = className;
 
-        // Register
+        // Register class
         if ( !RegisterClass( &wndClass ) ) 
             throw new WindowsException( "Unable to register class"  );
 
-        // Create
+        // Create Window
         hwnd = CreateWindow(
             className,                        //Window class used.
             "The program".toUTF16z,           //Window caption.

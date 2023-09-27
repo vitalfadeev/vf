@@ -33,8 +33,7 @@ import std.container.dlist : DList;
 import std.stdio : writeln;
 import std.functional : toDelegate;
 import core.sys.windows.windows;
-import vf.pool;
-import vf.types;
+import vf;
 
 struct Game
 {
@@ -52,7 +51,8 @@ struct Game
         {
             Runtime.initialize();
 
-            //result = my_win_main( hInstance, hPrevInstance, lpCmdLine, iCmdShow );
+            auto window = new Window();
+            
             foreach( e; pool )
                 writeln( e );
                 //sensors.sense( e );

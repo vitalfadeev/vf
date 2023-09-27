@@ -7,7 +7,7 @@
 	"dflags"         : ["-mixin=mixins.d"],
 	"configurations" : [
 		{
-			"name"           : "windows_native",
+			"name"           : "WINDOWS_NATIVE",
 			"targetType"     : "library",
 			"platforms"      : ["windows"],
 			"versions"       : ["WINDOWS_NATIVE"],
@@ -16,7 +16,7 @@
 			},
 		},
 		{
-			"name"           : "windows_sdl",
+			"name"           : "SDL",
 			"targetType"     : "library",
 			"platforms"      : ["windows"],
 			"versions"       : ["SDL"],
