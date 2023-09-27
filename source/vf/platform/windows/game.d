@@ -51,11 +51,10 @@ struct Game
         {
             Runtime.initialize();
 
-            auto window = new Window();
+            auto window = new DLWindow();
             
             foreach( e; pool )
             {
-                writeln( e );
                 TranslateMessage( &e );
                 DispatchMessage( &e );
                 //sensors.sense( e );
@@ -69,6 +68,18 @@ struct Game
             import std.utf;
             MessageBox( NULL, o.toString.toUTF16z, "Error", MB_OK | MB_ICONEXCLAMATION );
         }
+    }
+}
+
+
+class DLWindow : Window
+{
+    import core.sys.windows.windows;
+
+    override
+    void event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
+    {
+        writeln( message );
     }
 }
 
