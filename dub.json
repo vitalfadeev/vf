@@ -1,0 +1,30 @@
+{
+	"name"           : "vf",
+	"description"    : "UI lib",
+	"authors"        : ["vital"],
+	"copyright"      : "Copyright © 2023, vital",
+	"license"        : "GPL3",
+	"dflags"         : ["-mixin=mixins.d"],
+	"configurations" : [
+		{
+			"name"           : "windows_native",
+			"targetType"     : "library",
+			"platforms"      : ["windows"],
+			"versions"       : ["WINDOWS_NATIVE"],
+			"libs"           : ["user32", "gdi32"],
+			"dependencies"   : {
+			},
+		},
+		{
+			"name"           : "windows_sdl",
+			"targetType"     : "library",
+			"platforms"      : ["windows"],
+			"versions"       : ["SDL"],
+			"libs"           : [],
+			"dependencies"   : {
+				"bindbc-sdl"       : "~>1.4.2",
+				"intel-intrinsics" : "~>1.11.13"
+			},
+		},
+	]
+}
