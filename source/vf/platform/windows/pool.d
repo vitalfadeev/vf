@@ -13,7 +13,8 @@ struct Pool
     void popFront()
     {
         if ( GetMessage( &this.front, null, 0, 0 ) == 0 ) 
-            throw new WindowsException( "Pool.popFront: " );
+            if ( GetLastError() )
+                throw new WindowsException( "Pool.popFront: " );
     }
 
     pragma( inline, true )
