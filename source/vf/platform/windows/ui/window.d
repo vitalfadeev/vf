@@ -183,7 +183,6 @@ class Window
     auto on_WM_DESTROY( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
     {
         WindowManager.unregister( hwnd );
-
         PostQuitMessage(0);
         return 0;
     }
@@ -210,4 +209,47 @@ void show_throwable( Throwable o )
         MessageBox( NULL, s, "Error", MB_OK | MB_ICONEXCLAMATION );
     }
     catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
+}
+
+
+void CaptureScreen()
+{
+    int     screen_width   = GetSystemMetrics( SM_CXSCREEN );
+    int     screen_height  = GetSystemMetrics( SM_CYSCREEN );
+    HWND    desktop_wnd    = GetDesktopWindow();
+    HDC     desktop_dc     = GetDC( desktop_wnd );
+    HDC     capture_dc     = CreateCompatibleDC( desktop_dc );
+    HBITMAP capture_bitmap = CreateCompatibleBitmap( desktop_dc, screen_width, screen_height );
+    SelectObject( capture_dc, capture_bitmap ); 
+
+    BitBlt( capture_dc, 0, 0, screen_width, screen_height, desktop_dc, 0,0, SRCCOPY|CAPTUREBLT );
+
+    BITMAPINFO bmi;
+    bmi.bmiHeader.biSize        = bmi.bmiHeader.sizeof;
+    bmi.bmiHeader.biWidth       = screen_width;
+    bmi.bmiHeader.biHeight      = screen_height;
+    bmi.bmiHeader.biPlanes      = 1;
+    bmi.bmiHeader.biBitCount    = 32;
+    bmi.bmiHeader.biCompression = BI_RGB;
+
+    auto pixels = new RGBQUAD[ screen_width * screen_height ];
+
+    GetDIBits(
+        capture_dc, 
+        capture_bitmap, 
+        0,  
+        screen_height,  
+        pixels.ptr, 
+        &bmi,  
+        DIB_RGB_COLORS
+    );  
+
+    // pPixels
+    // ...
+
+    pixels.destroy();
+
+    ReleaseDC( desktop_wnd, desktop_dc );
+    DeleteDC( capture_dc );
+    DeleteObject( capture_bitmap );
 }
