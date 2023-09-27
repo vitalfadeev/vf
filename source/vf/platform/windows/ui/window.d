@@ -2,7 +2,6 @@ module vf.platform.windows.ui.window;
 
 version(WINDOWS_NATIVE):
 import core.sys.windows.windows;
-import vf.game;
 import vf.types;
 
 
@@ -26,7 +25,7 @@ class Window
         import std.utf : toUTF16z;
 
         HINSTANCE hInstance = GetModuleHandle(NULL);
-        int       iCmdShow = 0;
+        int       iCmdShow  = 1;
         
         auto className = toUTF16z( "vfwindow" );
         WNDCLASS wndClass;
@@ -49,17 +48,17 @@ class Window
 
         // Create Window
         hwnd = CreateWindow(
-            className,                        //Window class used.
-            "The program".toUTF16z,           //Window caption.
-            WS_OVERLAPPEDWINDOW,              //Window style.
-            CW_USEDEFAULT,                    //Initial x position.
-            CW_USEDEFAULT,                    //Initial y position.
-            CW_USEDEFAULT,                    //Initial x size.
-            CW_USEDEFAULT,                    //Initial y size.
-            null,                             //Parent window handle.
-            null,                             //Window menu handle.
-            hInstance,                        //Program instance handle.
-            null                              //Creation parameters.
+            className,            //Window class used.
+            name.toUTF16z,        //Window caption.
+            WS_OVERLAPPEDWINDOW,  //Window style.
+            CW_USEDEFAULT,        //Initial x position.
+            CW_USEDEFAULT,        //Initial y position.
+            size.x,               //Initial x size.
+            size.y,               //Initial y size.
+            null,                 //Parent window handle.
+            null,                 //Window menu handle.
+            hInstance,            //Program instance handle.
+            null                  //Creation parameters.
         );                           
 
         if ( hwnd == NULL )
@@ -113,6 +112,7 @@ class Window
     static
     auto on_WM_DESTROY( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
     {
+        PostQuitMessage(0);
         return 0;
     }
 }

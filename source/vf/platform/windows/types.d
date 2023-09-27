@@ -29,25 +29,6 @@ class WindowsException : std.windows.syserror.WindowsException
     this( string msg )
     {
         import std.format;
-        super( GetLastError(), format!"%s(%x): %s"( error_message, code, msg ) );
-    }
-
-    private
-    string error_message()
-    {
-        import std.string;
-        
-        char[] buffer = new char[2048];
-        buffer[0] = '\0';
-
-        FormatMessageA( FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ARGUMENT_ARRAY,
-                       null,
-                       GetLastError(),
-                       LANG_NEUTRAL,
-                       buffer.ptr,
-                       cast(uint)buffer.length,
-                       cast(char**)["\0".ptr].ptr);
-
-        return buffer.ptr.fromStringz.idup;
+        super( GetLastError(), format!"%s(%x): %s"( sysErrorString( GetLastError() ), GetLastError(), msg ) );
     }
 }

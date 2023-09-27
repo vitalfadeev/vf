@@ -54,8 +54,12 @@ struct Game
             auto window = new Window();
             
             foreach( e; pool )
+            {
                 writeln( e );
+                TranslateMessage( &e );
+                DispatchMessage( &e );
                 //sensors.sense( e );
+            }
 
             Runtime.terminate();
         }
@@ -63,7 +67,7 @@ struct Game
         {
             import std.string;
             import std.utf;
-            MessageBox( NULL, o.toString().toUTF16z, "Error", MB_OK | MB_ICONEXCLAMATION );
+            MessageBox( NULL, o.toString.toUTF16z, "Error", MB_OK | MB_ICONEXCLAMATION );
         }
     }
 }
