@@ -122,10 +122,15 @@ class Window
         void event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
         {
             try {
-                import std.algorithm.searching : countUntil;
-                auto i = _os_windows.countUntil( hwnd );
-                if ( i != -1 )
-                    _vf_windows[i].event( hwnd, message, wParam, lParam );
+                if ( _vf_windows.length == 1 )
+                    _vf_windows[0].event( hwnd, message, wParam, lParam );
+                else
+                {
+                    import std.algorithm.searching : countUntil;
+                    auto i = _os_windows.countUntil( hwnd );
+                    if ( i != -1 )
+                        _vf_windows[i].event( hwnd, message, wParam, lParam );
+                }
             } catch (Throwable o) {
                 import std.string;
                 import std.utf;

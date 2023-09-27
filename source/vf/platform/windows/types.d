@@ -17,6 +17,7 @@ alias MPTR    = void*;
 alias SENSOR  = void delegate( MSG m );
 alias SENSORF = void function( MSG m );
 
+//
 struct PX
 {
     ushort x;
@@ -28,7 +29,6 @@ class WindowsException : std.windows.syserror.WindowsException
 {
     this( string msg )
     {
-        import std.format;
-        super( GetLastError(), format!"%s(%x): %s"( sysErrorString( GetLastError() ), GetLastError(), msg ) );
+        super( GetLastError(), msg );
     }
 }
