@@ -25,6 +25,11 @@ class Window
         //
     }
 
+    void draw( Drawer drawer )
+    {
+        //
+    }
+
     // private
     private
     void _create_window( PX size, string name )
@@ -51,7 +56,7 @@ class Window
 
         // Register class
         if ( !RegisterClass( &wndClass ) ) 
-            throw new WindowsException( "Unable to register class"  );
+            throw new WindowsException( "Unable to register class" );
 
         // Create Window
         hwnd = CreateWindow(
@@ -131,7 +136,8 @@ class Window
                     if ( i != -1 )
                         _vf_windows[i].event( hwnd, message, wParam, lParam );
                 }
-            } catch (Throwable o) {
+            } 
+            catch (Throwable o) {
                 import std.string;
                 import std.utf;
                 try { auto s = o.toString.toUTF16z; 
@@ -166,12 +172,23 @@ class Window
     static
     auto on_WM_PAINT( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
     {
-        HDC         hdc;
-        PAINTSTRUCT ps; 
-        //RECT        crect;
-        hdc = BeginPaint( hwnd, &ps );
-        //GetClientRect( hwnd, &crect );
-        EndPaint( hwnd, &ps ) ;
+        try {
+            HDC         hdc;
+            PAINTSTRUCT ps; 
+            //RECT        crect;
+            hdc = BeginPaint( hwnd, &ps );
+            //GetClientRect( hwnd, &crect );
+            WindowManager.vf_window( hwnd ).draw( Drawer( hdc ) );
+            EndPaint( hwnd, &ps ) ;
+        } 
+        catch (Throwable o) {
+            import std.string;
+            import std.utf;
+            try { auto s = o.toString.toUTF16z; 
+                MessageBox( NULL, s, "Error", MB_OK | MB_ICONEXCLAMATION );
+            }
+            catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
+        }
 
         return 0;
     }
@@ -183,5 +200,16 @@ class Window
 
         PostQuitMessage(0);
         return 0;
+    }
+}
+
+
+struct Drawer
+{
+    HDC hdc;
+
+    void line()
+    {
+        //
     }
 }
