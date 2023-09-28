@@ -168,16 +168,124 @@ struct Raster
 
         // 0..1
         if (pad1) 
-            h_line( pad1 );
+        {
+            // +
+            if ( w > 0 )
+            {
+                auto _inc   = T.sizeof;
+                auto _limit = _current + pad1 * _inc;
+
+                for ( ; _current < _limit; _current+=_inc )
+                    *( cast(T*)_current ) = _color;
+            }
+            else
+            // -
+            {
+                auto _inc   = T.sizeof;
+                auto _limit = _current + pad1 * _inc;
+
+                for ( ; _current > _limit; _current-=_inc )
+                    *( cast(T*)_current ) = _color;
+            }
+        }
 
         // 1..2..3
         if (pad2)
-            for ( auto cy=pad2n; cy; cy--, current+=pitch )
-                h_line( pad2 );
+        {
+            // ↙↘
+            // ?,+
+            if ( h > 0)
+            {
+                // ↘
+                // +,+
+                if ( w > 0 )
+                {
+                    auto _inc    = pitch;
+                    auto _limit  = _current + pad2n * _inc;
+                    auto _incx   = T.sizeof;
+
+                    for ( ; _current < _limit; _current+=_inc )
+                    {
+                        auto _limitx = _current + pad2 * _incx;
+                        for ( ; _current < _limitx; _current+=_incx )
+                            *( cast(T*)_current ) = _color;
+                    }
+                }
+                else
+                // ↙
+                // -,+
+                {
+                    auto _inc    = pitch;
+                    auto _limit  = _current + pad2n * _inc;
+                    auto _incx   = T.sizeof;
+
+                    for ( ; _current < _limit; _current+=_inc )
+                    {
+                        auto _limitx = _current + pad2 * _incx;
+                        for ( ; _current > _limitx; _current-=_incx )
+                            *( cast(T*)_current ) = _color;
+                    }
+                }
+            }
+            else
+            // ↖↗
+            // ?,-
+            {
+                // ↗
+                // +,-
+                if ( w > 0 )
+                {
+                    auto _inc   = pitch;
+                    auto _limit = _current + pad2n * _inc;
+                    auto _incx  = T.sizeof;
+
+                    for ( ; _current > _limit; _current-=_inc )
+                    {
+                        auto _limitx = _current - pad2 * _incx;
+                        for ( ; _current < _limitx; _current+=_incx )
+                            *( cast(T*)_current ) = _color;
+                    }
+                }
+                else
+                // ↖
+                // -,-
+                {
+                    auto _inc   = pitch;
+                    auto _limit = _current + pad2n * _inc;
+                    auto _incx  = T.sizeof;
+
+                    for ( ; _current > _limit; _current-=_inc )
+                    {
+                        auto _limitx = _current - pad2 * _incx;
+                        for ( ; _current > _limitx; _current-=_incx )
+                            *( cast(T*)_current ) = _color;
+                    }
+                }
+            }
+        }
 
         // 3..4
         if (pad3)
-            h_line( pad3 );
+        {
+            // +
+            if ( w > 0 )
+            {
+                auto _inc   = T.sizeof;
+                auto _limit = _current + pad3 * _inc;
+
+                for ( ; _current < _limit; _current+=_inc )
+                    *( cast(T*)_current ) = _color;
+            }
+            else
+            // -
+            {
+                auto _inc   = T.sizeof;
+                auto _limit = _current + pad3 * _inc;
+
+                for ( ; _current > _limit; _current-=_inc )
+                    *( cast(T*)_current ) = _color;
+            }            
+        }
 
         current = _current;
 
