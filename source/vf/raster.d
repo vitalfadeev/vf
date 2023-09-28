@@ -104,6 +104,41 @@ struct Raster
 
     auto ref d_line(W,H)( W w, H h )
     {
+        //                                                          y
+        // 0                       1                        2    // _y - y = 1
+        // #########################                             // 0
+        //                          #########################    // 1
+        //
+        //
+        // 0               1                2               3_   // _y - y = 2
+        // #################                                     // 0
+        //                  #################                    // 1
+        //                                   ################    // 2
+        //
+        // 0      1                2                3       4    // _y - y = 2
+        // ########                                              // 2_
+        //         #################                             // 0
+        //                          #################            // 1
+        //                                           ########    // _2
+        //
+        //
+        // 0          1            2            3           4    // _y - y = 3
+        // ############                                          // 0
+        //             #############                             // 1
+        //                          #############                // 2
+        //                                       ############    // 3
+        //                                                          y
+        // |<-------->|
+        //     padw     = ( _x - x ) / ( _y - y )
+        //
+
+        // -,-   |   +,-
+        //       |     
+        // ------+-----> u
+        //       |      
+        // -,+   v   +,+
+        //       c
+
         auto _current = current;
         auto _color   = color;
 
@@ -154,50 +189,52 @@ struct Raster
         auto _current = current;
         auto _color   = color;
 
+        // ↙↘
         // ?,+
         if ( h > 0)
         {
+            // ↘
             // +,+
             if ( w > 0 )
             {
                 auto _inc   = pitch + T.sizeof;
                 auto _limit = _current + h * _inc;
 
-                //+,+
                 for ( ; _current < _limit; _current+=_inc )
                     *( cast(T*)_current ) = _color;
             }
             else
+            // ↙
             // -,+
             {
                 auto _inc   = pitch - T.sizeof;
                 auto _limit = _current + h * _inc;
 
-                //+,+
                 for ( ; _current < _limit; _current+=_inc )
                     *( cast(T*)_current ) = _color;
             }                
         }
         else
+        // ↖↗
         // ?,-
         {
+            // ↗
             // +,-
             if ( w > 0 )
             {
                 auto _inc   = pitch - T.sizeof;
                 auto _limit = _current + h * _inc;
 
-                //+,+
                 for ( ; _current > _limit; _current-=_inc )
                     *( cast(T*)_current ) = _color;
             }
             else
+            // ↖
             // -,-
             {
                 auto _inc   = pitch + T.sizeof;
                 auto _limit = _current + h * _inc;
 
-                //+,+
                 for ( ; _current > _limit; _current-=_inc )
                     *( cast(T*)_current ) = _color;
             }                
