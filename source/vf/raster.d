@@ -38,7 +38,7 @@ struct Raster
             v_line( wh.y );
         else
         if ( wh.x == wh.y )
-            d_line_45( wh.x );              // 45 degress /
+            d_line_45( wh.x, wh.y );        // 45 degress /
         else
             d_line( wh.x, wh.y );           // /
     }
@@ -61,13 +61,27 @@ struct Raster
 
     auto ref v_line(H)( H h )
     {
-        auto _current = this.current;
-        auto _inc     = pitch;
-        auto _limit   = _current + h * _inc;
-        auto _color   = this.color;
+        auto _current = current;
+        auto _color   = color;
 
-        for ( ; _current < _limit; _current+=_inc )
-            *( cast(T*)_current ) = _color;
+        // +
+        if ( h > 0 )
+        {
+            auto _inc   = pitch;
+            auto _limit = _current + h * pitch;
+
+            for ( ; _current < _limit; _current+=_inc )
+                *( cast(T*)_current ) = _color;            
+        }
+        else
+        // -
+        {
+            auto _inc   = pitch;
+            auto _limit = _current + h * pitch;
+
+            for ( ; _current > _limit; _current-=_inc )
+                *( cast(T*)_current ) = _color;
+        }
 
         current = _current;
 
@@ -116,15 +130,59 @@ struct Raster
         return this;
     }
 
-    auto ref d_line_45( H h )
+    auto ref d_line_45( W w, H h )
     {
-        auto _current = current;                
-        auto _inc     = pitch + T.sizeof;       
-        auto _limit   = _current + h * _inc;    
-        auto _color   = color;                  
+        auto _current = current;
+        auto _color   = color;
 
-        for ( ; _current < _limit; _current+=_inc )
-            *( cast(T*)_current ) = _color;
+        // ?,+
+        if ( h > 0)
+        {
+            // +,+
+            if ( w > 0 )
+            {
+                auto _inc   = pitch + T.sizeof;
+                auto _limit = _current + h * _inc;
+
+                //+,+
+                for ( ; _current < _limit; _current+=_inc )
+                    *( cast(T*)_current ) = _color;
+            }
+            else
+            // -,+
+            {
+                auto _inc   = pitch - T.sizeof;
+                auto _limit = _current + h * _inc;
+
+                //+,+
+                for ( ; _current < _limit; _current+=_inc )
+                    *( cast(T*)_current ) = _color;
+            }                
+        }
+        else
+        // ?,-
+        {
+            // +,-
+            if ( w > 0 )
+            {
+                auto _inc   = pitch - T.sizeof;
+                auto _limit = _current + h * _inc;
+
+                //+,+
+                for ( ; _current > _limit; _current-=_inc )
+                    *( cast(T*)_current ) = _color;
+            }
+            else
+            // -,-
+            {
+                auto _inc   = pitch + T.sizeof;
+                auto _limit = _current + h * _inc;
+
+                //+,+
+                for ( ; _current > _limit; _current-=_inc )
+                    *( cast(T*)_current ) = _color;
+            }                
+        }
 
         current = _current;
 
