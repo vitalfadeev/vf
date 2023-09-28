@@ -57,9 +57,46 @@ struct Raster
 
     auto ref d_line( W w, H h )
     {
-        for ( auto cy=h; cy; cy--, current+=pitch )
-            for ( auto cx=w; cx; cx--, current+=T.sizeof )
+        auto padw = w / h;
+        auto _    = w % h;
+
+        W pad1;
+        W pad2;
+        W pad2n;
+        W pad3;
+
+        if ( _ == 0 )
+        {
+            pad1  = padw;
+            pad2  = padw;
+            pad2n = h;
+            pad3  = padw;
+        }
+        else
+        {        
+            pad1  = _ / 2;
+            _     = _ % 2;
+            pad2  = padw;
+            pad2n = h;
+            pad3  = pad1 - _;
+        }
+
+        // 0..1
+        if (pad1) 
+            for ( auto cx=pad1; cx; cx--, current+=T.sizeof )
                 *(cast(T*)current) = color;
+
+        // 1..2..3
+        if (pad2)
+            for ( auto cy=pad2n; cy; cy--, current+=pitch )
+                for ( auto cx=pad2; cx; cx--, current+=T.sizeof )
+                    *(cast(T*)current) = color;
+
+        // 3..4
+        if (pad3)
+            for ( auto cx = pad3; cx; cx--, current+=T.sizeof )
+                *(cast(T*)current) = color;
+
         return this;
     }
 
