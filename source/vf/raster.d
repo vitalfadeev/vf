@@ -18,18 +18,20 @@ struct Raster
     T*  current;
     T   color;
 
-    void point()
+    auto ref point()
     {
         foreach ( i; 0..100 )
         {
             *current = RGBQUAD(255,255,255,255);
             current++;
         }
+        return this;
     }
 
-    void go_center()
+    auto ref go_center()
     {
         current = pixels.ptr + px_in_row * h / 2;
+        return this;
     }
 
     void to(T:Window)( HWND hwnd, HDC hdc )
