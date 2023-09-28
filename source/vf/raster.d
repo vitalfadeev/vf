@@ -47,12 +47,26 @@ struct Raster
     auto ref h_line(W)( W w )
     {
         auto _current = this.current;           // local var for optimization
-        auto _inc     = T.sizeof;               //   put in to CPU registers
-        auto _limit   = _current + w * _inc;    //   LDC optimize local vars
-        auto _color   = this.color;             //   
+        auto _color   = this.color;             //   put in to CPU registers
+                                                //   LDC optimize local vars
+        // +
+        if ( w > 0 )
+        {
+            auto _inc   = T.sizeof;
+            auto _limit = _current + w * _inc;
 
-        for ( ; _current < _limit; _current+=_inc )
-            *( cast(T*)_current ) = _color;
+            for ( ; _current < _limit; _current+=_inc )
+                *( cast(T*)_current ) = _color;
+        }
+        else
+        // -
+        {
+            auto _inc   = T.sizeof;
+            auto _limit = _current + w * _inc;
+
+            for ( ; _current > _limit; _current-=_inc )
+                *( cast(T*)_current ) = _color;
+        }
 
         current = _current;
 
@@ -90,6 +104,9 @@ struct Raster
 
     auto ref d_line(W,H)( W w, H h )
     {
+        auto _current = current;
+        auto _color   = color;
+
         auto padw = w / h;
         auto _    = w % h;
 
@@ -126,6 +143,8 @@ struct Raster
         // 3..4
         if (pad3)
             h_line( pad3 );
+
+        current = _current;
 
         return this;
     }
