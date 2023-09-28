@@ -18,8 +18,8 @@ alias SENSOR  = void delegate( MSG m );
 alias SENSORF = void function( MSG m );
 alias X       = M16;
 alias Y       = M16;
-alias W       = X;
-alias H       = Y;
+alias W       = int;
+alias H       = int;
 
 //
 struct PX

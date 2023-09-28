@@ -24,18 +24,55 @@ struct Raster
         return this;
     }
 
-    auto ref h_line()
+    void line( PX a, PX b )
     {
-        for ( auto ecx=100; ecx; ecx--, current++ )  // REPNZ
-            *current = color;                        // STOSD
+        if ( a == b )
+            {}
+        else
+        if ( a.y == b.y )                   // -
+            h_line( b.x - a.x );
+        else
+        if ( a.x == b.x )                   // |
+            v_line( b.y - a.y );
+        else
+        if ( ABS(b.x - a.x) == ABS(b.y - a.y) ) 
+            d_line_45( b.x - a.x );         // 45 degress /
+        else
+            d_line( b.x-a.x, b.y-a.y );     // /
+    }
+
+    auto ref h_line( W w )
+    {
+        for ( auto cx=w; cx; cx--, current++ )     // JNZ LOOP
+            *current = color;                      // STOSD
+        return this;
+    }
+
+    auto ref v_line( H h )
+    {
+        for ( auto cx=h; cx; cx--, current+=pitch )
+            *current = color;
+        return this;
+    }
+
+    auto ref d_line( W w, H h )
+    {
+        for ( auto cy=h; cy; cy--, current+=pitch )
+            for ( auto cx=w; cx; cx--, current++ )
+                *current = color;
+        return this;
+    }
+
+    auto ref d_line_45( W w )
+    {
+        for ( auto cx=w; cx; cx--, current+=pitch, current++ )
+            *current = color;
         return this;
     }
 
     auto ref go_center()
     {
-        current = cast(T*)( cast(void*)(pixels.ptr) + h / 2 * pitch +  w / 2 * T.sizeof );
-        import std.stdio : writeln;
-        writeln( w, "x", h, " ", pitch );
+        current = cast(T*)( cast(void*)(pixels.ptr) + h / 2 * pitch + w / 2 * T.sizeof );
         return this;
     }
 
@@ -87,3 +124,10 @@ struct Raster
     }
 }
 
+auto ABS(T)(T a)
+{
+    return 
+        ( a < 0) ? 
+            (-a):
+            ( a);
+}
