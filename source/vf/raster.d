@@ -62,10 +62,10 @@ struct Raster
         auto padw = w / h;
         auto _    = w % h;
 
-        W pad1;
-        W pad2;
-        W pad2n;
-        W pad3;
+        int pad1;
+        int pad2;
+        int pad2n;
+        int pad3;
 
         if ( _ == 0 )
         {

@@ -16,10 +16,10 @@ alias M64     = ulong;
 alias MPTR    = void*;
 alias SENSOR  = void delegate( MSG m );
 alias SENSORF = void function( MSG m );
-alias X       = M16;
-alias Y       = M16;
-alias W       = int;
-alias H       = int;
+alias X       = short;
+alias Y       = short;
+alias W       = X;
+alias H       = Y;
 
 //
 struct PX
