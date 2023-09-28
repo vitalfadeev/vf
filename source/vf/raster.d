@@ -15,12 +15,12 @@ struct Raster
     W      w;
     H      h;
     size_t pitch;
-    T*     current;
+    void*  current;
     T      color;
 
     auto ref point()
     {
-        *current = color;
+        *(cast(T*)current) = color;
         return this;
     }
 
@@ -43,30 +43,30 @@ struct Raster
 
     auto ref h_line( W w )
     {
-        for ( auto cx=w; cx; cx--, current++ )     // JNZ LOOP
-            *current = color;                      // STOSD
+        for ( auto cx=w; cx; cx--, current+=T.sizeof )  // JNZ LOOP
+            *(cast(T*)current) = color;                 // STOSD
         return this;
     }
 
     auto ref v_line( H h )
     {
         for ( auto cx=h; cx; cx--, current+=pitch )
-            *current = color;
+            *(cast(T*)current) = color;
         return this;
     }
 
     auto ref d_line( W w, H h )
     {
         for ( auto cy=h; cy; cy--, current+=pitch )
-            for ( auto cx=w; cx; cx--, current++ )
-                *current = color;
+            for ( auto cx=w; cx; cx--, current+=T.sizeof )
+                *(cast(T*)current) = color;
         return this;
     }
 
     auto ref d_line_45( W w )
     {
-        for ( auto cx=w; cx; cx--, current+=pitch, current++ )
-            *current = color;
+        for ( auto cx=w; cx; cx--, current+=pitch, current+=T.sizeof )
+            *(cast(T*)current) = color;
         return this;
     }
 
