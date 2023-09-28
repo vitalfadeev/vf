@@ -72,7 +72,7 @@ struct Raster
 
     auto ref go_center()
     {
-        current = cast(T*)( cast(void*)(pixels.ptr) + h / 2 * pitch + w / 2 * T.sizeof );
+        current = (cast(void*)pixels.ptr) + h / 2 * pitch + w / 2 * T.sizeof;
         return this;
     }
 
