@@ -29,16 +29,17 @@ class Window
     void _create_window( PX size, string name )
     {
         import std.utf : toUTF16z;
+        import std.traits;
 
         HINSTANCE hInstance = GetModuleHandle(NULL);
         int       iCmdShow  = 1;
         
-        auto className = toUTF16z( "vfwindow" );
+        auto className = toUTF16z( fullyQualifiedName!(typeof(this)) );
         WNDCLASS wndClass;
 
         // Create Window Class
         wndClass.style         = CS_HREDRAW | CS_VREDRAW;
-        wndClass.lpfnWndProc   = &WindowProc;
+        wndClass.lpfnWndProc   = &WindowManager.event;
         wndClass.cbClsExtra    = 0;
         wndClass.cbWndExtra    = 0;
         wndClass.hInstance     = hInstance;
@@ -117,7 +118,7 @@ class Window
             _vf_windows = _vf_windows.remove( i );
         }
 
-        static nothrow
+        extern( Windows ) static nothrow
         LRESULT event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
         {
             try {
@@ -146,13 +147,6 @@ class Window
 
             return DefWindowProc( hwnd, message, wParam, lParam );
         }
-    }
-
-    static
-    extern( Windows ) nothrow 
-    LRESULT WindowProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
-    {
-        return WindowManager.event( hwnd, message, wParam, lParam );
     }
 }
 
@@ -236,5 +230,5 @@ LRESULT auto_route_event(T)( T This, HWND hwnd, UINT message, WPARAM wParam, LPA
                 if ( message == mixin( m[3..$] ) )
                     return __traits(getMember, This, m)( hwnd, message, wParam, lParam ); 
 
-    return 0;
+    return DefWindowProc( hwnd, message, wParam, lParam );
 }
