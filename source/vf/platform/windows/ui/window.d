@@ -5,7 +5,6 @@ import core.sys.windows.windows;
 import vf.types;
 
 
-
 class Window
 {
     HWND hwnd;
@@ -20,14 +19,9 @@ class Window
     }
 
     //
-    void event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
+    LRESULT event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
     {
-        //
-    }
-
-    void draw( Drawer drawer )
-    {
-        //
+        return DefWindowProc( hwnd, message, wParam, lParam );
     }
 
     // private
@@ -124,20 +118,33 @@ class Window
         }
 
         static nothrow
-        void event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
+        LRESULT event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
         {
             try {
                 if ( _vf_windows.length == 1 )
-                    _vf_windows[0].event( hwnd, message, wParam, lParam );
+                    return _vf_windows[0].event( hwnd, message, wParam, lParam );
                 else
                 {
                     import std.algorithm.searching : countUntil;
                     auto i = _os_windows.countUntil( hwnd );
                     if ( i != -1 )
-                        _vf_windows[i].event( hwnd, message, wParam, lParam );
+                    {
+                        if ( message == WM_DESTROY )
+                        {
+                            auto ret = _vf_windows[i].event( hwnd, message, wParam, lParam );
+                            unregister( hwnd );
+                            return ret;
+                        }
+                        else
+                        {
+                            return _vf_windows[i].event( hwnd, message, wParam, lParam );
+                        }
+                    }
                 }
             } 
             catch (Throwable o) { o.show_throwable; }
+
+            return DefWindowProc( hwnd, message, wParam, lParam );
         }
     }
 
@@ -145,46 +152,7 @@ class Window
     extern( Windows ) nothrow 
     LRESULT WindowProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
     {
-        switch( message )
-        {
-            case WM_CREATE : { return on_WM_CREATE(  hwnd, message, wParam, lParam ); }
-            case WM_PAINT  : { return on_WM_PAINT(   hwnd, message, wParam, lParam ); }
-            case WM_DESTROY: { return on_WM_DESTROY( hwnd, message, wParam, lParam ); }
-            default:
-                WindowManager.event( hwnd, message, wParam, lParam );
-                return DefWindowProc( hwnd, message, wParam, lParam );
-        }
-    }
-
-    static
-    auto on_WM_CREATE( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
-    {
-        return 0;
-    }
-
-    static
-    auto on_WM_PAINT( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
-    {
-        try {
-            HDC         hdc;
-            PAINTSTRUCT ps; 
-            //RECT        crect;
-            hdc = BeginPaint( hwnd, &ps );
-            //GetClientRect( hwnd, &crect );
-            WindowManager.vf_window( hwnd ).draw( Drawer( hdc ) );
-            EndPaint( hwnd, &ps ) ;
-        } 
-        catch (Throwable o) { o.show_throwable; }
-
-        return 0;
-    }
-
-    static
-    auto on_WM_DESTROY( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
-    {
-        WindowManager.unregister( hwnd );
-        PostQuitMessage(0);
-        return 0;
+        return WindowManager.event( hwnd, message, wParam, lParam );
     }
 }
 
@@ -252,4 +220,21 @@ void CaptureScreen()
     ReleaseDC( desktop_wnd, desktop_dc );
     DeleteDC( capture_dc );
     DeleteObject( capture_bitmap );
+}
+
+
+LRESULT auto_route_event(T)( T This, HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
+{
+    import std.traits;
+    import std.string;
+    import std.format;
+
+    // on_
+    static foreach( m; __traits( allMembers, T ) )
+        static if ( isCallable!(__traits(getMember, T, m)) )
+            static if ( m.startsWith( "on_" ) )
+                if ( message == mixin( m[3..$] ) )
+                    return __traits(getMember, This, m)( hwnd, message, wParam, lParam ); 
+
+    return 0;
 }
