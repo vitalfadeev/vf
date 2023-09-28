@@ -26,6 +26,16 @@ struct PX
 {
     X x;
     Y y;
+
+    PX opBinary(string op:"-")( PX b )
+    {
+        import std.conv : to;
+        return 
+            PX( 
+                (x - b.x).to!X, 
+                (y - b.y).to!Y
+            );
+    }
 }
 
 //

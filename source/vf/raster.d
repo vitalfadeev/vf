@@ -26,19 +26,21 @@ struct Raster
 
     void line( PX a, PX b )
     {
-        if ( a == b )
+        auto wh = b - a;
+
+        if ( wh.x == 0 && wh.y == 0 )
             {}
         else
-        if ( a.y == b.y )                   // -
-            h_line( b.x - a.x );
+        if ( wh.y == 0 )                    // -
+            h_line( wh.y );
         else
-        if ( a.x == b.x )                   // |
-            v_line( b.y - a.y );
+        if ( wh.x == 0 )                    // |
+            v_line( wh.y );
         else
-        if ( ABS(b.x - a.x) == ABS(b.y - a.y) ) 
-            d_line_45( b.x - a.x );         // 45 degress /
+        if ( wh.x == wh.y )
+            d_line_45( wh.x );              // 45 degress /
         else
-            d_line( b.x-a.x, b.y-a.y );     // /
+            d_line( wh.x, wh.y );           // /
     }
 
     auto ref h_line( W w )
