@@ -11,18 +11,24 @@ struct Raster
 {
     alias T = RGBQUAD;
 
-    T[] pixels;
-    W   px_in_row;
-    W   w;
-    H   h;
-    T*  current;
-    T   color;
+    T[]    pixels;
+    W      w;
+    H      h;
+    size_t pitch;
+    T*     current;
+    T      color;
 
     auto ref point()
     {
+        *current = color;
+        return this;
+    }
+
+    auto ref h_line()
+    {
         foreach ( i; 0..100 )
         {
-            *current = RGBQUAD(255,255,255,255);
+            *current = color;
             current++;
         }
         return this;
@@ -30,7 +36,9 @@ struct Raster
 
     auto ref go_center()
     {
-        current = pixels.ptr + px_in_row * h / 2;
+        current = pixels.ptr + w * h / 2;
+        import std.stdio : writeln;
+        writeln( w, "x", h, " ", pitch );
         return this;
     }
 

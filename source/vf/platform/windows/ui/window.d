@@ -205,12 +205,12 @@ class Window
         import std.conv : to;
         return
             Raster(
-                /*pixels*/    pixels,
-                /*px_in_row*/ window_width.to!W,
-                /*w*/         window_width.to!W,
-                /*h*/         window_height.to!H,
-                /*current*/   pixels.ptr,
-                /*color*/     RGBQUAD(255,255,255,255)
+                /*pixels*/  pixels,
+                /*w*/       window_width.to!W,
+                /*h*/       window_height.to!H,
+                /*pitch*/   window_width * RGBQUAD.sizeof,
+                /*current*/ pixels.ptr,
+                /*color*/   RGBQUAD(0,0,255,255)
                 );
 
     }
