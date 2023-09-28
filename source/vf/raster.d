@@ -26,17 +26,14 @@ struct Raster
 
     auto ref h_line()
     {
-        foreach ( i; 0..100 )
-        {
-            *current = color;
-            current++;
-        }
+        for ( auto ecx=100; ecx; ecx--, current++ )  // REPNZ
+            *current = color;                        // STOSD
         return this;
     }
 
     auto ref go_center()
     {
-        current = pixels.ptr + w * h / 2;
+        current = cast(T*)( cast(void*)(pixels.ptr) + h / 2 * pitch +  w / 2 * T.sizeof );
         import std.stdio : writeln;
         writeln( w, "x", h, " ", pitch );
         return this;

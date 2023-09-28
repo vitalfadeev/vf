@@ -150,10 +150,16 @@ class Window
         RECT rect;
         int  window_width;
         int  window_height;
+        int  client_width;
+        int  client_height;
         if ( GetWindowRect( hwnd, &rect ) )
         {
-          window_width  = rect.right - rect.left;
-          window_height = rect.bottom - rect.top;
+            window_width  = rect.right - rect.left;
+            window_height = rect.bottom - rect.top;
+
+            GetClientRect( hwnd, &rect );
+            client_width  = rect.right - rect.left;
+            client_height = rect.bottom - rect.top;
         }
         else
         {
@@ -206,8 +212,8 @@ class Window
         return
             Raster(
                 /*pixels*/  pixels,
-                /*w*/       window_width.to!W,
-                /*h*/       window_height.to!H,
+                /*w*/       client_width.to!W,
+                /*h*/       client_height.to!H,
                 /*pitch*/   window_width * RGBQUAD.sizeof,
                 /*current*/ pixels.ptr,
                 /*color*/   RGBQUAD(0,0,255,255)
