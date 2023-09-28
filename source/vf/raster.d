@@ -43,21 +43,38 @@ struct Raster
             d_line( wh.x, wh.y );           // /
     }
 
-    auto ref h_line( W w )
+    //pragma( inline, true )
+    auto ref h_line(W)( W w )
     {
-        for ( auto cx=w; cx; cx--, current+=T.sizeof )  // JNZ LOOP
-            *(cast(T*)current) = color;                 // STOSD
+        auto _current = this.current;           // local var for optimization
+        auto _inc     = T.sizeof;               //   put in to CPU registers
+        auto _limit   = _current + w * _inc;    //   LDC optimize local vars
+        auto _color   = this.color;             //   
+
+        for ( ; _current < _limit; _current+=_inc )
+            *( cast(T*)_current ) = _color;
+
+        current = _current;
+
         return this;
     }
 
-    auto ref v_line( H h )
+    auto ref v_line(H)( H h )
     {
-        for ( auto cx=h; cx; cx--, current+=pitch )
-            *(cast(T*)current) = color;
+        auto _current = this.current;
+        auto _inc     = pitch;
+        auto _limit   = _current + h * _inc;
+        auto _color   = this.color;
+
+        for ( ; _current < _limit; _current+=_inc )
+            *( cast(T*)_current ) = _color;
+
+        current = _current;
+
         return this;
     }
 
-    auto ref d_line( W w, H h )
+    auto ref d_line(W,H)( W w, H h )
     {
         auto padw = w / h;
         auto _    = w % h;
@@ -85,27 +102,32 @@ struct Raster
 
         // 0..1
         if (pad1) 
-            for ( auto cx=pad1; cx; cx--, current+=T.sizeof )
-                *(cast(T*)current) = color;
+            h_line( pad1 );
 
         // 1..2..3
         if (pad2)
             for ( auto cy=pad2n; cy; cy--, current+=pitch )
-                for ( auto cx=pad2; cx; cx--, current+=T.sizeof )
-                    *(cast(T*)current) = color;
+                h_line( pad2 );
 
         // 3..4
         if (pad3)
-            for ( auto cx = pad3; cx; cx--, current+=T.sizeof )
-                *(cast(T*)current) = color;
+            h_line( pad3 );
 
         return this;
     }
 
-    auto ref d_line_45( W w )
+    auto ref d_line_45( H h )
     {
-        for ( auto cx=w; cx; cx--, current+=pitch, current+=T.sizeof )
-            *(cast(T*)current) = color;
+        auto _current = current;                
+        auto _inc     = pitch + T.sizeof;       
+        auto _limit   = _current + h * _inc;    
+        auto _color   = color;                  
+
+        for ( ; _current < _limit; _current+=_inc )
+            *( cast(T*)_current ) = _color;
+
+        current = _current;
+
         return this;
     }
 
