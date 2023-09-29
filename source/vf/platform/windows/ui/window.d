@@ -20,9 +20,9 @@ class Window
     }
 
     //
-    LRESULT event( Event event, Code code, LPARAM lParam ) 
+    LRESULT event( Event event, EventCode code, EventValue value ) 
     {
-        return DefWindowProc( hwnd, cast(UINT)event, cast(WPARAM)code, lParam );
+        return DefWindowProc( hwnd, cast(UINT)event, cast(WPARAM)code, cast(LPARAM)value );
     }
 
     // private
@@ -162,13 +162,13 @@ class Window
                 {
                     if ( message == WM_DESTROY )
                     {
-                        auto ret = _vf_windows[i].event( Event(message), Code(wParam), lParam );
+                        auto ret = _vf_windows[i].event( Event(message), EventCode(wParam), EventValue(lParam) );
                         unregister( hwnd );
                         return ret;
                     }
                     else
                     {
-                        return _vf_windows[i].event( Event(message), Code(wParam), lParam );
+                        return _vf_windows[i].event( Event(message), EventCode(wParam), EventValue(lParam) );
                     }
                 }
             } 
@@ -268,7 +268,7 @@ void show_throwable( Throwable o )
 }
 
 
-LRESULT auto_route_event(T)( T This, Event event, Code code, LPARAM lParam )
+LRESULT auto_route_event(T)( T This, Event event, EventCode code, EventValue value )
 {
     import std.traits;
     import std.string;
@@ -279,7 +279,7 @@ LRESULT auto_route_event(T)( T This, Event event, Code code, LPARAM lParam )
         static if ( isCallable!(__traits(getMember, T, m)) )
             static if ( m.startsWith( "on_" ) )
                 if ( event == mixin( m[3..$] ) )
-                    return __traits(getMember, This, m)( event, code, lParam ); 
+                    return __traits(getMember, This, m)( event, code, value ); 
 
-    return DefWindowProc( This.hwnd, cast(UINT)event, code, lParam );
+    return DefWindowProc( This.hwnd, cast(UINT)event, code, value );
 }

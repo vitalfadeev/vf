@@ -54,9 +54,15 @@ struct Event
     alias _super this;
 }
 
-struct Code
+struct EventCode
 {
     WPARAM _super;
+    alias _super this;
+}
+
+struct EventValue
+{
+    LPARAM _super;
     alias _super this;
 }
 
