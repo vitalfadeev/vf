@@ -132,8 +132,8 @@ struct Raster
                 ( -T.sizeof ) :  // - ↙↖
                 (  T.sizeof ) ;  // + ↗↘
 
-        auto _limit = _current + absh * _y_inc + absw * _x_inc;
         auto _inc   = _x_inc + _y_inc;
+        auto _limit = _current + _inc * absh;
 
         for ( ; _current != _limit; _current+=_inc )
             *( cast(T*)_current ) = _color;
