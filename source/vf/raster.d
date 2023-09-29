@@ -272,7 +272,7 @@ struct Raster
             auto _y_limit = _current + 
                 ( (bar2n) * _y_inc ) +          // y
                 ( (bar2)  * _x_inc ) * bar2n;   // x
-            auto _x_limit_inc = (bar2) * _x_inc + _y_inc;
+            auto _x_limit_inc = _y_inc   + (bar2) * _x_inc;
             auto _x_limit     = _current + (bar2) * _x_inc;
 
             for ( ; _current != _y_limit; _current+=_y_inc, _x_limit+=_x_limit_inc )
@@ -361,7 +361,7 @@ struct Raster
                 ( (bar2n) * _x_inc ) +          // x
                 ( (bar2)  * _y_inc ) * bar2n;   // y
 
-            auto _y_limit_inc = (bar2) * _y_inc + _x_inc;
+            auto _y_limit_inc = _x_inc   + (bar2) * _y_inc;
             auto _y_limit     = _current + (bar2) * _y_inc;
 
             for ( ; _current != _x_limit; _current+=_x_inc, _y_limit+=_y_limit_inc )
