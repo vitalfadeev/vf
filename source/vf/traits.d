@@ -57,3 +57,12 @@ template hasMethod(T,string M)
     else
         enum hasMethod = false;
 }
+
+// Raster
+//   .line(x,y)
+//   .Cast!Raster
+//   .to!Window( hdc, hwmd )
+auto Cast(TO,FROM)(FROM from)
+{
+    return cast(TO)from;
+}
