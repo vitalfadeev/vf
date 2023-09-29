@@ -54,9 +54,9 @@ struct Raster
                                                 //   LDC optimize local vars
 
         auto _inc =
-            ( w >= 0 ) ?
-                 (T.sizeof) :  // +
-                -(T.sizeof) ;  // -
+            ( w < 0 ) ?
+                -(T.sizeof) :  // -
+                 (T.sizeof) ;  // +
 
         auto _limit = _current + ABS(w) * _inc;
 
@@ -74,9 +74,9 @@ struct Raster
         auto _color   = color;
 
         auto _inc =
-            ( h >= 0 ) ?
-                 (pitch) :  // +
-                -(pitch) ;  // -
+            ( h < 0 ) ?
+                -(pitch) :  // -
+                 (pitch) ;  // +
 
         auto _limit = _current + ABS(h) * _inc;
 
@@ -103,49 +103,22 @@ struct Raster
     {
         auto _current = current;
         auto _color   = color;
-        alias T_INC   = typeof( -cast(W)( pitch + T.sizeof ) );
-        alias T_LIMIT = typeof( _current );
-        T_INC   _inc;
-        T_LIMIT _limit;
 
-        // ↖↗
-        // ?,-
-        if ( h < 0 )
-        {
-            // ↖
-            // -,-
-            if ( w < 0 )
-            {
-                _inc   = -cast(T_INC)( pitch + T.sizeof );
-                _limit = _current - h * _inc;
-            }                
-            // ↗
-            // +,-
-            else
-            {
-                _inc   = -cast(T_INC)( pitch - T.sizeof );
-                _limit = _current - h * _inc;
-            }
-        }
-        else
-        // ↙↘
-        // ?,+
-        {
-            // ↙
-            // -,+
-            if ( w < 0 )
-            {
-                _inc   = cast(T_INC)( pitch - T.sizeof );
-                _limit = _current + h * _inc;
-            }                
-            else
-            // ↘
-            // +,+
-            {
-                _inc   = cast(T_INC)( pitch + T.sizeof );
-                _limit = _current + h * _inc;
-            }
-        }
+        
+        auto _inc =
+            ( h < 0 ) ?
+                (  // ↖↗
+                    ( w < 0 ) ?
+                        -( pitch + T.sizeof ) :  // ↖ -,-
+                        -( pitch - T.sizeof )    // ↗ +,-
+                ):
+                (  // ↙↘
+                    ( w < 0 ) ?
+                        ( pitch - T.sizeof ) :  // ↙ -,+
+                        ( pitch + T.sizeof )    // ↘ +,+
+                );
+
+        auto _limit = _current + ABS(w) * _inc;
 
         for ( ; _current != _limit; _current+=_inc )
             *( cast(T*)_current ) = _color;
