@@ -52,13 +52,14 @@ struct Raster
         auto _current = this.current;           // local var for optimization
         auto _color   = this.color;             //   put in to CPU registers
                                                 //   LDC optimize local vars
-
-        auto _inc =
+        auto _x_inc =
             ( w < 0 ) ?
-                -(T.sizeof) :  // -
-                 (T.sizeof) ;  // +
+                -(T.sizeof) :  // - ←
+                 (T.sizeof) ;  // + →
 
-        auto _limit = _current + ABS(w) * _inc;
+        auto _limit = _current + ABS(w) * _x_inc;
+
+        alias _inc = _x_inc;
 
         for ( ; _current != _limit; _current+=_inc )
             *( cast(T*)_current ) = _color;
@@ -73,12 +74,14 @@ struct Raster
         auto _current = current;
         auto _color   = color;
 
-        auto _inc =
+        auto _y_inc = 
             ( h < 0 ) ?
-                -(pitch) :  // -
-                 (pitch) ;  // +
+                ( -pitch ) :  // - ↑
+                (  pitch ) ;  // + ↓
 
-        auto _limit = _current + ABS(h) * _inc;
+        auto _limit = _current + ABS(h) * _y_inc;
+
+        alias _inc = _y_inc;
 
         for ( ; _current != _limit; _current+=_inc )
             *( cast(T*)_current ) = _color;
@@ -104,20 +107,18 @@ struct Raster
         auto _current = current;
         auto _color   = color;
         
-        auto _inc =
+        auto _y_inc = 
             ( h < 0 ) ?
-                (   // ↖↗
-                    ( w < 0 ) ?
-                        ( -T.sizeof - pitch ) :  // ↖ -,-
-                        (  T.sizeof - pitch )    // ↗ +,-
-                ):
-                (   // ↙↘
-                    ( w < 0 ) ?
-                        ( -T.sizeof + pitch ) :  // ↙ -,+
-                        (  T.sizeof + pitch )    // ↘ +,+
-                );
+                ( -pitch ) :  // -  ↖↗
+                (  pitch ) ;  // +  ↙↘
 
-        auto _limit = _current + ABS(w) * _inc;
+        auto _x_inc =
+            ( w < 0 ) ?
+                ( -T.sizeof ) :  // - ↙↖
+                (  T.sizeof ) ;  // + ↗↘
+
+        auto _limit = _current + ABS(h) * _y_inc + ABS(w) * _x_inc;
+        auto _inc   = _x_inc + _y_inc;
 
         for ( ; _current != _limit; _current+=_inc )
             *( cast(T*)_current ) = _color;
@@ -166,11 +167,6 @@ struct Raster
 
         auto _current = current;
         auto _color   = color;
-        alias T_INC   = typeof( -cast(W)( pitch + T.sizeof ) );
-        alias T_LIMIT = typeof( _current );
-        T_INC   _inc;
-        T_INC   _incx;
-        T_LIMIT _limit;
 
         auto absw = ABS( w );
         auto absh = ABS( h );
@@ -200,14 +196,14 @@ struct Raster
         }
 
         // 0..1
-        if (bar1) 
+        if (bar1)
         {
-            _inc =
-                ( w >= 0 ) ?
-                     cast(T_INC)T.sizeof :  // +
-                    -cast(T_INC)T.sizeof ;  // -
+            auto _inc =
+                ( w < 0 ) ?
+                    -(T.sizeof) :  // -
+                     (T.sizeof) ;  // +
 
-            _limit = _current + bar1 * _inc;
+            auto _limit = _current + (bar1) * _inc;
 
             for ( ; _current != _limit; _current+=_inc )
                 *( cast(T*)_current ) = _color;
@@ -216,93 +212,36 @@ struct Raster
         // 1..2..3
         if (bar2)
         {
-            // ↙↘
-            // ?,+
-            if ( h > 0)
-            {
-                // ↘
-                // +,+
-                if ( w > 0 )
-                {
-                    _inc    = cast(T_INC)pitch;
-                    _limit  = _current + bar2n * _inc;
-                    _incx   = cast(T_INC)T.sizeof;
+            auto _y_inc = 
+                ( h < 0 ) ?
+                    ( -pitch ) :  // -  ↖↗
+                    (  pitch ) ;  // +  ↙↘
 
-                    for ( ; _current != _limit; _current+=_inc )
-                    {
-                        auto _limitx = _current + bar2 * _incx;
-                        for ( ; _current != _limitx; _current+=_incx )
-                            *( cast(T*)_current ) = _color;
-                    }
-                }
-                else
-                // ↙
-                // -,+
-                {
-                    _inc    = cast(T_INC)pitch;
-                    _limit  = _current + bar2n * _inc;
-                    _incx   = -cast(T_INC)T.sizeof;
+            auto _x_inc =
+                ( w < 0 ) ?
+                    ( -T.sizeof ) :  // - ↙↖
+                    (  T.sizeof ) ;  // + ↗↘
 
-                    for ( ; _current != _limit; _current+=_inc )
-                    {
-                        auto _limitx = _current - bar2 * _incx;
-                        for ( ; _current != _limitx; _current+=_incx )
-                            *( cast(T*)_current ) = _color;
-                    }
-                }
-            }
-            else
-            // ↖↗
-            // ?,-
-            {
-                // ↗
-                // +,-
-                if ( w > 0 )
-                {
-                    _inc   = -cast(T_INC)pitch;
-                    _limit = _current + bar2n * _inc;
-                    _incx  = cast(T_INC)T.sizeof;
+            auto _y_limit = _current + (bar2n) * _y_inc + (bar2) * _x_inc;
 
-                    for ( ; _current != _limit; _current+=_inc )
-                    {
-                        auto _limitx = _current - bar2 * _incx;
-                        for ( ; _current != _limitx; _current+=_incx )
-                            *( cast(T*)_current ) = _color;
-                    }
-                }
-                else
-                // ↖
-                // -,-
-                {
-                    _inc   = -cast(T_INC)pitch;
-                    _limit = _current + bar2n * _inc;
-                    _incx  = -cast(T_INC)T.sizeof;
+            //for ( ; _current != _y_limit; _current+=_y_inc )
+            //{
+            //    auto _x_limit = _current + (bar2) * _x_inc;
 
-                    for ( ; _current != _limit; _current+=_inc )
-                    {
-                        auto _limitx = _current + bar2 * _incx;
-                        for ( ; _current != _limitx; _current+=_incx )
-                            *( cast(T*)_current ) = _color;
-                    }
-                }
-            }
+            //    for ( ; _current != _x_limit; _current+=_x_inc )
+            //        *( cast(T*)_current ) = _color;
+            //}
         }
 
         // 3..4
         if (bar3)
         {
-            // +
-            if ( w > 0 )
-            {
-                _inc   = cast(T_INC)T.sizeof;
-                _limit = _current + bar3 * _inc;
-            }
-            else
-            // -
-            {
-                _inc   = -cast(T_INC)T.sizeof;
-                _limit = _current + bar3 * _inc;
-            }            
+            auto _inc =
+                ( w < 0 ) ?
+                    -(T.sizeof) :  // -
+                     (T.sizeof) ;  // +
+
+            auto _limit = _current + (bar3) * _inc;
 
             for ( ; _current != _limit; _current+=_inc )
                 *( cast(T*)_current ) = _color;
@@ -315,156 +254,6 @@ struct Raster
 
     auto ref d_line_60(W,H)( W w, H h )
     {
-        auto _current = current;
-        auto _color   = color;
-
-        auto padh = h / w;
-        auto _    = h % w;
-
-        int pad1;
-        int pad2;
-        int pad2n;
-        int pad3;
-
-        if ( _ == 0 )
-        {
-            pad1  = padh;
-            pad2  = padh;
-            pad2n = w;
-            pad3  = padh;
-        }
-        else
-        {        
-            pad1  = _ / 2;
-            _     = _ % 2;
-            pad2  = padh;
-            pad2n = w;
-            pad3  = pad1 - _;
-        }
-
-        // 0..1
-        if (pad1) 
-        {
-            // +
-            if ( w > 0 )
-            {
-                auto _inc   = pitch;
-                auto _limit = _current + pad1 * _inc;
-
-                for ( ; _current < _limit; _current+=_inc )
-                    *( cast(T*)_current ) = _color;
-            }
-            else
-            // -
-            {
-                auto _inc   = pitch;
-                auto _limit = _current + pad1 * _inc;
-
-                for ( ; _current > _limit; _current-=_inc )
-                    *( cast(T*)_current ) = _color;
-            }
-        }
-
-        // 1..2..3
-        if (pad2)
-        {
-            // ↙↘
-            // ?,+
-            if ( h > 0)
-            {
-                // ↘
-                // +,+
-                if ( w > 0 )
-                {
-                    auto _inc    = pitch;
-                    auto _incx   = T.sizeof;
-                    auto _limitx = _current + pad2 * _incx;
-
-                    for ( ; _current < _limitx; _current+=_incx )
-                    {
-                        auto _limit  = _current + pad2n * _inc;
-                        for ( ; _current < _limit; _current+=_inc )
-                            *( cast(T*)_current ) = _color;
-                    }
-                }
-                else
-                // ↙
-                // -,+
-                {
-                    auto _inc    = pitch;
-                    auto _limit  = _current + pad2n * _inc;
-                    auto _incx   = T.sizeof;
-
-                    for ( ; _current < _limit; _current+=_inc )
-                    {
-                        auto _limitx = _current + pad2 * _incx;
-                        for ( ; _current > _limitx; _current-=_incx )
-                            *( cast(T*)_current ) = _color;
-                    }
-                }
-            }
-            else
-            // ↖↗
-            // ?,-
-            {
-                // ↗
-                // +,-
-                if ( w > 0 )
-                {
-                    auto _inc   = pitch;
-                    auto _limit = _current + pad2n * _inc;
-                    auto _incx  = T.sizeof;
-
-                    for ( ; _current > _limit; _current-=_inc )
-                    {
-                        auto _limitx = _current - pad2 * _incx;
-                        for ( ; _current < _limitx; _current+=_incx )
-                            *( cast(T*)_current ) = _color;
-                    }
-                }
-                else
-                // ↖
-                // -,-
-                {
-                    auto _inc   = pitch;
-                    auto _limit = _current + pad2n * _inc;
-                    auto _incx  = T.sizeof;
-
-                    for ( ; _current > _limit; _current-=_inc )
-                    {
-                        auto _limitx = _current - pad2 * _incx;
-                        for ( ; _current > _limitx; _current-=_incx )
-                            *( cast(T*)_current ) = _color;
-                    }
-                }
-            }
-        }
-
-        // 3..4
-        if (pad3)
-        {
-            // +
-            if ( w > 0 )
-            {
-                auto _inc   = T.sizeof;
-                auto _limit = _current + pad3 * _inc;
-
-                for ( ; _current < _limit; _current+=_inc )
-                    *( cast(T*)_current ) = _color;
-            }
-            else
-            // -
-            {
-                auto _inc   = T.sizeof;
-                auto _limit = _current + pad3 * _inc;
-
-                for ( ; _current > _limit; _current-=_inc )
-                    *( cast(T*)_current ) = _color;
-            }            
-        }
-
-        current = _current;
-
         return this;
     }
 
