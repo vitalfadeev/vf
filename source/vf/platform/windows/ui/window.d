@@ -81,6 +81,28 @@ class Window
     }
 
 
+    auto ref move_to_center()
+    {
+        RECT rect;
+        GetWindowRect( hwnd, &rect );
+
+        auto ws = GetSystemMetrics( SM_CXSCREEN );
+        auto hs = GetSystemMetrics( SM_CYSCREEN );
+
+        SetWindowPos(
+          hwnd,
+          null,
+          (ws - (rect.right - rect.left))/2,
+          (hs - (rect.bottom - rect.top))/2,
+          0,
+          0,
+          SWP_NOSIZE | SWP_NOZORDER | SWP_ASYNCWINDOWPOS
+        );
+
+        return this;
+    }
+
+
     private
     void _create_renderer()
     {

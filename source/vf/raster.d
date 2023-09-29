@@ -181,10 +181,10 @@ struct Raster
 
         if ( _ == 0 )
         {
-            bar1  = barw;
+            bar1  = 0;
             bar2  = barw;
             bar2n = absh;
-            bar3  = barw;
+            bar3  = 0;
         }
         else
         {        
@@ -194,10 +194,17 @@ struct Raster
             bar2n = absh;
             bar3  = bar1 - _;
         }
+        import std.stdio : writeln;
+        writeln( "absw: ", absw );
+        writeln( "absh: ", absh );
+        writeln( "absw/absh: ", absw/absh );
+        writeln( "absw%absh: ", absw%absh );
+        writeln( "bar2n: ", bar2n );
 
         // 0..1
         if (bar1)
         {
+            _color = RGBQUAD( 0, 255, 0, 0);
             auto _inc =
                 ( w < 0 ) ?
                     -(T.sizeof) :  // -
@@ -212,6 +219,7 @@ struct Raster
         // 1..2..3
         if (bar2)
         {
+            _color = RGBQUAD( 0, 255, 255, 0);
             auto _y_inc = 
                 ( h < 0 ) ?
                     ( -pitch ) :  // -  ↖↗
@@ -222,20 +230,23 @@ struct Raster
                     ( -T.sizeof ) :  // - ↙↖
                     (  T.sizeof ) ;  // + ↗↘
 
-            auto _y_limit = _current + (bar2n) * _y_inc + (bar2) * _x_inc;
+            auto _y_limit = _current + 
+                ( (bar2n) * _y_inc ) + 
+                ( (bar2)  * _x_inc );
 
-            //for ( ; _current != _y_limit; _current+=_y_inc )
-            //{
-            //    auto _x_limit = _current + (bar2) * _x_inc;
+            for ( ; _current <= _y_limit; _current+=_y_inc )
+            {
+                auto _x_limit = _current + (bar2) * _x_inc;
 
-            //    for ( ; _current != _x_limit; _current+=_x_inc )
-            //        *( cast(T*)_current ) = _color;
-            //}
+                for ( ; _current != _x_limit; _current+=_x_inc )
+                    *( cast(T*)_current ) = _color;
+            }
         }
 
         // 3..4
         if (bar3)
         {
+            _color = RGBQUAD( 255, 0, 255, 0);
             auto _inc =
                 ( w < 0 ) ?
                     -(T.sizeof) :  // -
@@ -265,7 +276,20 @@ struct Raster
 
     auto ref go( W w, H h )
     {
-        current = (cast(void*)pixels.ptr) + h * pitch + w * T.sizeof;
+        auto _y_inc = 
+            ( h < 0 ) ?
+                ( -pitch ) :  // -  ↖↗
+                (  pitch ) ;  // +  ↙↘
+
+        auto _x_inc =
+            ( w < 0 ) ?
+                ( -T.sizeof ) :  // - ↙↖
+                (  T.sizeof ) ;  // + ↗↘
+
+        auto _inc = ABS(h) * _y_inc + ABS(w) * _x_inc;
+
+        current = (cast(void*)current) + _inc;
+
         return this;
     }
 
