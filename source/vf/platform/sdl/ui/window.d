@@ -37,8 +37,8 @@ class WindowSensor : ISenseAble, IVAble, ILaAble
     {
         if ( d.button.button == SDL_BUTTON_LEFT )  // sub sensor
         {
-            game.pool ~= DT_MOUSE_LEFT_PRESSED;    // action
-            game.pool ~= D_LA( pxpx );             // action
+            game.queue ~= DT_MOUSE_LEFT_PRESSED;    // action
+            game.queue ~= D_LA( pxpx );             // action
         }
     }
 

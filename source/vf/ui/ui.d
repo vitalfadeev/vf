@@ -17,12 +17,12 @@ module vf.ui.ui;
 //       draw o, x,y,w,h
 
 // Draw( o, rect )
-//   o.DrawPooled( rect)
+//   o.DrawQueued( rect)
 //   o.DirectDraw( rect )
 //
 // Draw( o, rect )
-//   o.DrawPooled( rect)
-//     pool ~= D( DRAW, rect )
+//   o.DrawQueued( rect)
+//     queue ~= D( DRAW, rect )
 //   o.DirectDraw( rect )
 //     renderer.DrawRect( rect )
 
@@ -247,9 +247,9 @@ module vf.ui.ui;
 // O
 //   Window : O
 //     la()
-//       game.pool <- DT_LA, rect
+//       game.queue <- DT_LA, rect
 // game
-//   pool
+//   queue
 //     DT_LA
 //       foreach o in rect
 //         o.la()

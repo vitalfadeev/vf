@@ -1,7 +1,7 @@
 module vf.platform.sdl.game;
 
 // Linux
-//   pool <- evdev <- device 
+//   queue <- evdev <- device 
 //     D( time, type, code, value )
 //        M32   M16   M16   M32
 // my version
@@ -10,7 +10,7 @@ module vf.platform.sdl.game;
 //        R32   R32         R32  // on x86
 //
 // Windows
-//   pool <- GetMessage <- device 
+//   queue <- GetMessage <- device 
 //     D( hwnd, message, wParam, lParam, time, pt,  lPrivate )
 //        M64   M32      M64     M64     M32   M128 M32  // on x86_64
 //        M32   M32      M32     M32     M32   M128 M32  // on x86
@@ -21,10 +21,10 @@ module vf.platform.sdl.game;
 //              R32      R32     R32     R32
 
 // OS
-// pool
+// queue
 // sensors
 // go
-//   for d in pool
+//   for d in queue
 //     for s in sensors
 //       s( d )
 
@@ -33,25 +33,25 @@ import std.container.dlist : DList;
 import std.stdio : writeln;
 import std.functional : toDelegate;
 import bindbc.sdl;
-import pool : Pool;
+import queue : Queue;
 import vf.sensor;
 import vf.types;
 import vf.cls.o : IVAble, ILaAble, ISenseAble, IStateAble;
 public import vf.ui.window;
 
 Game game;  // for each CPU core
-            //   pool 1 for all CPU cores
+            //   queue 1 for all CPU cores
 
 struct Game
 {
     static
-    Pool    pool;
+    Queue    queue;
     Sensors sensors;
 
     //
     void go()
     {
-        foreach( d; pool )
+        foreach( d; queue )
             sensors.sense( d );
     }
 }
@@ -95,7 +95,7 @@ unittest
     {
         if ( d.t == DT_KEY_PRESSED )               // sensor
         if ( d.m == cast(MPTR)'A' )                //
-            game.pool ~= DT_KEY_A_PRESSED;         // action
+            game.queue ~= DT_KEY_A_PRESSED;         // action
     }
 
     // struct.function
@@ -107,7 +107,7 @@ unittest
         {
             if ( d.t == DT_KEY_PRESSED )           // sensor
             if ( d.m == cast(MPTR)'!' )            // 
-                game.pool ~= DT_KEY_CTRL_PRESSED;  // action
+                game.queue ~= DT_KEY_CTRL_PRESSED;  // action
         }
     }
 
@@ -130,11 +130,11 @@ unittest
 
             //
             if ( ctrl && a )                          // brain login
-                game.pool ~= DT_KEYS_CTRL_A_PRESSED;  // action
+                game.queue ~= DT_KEYS_CTRL_A_PRESSED;  // action
 
             // ANY CODE
             //   check d.m
-            //   pool ~= d(sid,m)
+            //   queue ~= d(sid,m)
             //   direct action
         }
 
@@ -163,14 +163,14 @@ unittest
     //auto window_sensor = new WindowSensor();
 
     //
-    game.pool ~= D_KEY_PRESSED( '!' );
-    game.pool ~= D_KEY_PRESSED( 'A' );
+    game.queue ~= D_KEY_PRESSED( '!' );
+    game.queue ~= D_KEY_PRESSED( 'A' );
 
     ////
     //game.go();
     //
     //
-    //assert( game.pool.empty );
+    //assert( game.queue.empty );
     //assert( a.length == 5 );
     //assert( a == [
     //        D(DT.KEY_PRESSED, cast(MPTR)'!'), 
@@ -187,7 +187,7 @@ unittest
     void ClipboardCopy()
     {
         // direct
-        // via pool
+        // via queue
     }
 }
 
@@ -215,11 +215,11 @@ ref auto sensors()
     return .game.sensors;
 }
 
-// game.pool
+// game.queue
 pragma( inline, true )
-ref auto pool()
+ref auto queue()
 {
-    return .game.pool;
+    return .game.queue;
 }
 
 
@@ -245,14 +245,14 @@ void send_la( PX xy )
 {
     auto d = xy.to!D;  // rect.xy_
     d.t = DT_LA;
-    game.pool ~= d;
+    game.queue ~= d;
 }
 
 void send_la( PXPX xyxy )
 {
     auto d = xyxy.to!D;  // rect.xy_
     d.t = DT_LA;
-    game.pool ~= d;
+    game.queue ~= d;
 }
 
 
