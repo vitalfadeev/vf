@@ -20,7 +20,7 @@ class Window
     }
 
     //
-    LRESULT event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
+    LRESULT event( UINT message, WPARAM wParam, LPARAM lParam ) 
     {
         return DefWindowProc( hwnd, message, wParam, lParam );
     }
@@ -162,13 +162,13 @@ class Window
                 {
                     if ( message == WM_DESTROY )
                     {
-                        auto ret = _vf_windows[i].event( hwnd, message, wParam, lParam );
+                        auto ret = _vf_windows[i].event( message, wParam, lParam );
                         unregister( hwnd );
                         return ret;
                     }
                     else
                     {
-                        return _vf_windows[i].event( hwnd, message, wParam, lParam );
+                        return _vf_windows[i].event( message, wParam, lParam );
                     }
                 }
             } 
@@ -279,7 +279,7 @@ LRESULT auto_route_event(T)( T This, HWND hwnd, UINT message, WPARAM wParam, LPA
         static if ( isCallable!(__traits(getMember, T, m)) )
             static if ( m.startsWith( "on_" ) )
                 if ( message == mixin( m[3..$] ) )
-                    return __traits(getMember, This, m)( hwnd, message, wParam, lParam ); 
+                    return __traits(getMember, This, m)( message, wParam, lParam ); 
 
     return DefWindowProc( hwnd, message, wParam, lParam );
 }
