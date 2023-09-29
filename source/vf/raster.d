@@ -68,7 +68,22 @@ struct Raster
         // x++
         //   =color
         for ( ; _current != _limit; _current+=_x_inc )
-            *( cast(T*)_current ) = _color;
+        {
+            // weight
+            auto wei = 5;
+            auto _wei_inc = pitch;
+            auto _wei_current = _current - wei/2*_wei_inc;
+            auto _wei_color = RGBQUAD(0,0,0,255);
+
+            foreach( i; 0..wei )
+            {
+                *( cast(T*)_wei_current ) = _wei_color;
+                _wei_current += _wei_inc;
+            }
+
+            // base line
+            *( cast(T*)_current ) = _color;            
+        }
 
         current = _current;
 
