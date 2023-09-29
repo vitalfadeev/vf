@@ -183,6 +183,17 @@ struct Raster
         auto _current = current;
         auto _color   = color;
 
+        auto _y_inc = 
+            ( h < 0 ) ?
+                ( -pitch ) :  // -  ↖↗
+                (  pitch ) ;  // +  ↙↘
+
+        auto _x_inc =
+            ( w < 0 ) ?
+                ( -T.sizeof ) :  // - ↙↖
+                (  T.sizeof ) ;  // + ↗↘
+
+        //
         auto barw = absw / absh;
         auto _    = absw % absh;
 
@@ -205,16 +216,6 @@ struct Raster
             bar2n = ( absh <= 2 ) ? 0 : absh - 2;
             bar3  = ( absh <= 2 ) ? 0 : barw;
         }
-
-        auto _y_inc = 
-            ( h < 0 ) ?
-                ( -pitch ) :  // -  ↖↗
-                (  pitch ) ;  // +  ↙↘
-
-        auto _x_inc =
-            ( w < 0 ) ?
-                ( -T.sizeof ) :  // - ↙↖
-                (  T.sizeof ) ;  // + ↗↘
 
         // 0..1
         if (bar1)
