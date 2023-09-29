@@ -52,24 +52,26 @@ struct Raster
         auto _current = this.current;           // local var for optimization
         auto _color   = this.color;             //   put in to CPU registers
                                                 //   LDC optimize local vars
+        alias T_INC   = typeof( -cast(W)pitch );
+        alias T_LIMIT = typeof( _current );
+        T_INC   _inc;
+        T_LIMIT _limit;
+
         // +
         if ( w > 0 )
         {
-            auto _inc   = T.sizeof;
-            auto _limit = _current + w * _inc;
-
-            for ( ; _current < _limit; _current+=_inc )
-                *( cast(T*)_current ) = _color;
+            _inc   = cast(T_INC)T.sizeof;
+            _limit = _current + w * _inc;
         }
         else
         // -
         {
-            auto _inc   = T.sizeof;
-            auto _limit = _current + w * _inc;
-
-            for ( ; _current > _limit; _current-=_inc )
-                *( cast(T*)_current ) = _color;
+            _inc   = -cast(T_INC)T.sizeof;
+            _limit = _current - w * _inc;
         }
+
+        for ( ; _current != _limit; _current+=_inc )
+            *( cast(T*)_current ) = _color;
 
         current = _current;
 
