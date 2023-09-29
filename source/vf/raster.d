@@ -103,19 +103,18 @@ struct Raster
     {
         auto _current = current;
         auto _color   = color;
-
         
         auto _inc =
             ( h < 0 ) ?
-                (  // ↖↗
+                (   // ↖↗
                     ( w < 0 ) ?
-                        -( pitch + T.sizeof ) :  // ↖ -,-
-                        -( pitch - T.sizeof )    // ↗ +,-
+                        ( -T.sizeof - pitch ) :  // ↖ -,-
+                        (  T.sizeof - pitch )    // ↗ +,-
                 ):
-                (  // ↙↘
+                (   // ↙↘
                     ( w < 0 ) ?
-                        ( pitch - T.sizeof ) :  // ↙ -,+
-                        ( pitch + T.sizeof )    // ↘ +,+
+                        ( -T.sizeof + pitch ) :  // ↙ -,+
+                        (  T.sizeof + pitch )    // ↘ +,+
                 );
 
         auto _limit = _current + ABS(w) * _inc;
