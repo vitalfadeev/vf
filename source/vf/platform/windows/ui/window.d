@@ -13,9 +13,9 @@ class Window
     alias T = typeof(this);
 
 
-    this( PX size=PX(640,480), string name="Windows Window" )
+    this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
     {
-        _create_window( size, name );
+        _create_window( cmd_show, size, name );
         _create_renderer();
     }
 
@@ -27,13 +27,12 @@ class Window
 
     // private
     private
-    void _create_window( PX size, string name )
+    void _create_window( int cmd_show, PX size, string name )
     {
         import std.utf : toUTF16z;
         import std.traits;
 
         HINSTANCE hInstance = GetModuleHandle(NULL);
-        int       iCmdShow  = 1;
         
         auto className = toUTF16z( fullyQualifiedName!(typeof(this)) );
         WNDCLASS wndClass;
@@ -76,8 +75,11 @@ class Window
         WindowManager.register( hwnd, this );
 
         // Show
-        ShowWindow( hwnd, iCmdShow );
-        UpdateWindow( hwnd ); 
+        if ( cmd_show )
+        {
+            ShowWindow( hwnd, cmd_show );
+            UpdateWindow( hwnd ); 
+        }
     }
 
 
@@ -98,6 +100,15 @@ class Window
           0,
           SWP_NOSIZE | SWP_NOZORDER | SWP_ASYNCWINDOWPOS
         );
+
+        return this;
+    }
+
+
+    auto ref show()
+    {
+        ShowWindow( hwnd, 1 );
+        UpdateWindow( hwnd ); 
 
         return this;
     }
