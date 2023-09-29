@@ -37,10 +37,13 @@ struct Raster
         if ( wh.x == 0 )                    // |
             v_line( wh.y );
         else
-        if ( wh.x == wh.y )
+        if ( ABS( w ) == ABS( h ) )
             d_line_45( wh.x, wh.y );        // 45 degress /
         else
-            d_line( wh.x, wh.y );           // /
+        if ( ABS(wh.x) > ABS(wh.y) )
+            d_line_30( wh.x, wh.y );        // /
+        else
+            d_line_60( wh.x, wh.y );        // /
     }
 
     //pragma( inline, true )
@@ -77,32 +80,100 @@ struct Raster
     {
         auto _current = current;
         auto _color   = color;
+        alias T_INC   = typeof( -cast(W)pitch );
+        alias T_LIMIT = typeof( _current );
+        T_INC   _inc;
+        T_LIMIT _limit;
 
         // +
         if ( h > 0 )
         {
-            auto _inc   = pitch;
-            auto _limit = _current + h * pitch;
-
-            for ( ; _current < _limit; _current+=_inc )
-                *( cast(T*)_current ) = _color;            
+            _inc   = cast(T_INC)pitch;
+            _limit = _current + h * _inc;
         }
         else
         // -
         {
-            auto _inc   = pitch;
-            auto _limit = _current + h * pitch;
-
-            for ( ; _current > _limit; _current-=_inc )
-                *( cast(T*)_current ) = _color;
+            _inc   = -cast(T_INC)pitch;
+            _limit = _current - h * _inc;
         }
+
+        for ( ; _current != _limit; _current+=_inc )
+            *( cast(T*)_current ) = _color;
 
         current = _current;
 
         return this;
     }
 
-    auto ref d_line(W,H)( W w, H h )
+    auto ref d_line_45( W w, H h )
+    {
+        auto _current = current;
+        auto _color   = color;
+        alias T_INC   = typeof( -cast(W)( pitch + T.sizeof ) );
+        alias T_LIMIT = typeof( _current );
+        T_INC   _inc;
+        T_LIMIT _limit;
+
+        // ↖↗
+        // ?,-
+        if ( h < 0 )
+        {
+            // ↖
+            // -,-
+            if ( w < 0 )
+            {
+                _inc   = -cast(T_INC)( pitch + T.sizeof );
+                _limit = _current - h * _inc;
+            }                
+            // ↗
+            // +,-
+            else
+            {
+                _inc   = -cast(T_INC)( pitch - T.sizeof );
+                _limit = _current - h * _inc;
+            }
+        }
+        else
+        // ↙↘
+        // ?,+
+        {
+            // ↙
+            // -,+
+            if ( w < 0 )
+            {
+                _inc   = cast(T_INC)( pitch - T.sizeof );
+                _limit = _current + h * _inc;
+            }                
+            else
+            // ↘
+            // +,+
+            {
+                _inc   = cast(T_INC)( pitch + T.sizeof );
+                _limit = _current + h * _inc;
+            }
+        }
+
+        for ( ; _current != _limit; _current+=_inc )
+            *( cast(T*)_current ) = _color;
+
+        current = _current;
+
+        return this;
+    }
+
+    auto ref d_line( W w, H h )
+    {
+        if ( ABS( w ) == ABS( h ) )
+            return d_line_45( w, h );        // 45 degress /
+        else
+        if ( ABS( w ) > ABS( h ) )
+            return d_line_30( w, h );        // /
+        else
+            return d_line_60( w, h );        // /
+    }
+
+    auto ref d_line_30(W,H)( W w, H h )
     {
         //                                                          y
         // 0                       1                        2    // _y - y = 1
@@ -172,19 +243,19 @@ struct Raster
             // +
             if ( w > 0 )
             {
-                auto _inc   = T.sizeof;
+                W    _inc   = cast(W)T.sizeof;
                 auto _limit = _current + pad1 * _inc;
 
-                for ( ; _current < _limit; _current+=_inc )
+                for ( ; _current == _limit; _current+=_inc )
                     *( cast(T*)_current ) = _color;
             }
             else
             // -
             {
-                auto _inc   = T.sizeof;
-                auto _limit = _current + pad1 * _inc;
+                W    _inc   = -cast(W)T.sizeof;
+                auto _limit = _current - pad1 * _inc;
 
-                for ( ; _current > _limit; _current-=_inc )
+                for ( ; _current == _limit; _current+=_inc )
                     *( cast(T*)_current ) = _color;
             }
         }
@@ -292,60 +363,154 @@ struct Raster
         return this;
     }
 
-    auto ref d_line_45( W w, H h )
+    auto ref d_line_60(W,H)( W w, H h )
     {
         auto _current = current;
         auto _color   = color;
 
-        // ↖↗
-        // ?,-
-        if ( h < 0 )
-        {
-            // ↖
-            // -,-
-            if ( w < 0 )
-            {
-                auto _inc   = pitch + T.sizeof;
-                auto _limit = _current + h * _inc;
+        auto padh = h / w;
+        auto _    = h % w;
 
-                for ( ; _current > _limit; _current-=_inc )
-                    *( cast(T*)_current ) = _color;
-            }                
-            // ↗
-            // +,-
-            else
+        int pad1;
+        int pad2;
+        int pad2n;
+        int pad3;
+
+        if ( _ == 0 )
+        {
+            pad1  = padh;
+            pad2  = padh;
+            pad2n = w;
+            pad3  = padh;
+        }
+        else
+        {        
+            pad1  = _ / 2;
+            _     = _ % 2;
+            pad2  = padh;
+            pad2n = w;
+            pad3  = pad1 - _;
+        }
+
+        // 0..1
+        if (pad1) 
+        {
+            // +
+            if ( w > 0 )
             {
-                auto _inc   = pitch - T.sizeof;
-                auto _limit = _current + h * _inc;
+                auto _inc   = pitch;
+                auto _limit = _current + pad1 * _inc;
+
+                for ( ; _current < _limit; _current+=_inc )
+                    *( cast(T*)_current ) = _color;
+            }
+            else
+            // -
+            {
+                auto _inc   = pitch;
+                auto _limit = _current + pad1 * _inc;
 
                 for ( ; _current > _limit; _current-=_inc )
                     *( cast(T*)_current ) = _color;
             }
         }
-        else
-        // ↙↘
-        // ?,+
-        {
-            // ↙
-            // -,+
-            if ( w < 0 )
-            {
-                auto _inc   = pitch - T.sizeof;
-                auto _limit = _current + h * _inc;
 
-                for ( ; _current < _limit; _current+=_inc )
-                    *( cast(T*)_current ) = _color;
-            }                
-            else
-            // ↘
-            // +,+
+        // 1..2..3
+        if (pad2)
+        {
+            // ↙↘
+            // ?,+
+            if ( h > 0)
             {
-                auto _inc   = pitch + T.sizeof;
-                auto _limit = _current + h * _inc;
+                // ↘
+                // +,+
+                if ( w > 0 )
+                {
+                    auto _inc    = pitch;
+                    auto _incx   = T.sizeof;
+                    auto _limitx = _current + pad2 * _incx;
+
+                    for ( ; _current < _limitx; _current+=_incx )
+                    {
+                        auto _limit  = _current + pad2n * _inc;
+                        for ( ; _current < _limit; _current+=_inc )
+                            *( cast(T*)_current ) = _color;
+                    }
+                }
+                else
+                // ↙
+                // -,+
+                {
+                    auto _inc    = pitch;
+                    auto _limit  = _current + pad2n * _inc;
+                    auto _incx   = T.sizeof;
+
+                    for ( ; _current < _limit; _current+=_inc )
+                    {
+                        auto _limitx = _current + pad2 * _incx;
+                        for ( ; _current > _limitx; _current-=_incx )
+                            *( cast(T*)_current ) = _color;
+                    }
+                }
+            }
+            else
+            // ↖↗
+            // ?,-
+            {
+                // ↗
+                // +,-
+                if ( w > 0 )
+                {
+                    auto _inc   = pitch;
+                    auto _limit = _current + pad2n * _inc;
+                    auto _incx  = T.sizeof;
+
+                    for ( ; _current > _limit; _current-=_inc )
+                    {
+                        auto _limitx = _current - pad2 * _incx;
+                        for ( ; _current < _limitx; _current+=_incx )
+                            *( cast(T*)_current ) = _color;
+                    }
+                }
+                else
+                // ↖
+                // -,-
+                {
+                    auto _inc   = pitch;
+                    auto _limit = _current + pad2n * _inc;
+                    auto _incx  = T.sizeof;
+
+                    for ( ; _current > _limit; _current-=_inc )
+                    {
+                        auto _limitx = _current - pad2 * _incx;
+                        for ( ; _current > _limitx; _current-=_incx )
+                            *( cast(T*)_current ) = _color;
+                    }
+                }
+            }
+        }
+
+        // 3..4
+        if (pad3)
+        {
+            // +
+            if ( w > 0 )
+            {
+                auto _inc   = T.sizeof;
+                auto _limit = _current + pad3 * _inc;
 
                 for ( ; _current < _limit; _current+=_inc )
                     *( cast(T*)_current ) = _color;
             }
+            else
+            // -
+            {
+                auto _inc   = T.sizeof;
+                auto _limit = _current + pad3 * _inc;
+
+                for ( ; _current > _limit; _current-=_inc )
+                    *( cast(T*)_current ) = _color;
+            }            
         }
 
         current = _current;
@@ -356,6 +521,12 @@ struct Raster
     auto ref go_center()
     {
         current = (cast(void*)pixels.ptr) + h / 2 * pitch + w / 2 * T.sizeof;
+        return this;
+    }
+
+    auto ref go( W w, H h )
+    {
+        current = (cast(void*)pixels.ptr) + h * pitch + w * T.sizeof;
         return this;
     }
 
