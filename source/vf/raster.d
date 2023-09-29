@@ -35,19 +35,14 @@ struct Raster
         if ( w == 0 && h == 0 )
             {}
         else
-        if ( h == 0 )                       // -
+        if ( h == 0 )                    // -
             h_line( w, absw );
         else
-        if ( w == 0 )                       // |
+        if ( w == 0 )                    // |
             v_line( h, absh );
         else
         if ( absw == absh )
-            d_line_45( w, h, absw, absh );  // 45 degress /
-        else
-        if ( absw > absh )
-            d_line_30( w, h, absw, absh );  // 0..45 degress
-        else
-            d_line_60( w, h, absw, absh );  // 45..90 degress
+            d_line( w, h, absw, absh );  // /
 
         return this;
     }
@@ -83,6 +78,7 @@ struct Raster
     {
         return v_line( h, ABS(h) );
     }
+
     auto ref v_line(H,AH)( H h, AH absh )
     {
         auto _current = current;
@@ -107,9 +103,11 @@ struct Raster
 
     auto ref d_line( W w, H h )
     {
-        auto absw = ABS( w );
-        auto absh = ABS( h );
+        return d_line( w, h, ABS(w), ABS(h) );
+    }
 
+    auto ref d_line(W,H,AW,AH)( W w, H h, AW absw, AH absh )
+    {
         if ( absw == absh )
             return d_line_45( w, h, absw, absh );        // 45 degress /
         else
