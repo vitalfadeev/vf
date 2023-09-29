@@ -269,12 +269,11 @@ struct Raster
         {
             _color = RGBQUAD( 0, 255, 255, 0);
 
-            //auto _y_limit = _current + 
-            //    ( (bar2n) * _y_inc ) + 
-            //    ( (bar2)  * _x_inc );
+            auto _y_limit = _current + 
+                ( (bar2n) * _y_inc ) +          // y
+                ( (bar2)  * _x_inc ) * bar2n;   // x
 
-            //for ( ; _current != _y_limit; _current+=_y_inc )
-            for ( auto cx=bar2n; cx != 0; cx--, _current+=_y_inc )
+            for ( ; _current != _y_limit; _current+=_y_inc )
             {
                 auto _x_limit = _current + (bar2) * _x_inc;
 
