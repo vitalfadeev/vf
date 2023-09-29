@@ -29,33 +29,35 @@ struct Raster
         auto w = b.x - a.x;
         auto h = b.y - a.y;
 
+        auto absw = ABS( w );
+        auto absh = ABS( h );
+
         if ( w == 0 && h == 0 )
             {}
         else
-        if ( h == 0 )                    // -
-            h_line( w );
+        if ( h == 0 )                       // -
+            h_line( w, absw );
         else
-        if ( w == 0 )                    // |
-            v_line( h );
+        if ( w == 0 )                       // |
+            v_line( h, absh );
         else
-        {
-            auto absw = ABS( w );
-            auto absh = ABS( h );
-
-            if ( absw == absh )
-                d_line_45( w, h, absw, absh );        // 45 degress /
-            else
-            if ( absw > absh )
-                d_line_30( w, h, absw, absh );        // 0..45 degress
-            else
-                d_line_60( w, h, absw, absh );        // 45..90 degress
-        }
+        if ( absw == absh )
+            d_line_45( w, h, absw, absh );  // 45 degress /
+        else
+        if ( absw > absh )
+            d_line_30( w, h, absw, absh );  // 0..45 degress
+        else
+            d_line_60( w, h, absw, absh );  // 45..90 degress
 
         return this;
     }
 
-    //pragma( inline, true )
     auto ref h_line(W)( W w )
+    {
+        return h_line( w, ABS(w) );
+    }
+
+    auto ref h_line(W,AW)( W w, AW absw )
     {
         auto _current = this.current;           // local var for optimization
         auto _color   = this.color;             //   put in to CPU registers
@@ -65,7 +67,7 @@ struct Raster
                 -(T.sizeof) :  // - ←
                  (T.sizeof) ;  // + →
 
-        auto _limit = _current + ABS(w) * _x_inc;
+        auto _limit = _current + absw * _x_inc;
 
         alias _inc = _x_inc;
 
@@ -79,6 +81,10 @@ struct Raster
 
     auto ref v_line(H)( H h )
     {
+        return v_line( h, ABS(h) );
+    }
+    auto ref v_line(H,AH)( H h, AH absh )
+    {
         auto _current = current;
         auto _color   = color;
 
@@ -87,7 +93,7 @@ struct Raster
                 ( -pitch ) :  // - ↑
                 (  pitch ) ;  // + ↓
 
-        auto _limit = _current + ABS(h) * _y_inc;
+        auto _limit = _current + absh * _y_inc;
 
         alias _inc = _y_inc;
 
