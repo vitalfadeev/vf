@@ -35,7 +35,7 @@ import std.functional : toDelegate;
 import core.sys.windows.windows;
 import vf;
 
-class Game(T)
+class Game
 {
     static
     Queue   queue;
@@ -68,18 +68,6 @@ class Game(T)
     Window new_window()
     {
         return new Window();            
-    }
-
-    static
-    T opCall()
-    {
-        static 
-        T _instance;
-
-        if ( _instance is null )
-            _instance = new T();
-
-        return _instance;
     }
 
     static
