@@ -24,7 +24,7 @@ struct Raster
         return this;
     }
 
-    void line( PX a, PX b )
+    auto ref line( PX a, PX b )
     {
         auto wh = b - a;
 
@@ -37,13 +37,20 @@ struct Raster
         if ( wh.x == 0 )                    // |
             v_line( wh.y );
         else
-        if ( ABS( w ) == ABS( h ) )
-            d_line_45( wh.x, wh.y );        // 45 degress /
-        else
-        if ( ABS(wh.x) > ABS(wh.y) )
-            d_line_30( wh.x, wh.y );        // /
-        else
-            d_line_60( wh.x, wh.y );        // /
+        {
+            auto absw = ABS( w );
+            auto absh = ABS( h );
+
+            if ( absw == absh )
+                d_line_45( w, h, absw, absh );        // 45 degress /
+            else
+            if ( absw > absh )
+                d_line_30( w, h, absw, absh );        // 0..45 degress
+            else
+                d_line_60( w, h, absw, absh );        // 45..90 degress
+        }
+
+        return this;
     }
 
     //pragma( inline, true )
@@ -93,16 +100,19 @@ struct Raster
 
     auto ref d_line( W w, H h )
     {
-        if ( ABS( w ) == ABS( h ) )
-            return d_line_45( w, h );        // 45 degress /
+        auto absw = ABS( w );
+        auto absh = ABS( h );
+
+        if ( absw == absh )
+            return d_line_45( w, h, absw, absh );        // 45 degress /
         else
-        if ( ABS( w ) > ABS( h ) )
-            return d_line_30( w, h );        // /
+        if ( absw > absh )
+            return d_line_30( w, h, absw, absh );        // 0..45 degress
         else
-            return d_line_60( w, h );        // /
+            return d_line_60( w, h, absw, absh );        // 45..90 degress
     }
 
-    auto ref d_line_45( W w, H h )
+    auto ref d_line_45(AW,AH)( W w, H h, AW absw, AH absh )
     {
         auto _current = current;
         auto _color   = color;
@@ -117,7 +127,7 @@ struct Raster
                 ( -T.sizeof ) :  // - ↙↖
                 (  T.sizeof ) ;  // + ↗↘
 
-        auto _limit = _current + ABS(h) * _y_inc + ABS(w) * _x_inc;
+        auto _limit = _current + absh * _y_inc + absw * _x_inc;
         auto _inc   = _x_inc + _y_inc;
 
         for ( ; _current != _limit; _current+=_inc )
@@ -128,7 +138,7 @@ struct Raster
         return this;
     }
 
-    auto ref d_line_30( W w, H h )
+    auto ref d_line_30(AW,AH)( W w, H h, AW absw, AH absh )
     {
         //                                                          y
         // 0                       1                        2    // _y - y = 1
@@ -165,58 +175,8 @@ struct Raster
         // -,+   v   +,+
         //       h
 
-        // line( 1, 0 )
-        // w = 1
-        //
-        // ...........
-        // ^
-        // current
-        //  ^
-        //  _limit
-        //
-        // #..........
-        //  ^
-        //  current
-        //  ^
-        //  _limit
-        //
-        // line( 2, 0 )
-        // w = 2
-        //
-        // ...........
-        // ^
-        // current
-        //   ^
-        //   _limit
-        //
-        // ##......... +2*T.sizeof
-        //   ^
-        //   current
-        //   ^
-        //   _limit
-        //
-        // line( 2, 1 )
-        // w = 2, h = 1
-        //
-        // ...........
-        // ^
-        // current
-        //   ^
-        //   _limit
-        //
-        // #..........  +T.sizeof +pitch
-        // .#.........  +T.sizeof +pitch
-        // ...........  
-        //   ^
-        //   current
-        //   ^
-        //   _limit
-
         auto _current = current;
         auto _color   = color;
-
-        auto absw = ABS( w );
-        auto absh = ABS( h );
 
         auto barw = absw / absh;
         auto _    = absw % absh;
@@ -304,13 +264,10 @@ struct Raster
         return this;
     }
 
-    auto ref d_line_60(W,H)( W w, H h )
+    auto ref d_line_60(AW,AH)( W w, H h, AW absw, AH absh )
     {
         auto _current = current;
         auto _color   = color;
-
-        auto absw = ABS( w );
-        auto absh = ABS( h );
 
         auto barh = absh / absw;
         auto _    = absh % absw;
