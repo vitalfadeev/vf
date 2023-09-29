@@ -46,3 +46,10 @@ class WindowsException : std.windows.syserror.WindowsException
         super( GetLastError(), msg );
     }
 }
+
+
+struct Message 
+{
+    UINT _super;
+    alias _super this;
+}
