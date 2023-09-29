@@ -48,7 +48,7 @@ class WindowsException : std.windows.syserror.WindowsException
 }
 
 
-struct Message 
+struct Event 
 {
     UINT _super;
     alias _super this;
