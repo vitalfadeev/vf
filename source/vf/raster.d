@@ -322,6 +322,8 @@ struct Raster
             //   = color
             for ( ; _current != _limit; _current+=_x_inc )
                 *( cast(T*)_current ) = _color;
+
+            _current -= _x_inc;  // back 1. set cursor on last pixel
         }
 
         current = _current;
@@ -422,7 +424,7 @@ struct Raster
             for ( ; _current != _limit; _current+=_y_inc )
                 *( cast(T*)_current ) = _color;
 
-            _current+=_x_inc;
+            _current -= _y_inc;  // back 1. set cursor on last pixel
         }
 
         current = _current;
@@ -432,25 +434,19 @@ struct Raster
 
     auto ref go_center()
     {
-        current = (cast(void*)pixels.ptr) + h / 2 * pitch + w / 2 * T.sizeof;
+        current = 
+            (cast(void*)pixels.ptr) + 
+            h / 2 * pitch + 
+            w / 2 * T.sizeof;
         return this;
     }
 
     auto ref go( W w, H h )
     {
-        auto _y_inc = 
-            ( h < 0 ) ?
-                ( -pitch ) :  // -  ↖↗
-                (  pitch ) ;  // +  ↙↘
-
-        auto _x_inc =
-            ( w < 0 ) ?
-                ( -T.sizeof ) :  // - ↙↖
-                (  T.sizeof ) ;  // + ↗↘
-
-        auto _inc = ABS(h) * _y_inc + ABS(w) * _x_inc;
-
-        current = (cast(void*)current) + _inc;
+        current = 
+            current + 
+            h * pitch + 
+            w * T.sizeof;
 
         return this;
     }
