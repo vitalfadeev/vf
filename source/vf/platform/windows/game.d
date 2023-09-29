@@ -69,4 +69,10 @@ class Game
     {
         return new Window();            
     }
+
+    static
+    void quit( int quit_code=0 )
+    {   
+        PostQuitMessage( quit_code );
+    }
 }
