@@ -14,3 +14,4 @@ draw_line-test-*
 *.o
 *.obj
 *.lst
+mixins.d
