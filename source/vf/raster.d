@@ -165,6 +165,53 @@ struct Raster
         // -,+   v   +,+
         //       h
 
+        // line( 1, 0 )
+        // w = 1
+        //
+        // ...........
+        // ^
+        // current
+        //  ^
+        //  _limit
+        //
+        // #..........
+        //  ^
+        //  current
+        //  ^
+        //  _limit
+        //
+        // line( 2, 0 )
+        // w = 2
+        //
+        // ...........
+        // ^
+        // current
+        //   ^
+        //   _limit
+        //
+        // ##......... +2*T.sizeof
+        //   ^
+        //   current
+        //   ^
+        //   _limit
+        //
+        // line( 2, 1 )
+        // w = 2, h = 1
+        //
+        // ...........
+        // ^
+        // current
+        //   ^
+        //   _limit
+        //
+        // #..........  +T.sizeof +pitch
+        // .#.........  +T.sizeof +pitch
+        // ...........  
+        //   ^
+        //   current
+        //   ^
+        //   _limit
+
         auto _current = current;
         auto _color   = color;
 
@@ -193,16 +240,6 @@ struct Raster
             bar2n = ( absh <= 2 ) ? 0 : absh - 2;
             bar3  = ( absh <= 2 ) ? 0 : barw;
         }
-        import std.stdio : writeln;
-        writeln( "barw: ", barw );
-        writeln( "   _: ", _ );
-        writeln( "bar1: ", bar1 );
-        writeln(  );
-        writeln( "absw: ", absw );
-        writeln( "absh: ", absh );
-        writeln( "absw/absh: ", absw/absh );
-        writeln( "absw%absh: ", absw%absh );
-        writeln( "bar2n: ", bar2n );
 
         auto _y_inc = 
             ( h < 0 ) ?
@@ -232,11 +269,12 @@ struct Raster
         {
             _color = RGBQUAD( 0, 255, 255, 0);
 
-            auto _y_limit = _current + 
-                ( (bar2n) * _y_inc ) + 
-                ( (bar2)  * _x_inc );
+            //auto _y_limit = _current + 
+            //    ( (bar2n) * _y_inc ) + 
+            //    ( (bar2)  * _x_inc );
 
-            for ( ; _current < _y_limit; _current+=_y_inc )
+            //for ( ; _current != _y_limit; _current+=_y_inc )
+            for ( auto cx=bar2n; cx != 0; cx--, _current+=_y_inc )
             {
                 auto _x_limit = _current + (bar2) * _x_inc;
 
@@ -265,6 +303,92 @@ struct Raster
 
     auto ref d_line_60(W,H)( W w, H h )
     {
+        auto _current = current;
+        auto _color   = color;
+
+        auto absw = ABS( w );
+        auto absh = ABS( h );
+
+        auto barh = absh / absw;
+        auto _    = absh % absw;
+
+        int bar1;  // width of bar 1
+        int bar2;
+        int bar2n;
+        int bar3;
+
+        if ( _ == 0 )
+        {
+            bar1  = 0;
+            bar2  = barh;
+            bar2n = absw;
+            bar3  = 0;
+        }
+        else
+        {        
+            bar1  = barh - _;
+            bar2  = barh;
+            bar2n = ( absw <= 2 ) ? 0 : absw - 2;
+            bar3  = ( absw <= 2 ) ? 0 : barh;
+        }
+
+        auto _y_inc = 
+            ( h < 0 ) ?
+                ( -pitch ) :  // -  ↖↗
+                (  pitch ) ;  // +  ↙↘
+
+        auto _x_inc =
+            ( w < 0 ) ?
+                ( -T.sizeof ) :  // - ↙↖
+                (  T.sizeof ) ;  // + ↗↘
+
+        // 0..1
+        if (bar1)
+        {
+            _color = RGBQUAD( 0, 255, 0, 0);
+
+            auto _limit = _current + (bar1) * _y_inc;
+
+            for ( ; _current != _limit; _current+=_y_inc )
+                *( cast(T*)_current ) = _color;
+
+            _current+=_x_inc;
+        }
+
+        // 1..2..3
+        if (bar2)
+        {
+            _color = RGBQUAD( 0, 255, 255, 0);
+
+            //auto _x_limit = _current + 
+            //    ( (bar2n) * _y_inc ) + 
+            //    ( (bar2)  * _x_inc );
+
+            //for ( ; _current != _y_limit; _current+=_y_inc )
+            for ( auto cy=bar2n; cy != 0; cy--, _current+=_x_inc )
+            {
+                auto _y_limit = _current + (bar2) * _y_inc;
+
+                for ( ; _current != _y_limit; _current+=_y_inc )
+                    *( cast(T*)_current ) = _color;
+            }
+        }
+
+        // 3..4
+        if (bar3)
+        {
+            _color = RGBQUAD( 255, 0, 255, 0);
+
+            auto _limit = _current + (bar3) * _y_inc;
+
+            for ( ; _current != _limit; _current+=_y_inc )
+                *( cast(T*)_current ) = _color;
+
+            _current+=_x_inc;
+        }
+
+        current = _current;
+
         return this;
     }
 
