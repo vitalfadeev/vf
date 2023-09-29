@@ -43,7 +43,6 @@ struct Raster
         if ( w == 0 )                    // |
             v_line( h, absh );
         else
-        if ( absw == absh )
             d_line( w, h, absw, absh );  // /
 
         return this;
