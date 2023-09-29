@@ -24,11 +24,13 @@ struct Raster
         return this;
     }
 
-    auto ref line( PX a, PX b )
+    auto ref line( PX px )
     {
-        auto w = b.x - a.x;
-        auto h = b.y - a.y;
-
+        line( px.x, px.y );
+        return this;
+    }
+    auto ref line( W w, H h )
+    {
         auto absw = ABS( w );
         auto absh = ABS( h );
 
