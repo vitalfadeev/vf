@@ -188,13 +188,16 @@ struct Raster
         }
         else
         {        
-            bar1  = _ / 2;
-            _     = _ % 2;
+            bar1  = barw - _;
             bar2  = barw;
-            bar2n = absh;
-            bar3  = bar1 - _;
+            bar2n = ( absh <= 2 ) ? 0 : absh - 2;
+            bar3  = ( absh <= 2 ) ? 0 : barw;
         }
         import std.stdio : writeln;
+        writeln( "barw: ", barw );
+        writeln( "   _: ", _ );
+        writeln( "bar1: ", bar1 );
+        writeln(  );
         writeln( "absw: ", absw );
         writeln( "absh: ", absh );
         writeln( "absw/absh: ", absw/absh );
@@ -234,7 +237,7 @@ struct Raster
                 ( (bar2n) * _y_inc ) + 
                 ( (bar2)  * _x_inc );
 
-            for ( ; _current <= _y_limit; _current+=_y_inc )
+            for ( ; _current < _y_limit; _current+=_y_inc )
             {
                 auto _x_limit = _current + (bar2) * _x_inc;
 
