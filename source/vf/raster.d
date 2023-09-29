@@ -269,7 +269,7 @@ struct Raster
         {
             _color = RGBQUAD( 0, 255, 255, 0);
 
-            auto _bar2_x_inc  = _x_inc * (bar2);
+            auto _bar2_x_inc  = (bar2) * _x_inc;
             auto _x_limit_inc = _y_inc   + _bar2_x_inc;
             auto _x_limit     = _current + _bar2_x_inc;
             auto _y_limit     = _current + _x_limit_inc * (bar2n);
@@ -356,7 +356,7 @@ struct Raster
         {
             _color = RGBQUAD( 0, 255, 255, 0);
 
-            auto _bar2_y_inc  = _y_inc * (bar2);
+            auto _bar2_y_inc  = (bar2) * _y_inc;
             auto _y_limit_inc = _x_inc   + _bar2_y_inc;
             auto _y_limit     = _current + _bar2_y_inc;
             auto _x_limit     = _current + _y_limit_inc * (bar2n);
