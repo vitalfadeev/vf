@@ -32,7 +32,7 @@ struct Raster
             {}
         else
         if ( wh.y == 0 )                    // -
-            h_line( wh.y );
+            h_line( wh.x );
         else
         if ( wh.x == 0 )                    // |
             v_line( wh.y );
@@ -47,28 +47,18 @@ struct Raster
     }
 
     //pragma( inline, true )
-    auto ref h_line(W)( W w )
+    auto ref h_line( W w )
     {
         auto _current = this.current;           // local var for optimization
         auto _color   = this.color;             //   put in to CPU registers
                                                 //   LDC optimize local vars
-        alias T_INC   = typeof( -cast(W)pitch );
-        alias T_LIMIT = typeof( _current );
-        T_INC   _inc;
-        T_LIMIT _limit;
 
-        // +
-        if ( w > 0 )
-        {
-            _inc   = cast(T_INC)T.sizeof;
-            _limit = _current + w * _inc;
-        }
-        else
-        // -
-        {
-            _inc   = -cast(T_INC)T.sizeof;
-            _limit = _current - w * _inc;
-        }
+        auto _inc =
+            ( w >= 0 ) ?
+                 (T.sizeof) :  // +
+                -(T.sizeof) ;  // -
+
+        auto _limit = _current + ABS(w) * _inc;
 
         for ( ; _current != _limit; _current+=_inc )
             *( cast(T*)_current ) = _color;
@@ -78,27 +68,17 @@ struct Raster
         return this;
     }
 
-    auto ref v_line(H)( H h )
+    auto ref v_line( H h )
     {
         auto _current = current;
         auto _color   = color;
-        alias T_INC   = typeof( -cast(W)pitch );
-        alias T_LIMIT = typeof( _current );
-        T_INC   _inc;
-        T_LIMIT _limit;
 
-        // +
-        if ( h > 0 )
-        {
-            _inc   = cast(T_INC)pitch;
-            _limit = _current + h * _inc;
-        }
-        else
-        // -
-        {
-            _inc   = -cast(T_INC)pitch;
-            _limit = _current - h * _inc;
-        }
+        auto _inc =
+            ( h >= 0 ) ?
+                 (pitch) :  // +
+                -(pitch) ;  // -
+
+        auto _limit = _current + ABS(h) * _inc;
 
         for ( ; _current != _limit; _current+=_inc )
             *( cast(T*)_current ) = _color;
@@ -106,6 +86,17 @@ struct Raster
         current = _current;
 
         return this;
+    }
+
+    auto ref d_line( W w, H h )
+    {
+        if ( ABS( w ) == ABS( h ) )
+            return d_line_45( w, h );        // 45 degress /
+        else
+        if ( ABS( w ) > ABS( h ) )
+            return d_line_30( w, h );        // /
+        else
+            return d_line_60( w, h );        // /
     }
 
     auto ref d_line_45( W w, H h )
@@ -164,18 +155,7 @@ struct Raster
         return this;
     }
 
-    auto ref d_line( W w, H h )
-    {
-        if ( ABS( w ) == ABS( h ) )
-            return d_line_45( w, h );        // 45 degress /
-        else
-        if ( ABS( w ) > ABS( h ) )
-            return d_line_30( w, h );        // /
-        else
-            return d_line_60( w, h );        // /
-    }
-
-    auto ref d_line_30(W,H)( W w, H h )
+    auto ref d_line_30( W w, H h )
     {
         //                                                          y
         // 0                       1                        2    // _y - y = 1
@@ -202,7 +182,7 @@ struct Raster
         //                                       ############    // 3
         //                                                          y
         // |<-------->|
-        //     padw     = ( _x - x ) / ( _y - y )
+        //     barw     = ( _x - x ) / ( _y - y )
         //
 
         // -,-   |   +,-
@@ -214,56 +194,55 @@ struct Raster
 
         auto _current = current;
         auto _color   = color;
+        alias T_INC   = typeof( -cast(W)( pitch + T.sizeof ) );
+        alias T_LIMIT = typeof( _current );
+        T_INC   _inc;
+        T_INC   _incx;
+        T_LIMIT _limit;
 
-        auto padw = w / h;
-        auto _    = w % h;
+        auto absw = ABS( w );
+        auto absh = ABS( h );
 
-        int pad1;
-        int pad2;
-        int pad2n;
-        int pad3;
+        auto barw = absw / absh;
+        auto _    = absw % absh;
+
+        int bar1;  // width of bar 1
+        int bar2;
+        int bar2n;
+        int bar3;
 
         if ( _ == 0 )
         {
-            pad1  = padw;
-            pad2  = padw;
-            pad2n = h;
-            pad3  = padw;
+            bar1  = barw;
+            bar2  = barw;
+            bar2n = absh;
+            bar3  = barw;
         }
         else
         {        
-            pad1  = _ / 2;
+            bar1  = _ / 2;
             _     = _ % 2;
-            pad2  = padw;
-            pad2n = h;
-            pad3  = pad1 - _;
+            bar2  = barw;
+            bar2n = absh;
+            bar3  = bar1 - _;
         }
 
         // 0..1
-        if (pad1) 
+        if (bar1) 
         {
-            // +
-            if ( w > 0 )
-            {
-                W    _inc   = cast(W)T.sizeof;
-                auto _limit = _current + pad1 * _inc;
+            _inc =
+                ( w >= 0 ) ?
+                     cast(T_INC)T.sizeof :  // +
+                    -cast(T_INC)T.sizeof ;  // -
 
-                for ( ; _current == _limit; _current+=_inc )
-                    *( cast(T*)_current ) = _color;
-            }
-            else
-            // -
-            {
-                W    _inc   = -cast(W)T.sizeof;
-                auto _limit = _current - pad1 * _inc;
+            _limit = _current + bar1 * _inc;
 
-                for ( ; _current == _limit; _current+=_inc )
-                    *( cast(T*)_current ) = _color;
-            }
+            for ( ; _current != _limit; _current+=_inc )
+                *( cast(T*)_current ) = _color;
         }
 
         // 1..2..3
-        if (pad2)
+        if (bar2)
         {
             // ↙↘
             // ?,+
@@ -273,14 +252,14 @@ struct Raster
                 // +,+
                 if ( w > 0 )
                 {
-                    auto _inc    = pitch;
-                    auto _limit  = _current + pad2n * _inc;
-                    auto _incx   = T.sizeof;
+                    _inc    = cast(T_INC)pitch;
+                    _limit  = _current + bar2n * _inc;
+                    _incx   = cast(T_INC)T.sizeof;
 
-                    for ( ; _current < _limit; _current+=_inc )
+                    for ( ; _current != _limit; _current+=_inc )
                     {
-                        auto _limitx = _current + pad2 * _incx;
-                        for ( ; _current < _limitx; _current+=_incx )
+                        auto _limitx = _current + bar2 * _incx;
+                        for ( ; _current != _limitx; _current+=_incx )
                             *( cast(T*)_current ) = _color;
                     }
                 }
@@ -288,14 +267,14 @@ struct Raster
                 // ↙
                 // -,+
                 {
-                    auto _inc    = pitch;
-                    auto _limit  = _current + pad2n * _inc;
-                    auto _incx   = T.sizeof;
+                    _inc    = cast(T_INC)pitch;
+                    _limit  = _current + bar2n * _inc;
+                    _incx   = -cast(T_INC)T.sizeof;
 
-                    for ( ; _current < _limit; _current+=_inc )
+                    for ( ; _current != _limit; _current+=_inc )
                     {
-                        auto _limitx = _current + pad2 * _incx;
-                        for ( ; _current > _limitx; _current-=_incx )
+                        auto _limitx = _current - bar2 * _incx;
+                        for ( ; _current != _limitx; _current+=_incx )
                             *( cast(T*)_current ) = _color;
                     }
                 }
@@ -308,14 +287,14 @@ struct Raster
                 // +,-
                 if ( w > 0 )
                 {
-                    auto _inc   = pitch;
-                    auto _limit = _current + pad2n * _inc;
-                    auto _incx  = T.sizeof;
+                    _inc   = -cast(T_INC)pitch;
+                    _limit = _current + bar2n * _inc;
+                    _incx  = cast(T_INC)T.sizeof;
 
-                    for ( ; _current > _limit; _current-=_inc )
+                    for ( ; _current != _limit; _current+=_inc )
                     {
-                        auto _limitx = _current - pad2 * _incx;
-                        for ( ; _current < _limitx; _current+=_incx )
+                        auto _limitx = _current - bar2 * _incx;
+                        for ( ; _current != _limitx; _current+=_incx )
                             *( cast(T*)_current ) = _color;
                     }
                 }
@@ -323,14 +302,14 @@ struct Raster
                 // ↖
                 // -,-
                 {
-                    auto _inc   = pitch;
-                    auto _limit = _current + pad2n * _inc;
-                    auto _incx  = T.sizeof;
+                    _inc   = -cast(T_INC)pitch;
+                    _limit = _current + bar2n * _inc;
+                    _incx  = -cast(T_INC)T.sizeof;
 
-                    for ( ; _current > _limit; _current-=_inc )
+                    for ( ; _current != _limit; _current+=_inc )
                     {
-                        auto _limitx = _current - pad2 * _incx;
-                        for ( ; _current > _limitx; _current-=_incx )
+                        auto _limitx = _current + bar2 * _incx;
+                        for ( ; _current != _limitx; _current+=_incx )
                             *( cast(T*)_current ) = _color;
                     }
                 }
@@ -338,26 +317,23 @@ struct Raster
         }
 
         // 3..4
-        if (pad3)
+        if (bar3)
         {
             // +
             if ( w > 0 )
             {
-                auto _inc   = T.sizeof;
-                auto _limit = _current + pad3 * _inc;
-
-                for ( ; _current < _limit; _current+=_inc )
-                    *( cast(T*)_current ) = _color;
+                _inc   = cast(T_INC)T.sizeof;
+                _limit = _current + bar3 * _inc;
             }
             else
             // -
             {
-                auto _inc   = T.sizeof;
-                auto _limit = _current + pad3 * _inc;
-
-                for ( ; _current > _limit; _current-=_inc )
-                    *( cast(T*)_current ) = _color;
+                _inc   = -cast(T_INC)T.sizeof;
+                _limit = _current + bar3 * _inc;
             }            
+
+            for ( ; _current != _limit; _current+=_inc )
+                *( cast(T*)_current ) = _color;
         }
 
         current = _current;
@@ -583,7 +559,7 @@ struct Raster
 auto ABS(T)(T a)
 {
     return 
-        ( a < 0) ? 
+        ( a < 0 ) ? 
             (-a):
             ( a);
 }
