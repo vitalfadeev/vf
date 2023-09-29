@@ -14,8 +14,8 @@ alias M16     = ushort;
 alias M32     = uint;
 alias M64     = ulong;
 alias MPTR    = void*;
-alias SENSOR  = void delegate( MSG m );
-alias SENSORF = void function( MSG m );
+alias SENSOR  = void delegate( Event m );
+alias SENSORF = void function( Event m );
 alias X       = short;
 alias Y       = short;
 alias W       = X;
@@ -66,3 +66,12 @@ struct EventValue
     alias _super this;
 }
 
+alias LRESULT = core.sys.windows.windows.LRESULT;
+alias HDC = core.sys.windows.windows.HDC;
+alias PAINTSTRUCT = core.sys.windows.windows.PAINTSTRUCT;
+alias BeginPaint = core.sys.windows.windows.BeginPaint;
+alias EndPaint = core.sys.windows.windows.EndPaint;
+alias MessageBox = core.sys.windows.windows.MessageBox;
+alias MB_OK = core.sys.windows.windows.MB_OK;
+alias MB_ICONEXCLAMATION = core.sys.windows.windows.MB_ICONEXCLAMATION;
+alias NULL = core.sys.windows.windows.NULL;

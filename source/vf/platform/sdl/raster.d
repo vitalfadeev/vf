@@ -1,7 +1,7 @@
-module vf.platform.windows.raster;
+module vf.platform.sdl.raster;
 
-version(WINDOWS_NATIVE):
-import core.sys.windows.windows;
+version(SDL):
+import bindbc.sdl;
 import vf.types;
 import vf.color;
 import vf.ui.window;
@@ -10,7 +10,7 @@ import vf.gfx.raster;
 
 struct Raster
 {
-    alias T = RGBQUAD;
+    alias T = SDL_Color;
     vf.gfx.raster.Raster!(T,W,H) _super;
     alias _super this;
 

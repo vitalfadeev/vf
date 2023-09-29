@@ -7,7 +7,7 @@ import vf.types;
 
 struct Queue
 {
-    D front;
+    SDL_Event front;
 
     pragma( inline, true )
     void popFront()

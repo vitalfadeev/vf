@@ -20,9 +20,9 @@ class Window
     }
 
     //
-    LRESULT event( Event event, EventCode code, EventValue value ) 
+    LRESULT event( Event e, EventCode code, EventValue value ) 
     {
-        return DefWindowProc( hwnd, cast(UINT)event, cast(WPARAM)code, cast(LPARAM)value );
+        return DefWindowProc( hwnd, cast(UINT)e, cast(WPARAM)code, cast(LPARAM)value );
     }
 
     // private
@@ -268,7 +268,7 @@ void show_throwable( Throwable o )
 }
 
 
-LRESULT auto_route_event(T)( T This, Event event, EventCode code, EventValue value )
+LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
 {
     import std.traits;
     import std.string;
@@ -278,8 +278,8 @@ LRESULT auto_route_event(T)( T This, Event event, EventCode code, EventValue val
     static foreach( m; __traits( allMembers, T ) )
         static if ( isCallable!(__traits(getMember, T, m)) )
             static if ( m.startsWith( "on_" ) )
-                if ( event == mixin( m[3..$] ) )
-                    return __traits(getMember, This, m)( event, code, value ); 
+                if ( e == mixin( m[3..$] ) )
+                    return __traits(getMember, This, m)( e, code, value ); 
 
-    return DefWindowProc( This.hwnd, cast(UINT)event, code, value );
+    return DefWindowProc( This.hwnd, cast(UINT)e, code, value );
 }
