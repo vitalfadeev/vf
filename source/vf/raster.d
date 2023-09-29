@@ -198,10 +198,11 @@ struct Raster
         auto barw = absw / absh;
         auto _    = absw % absh;
 
-        int bar1;  // width of bar 1
-        int bar2;
-        int bar2n;
-        int bar3;
+        alias TBARW = typeof(barw);
+        TBARW bar1;  // width of bar 1
+        TBARW bar2;
+        TBARW bar2n;
+        TBARW bar3;
 
         if ( _ == 0 )
         {
@@ -279,10 +280,11 @@ struct Raster
         auto barh = absh / absw;
         auto _    = absh % absw;
 
-        int bar1;  // width of bar 1
-        int bar2;
-        int bar2n;
-        int bar3;
+        alias TBARW = typeof(barh);
+        TBARW bar1;  // height of bar 1
+        TBARW bar2;
+        TBARW bar2n;
+        TBARW bar3;
 
         if ( _ == 0 )
         {
