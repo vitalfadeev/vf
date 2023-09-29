@@ -26,16 +26,17 @@ struct Raster
 
     auto ref line( PX a, PX b )
     {
-        auto wh = b - a;
+        auto w = b.x - a.x;
+        auto h = b.y - a.y;
 
-        if ( wh.x == 0 && wh.y == 0 )
+        if ( w == 0 && h == 0 )
             {}
         else
-        if ( wh.y == 0 )                    // -
-            h_line( wh.x );
+        if ( h == 0 )                    // -
+            h_line( w );
         else
-        if ( wh.x == 0 )                    // |
-            v_line( wh.y );
+        if ( w == 0 )                    // |
+            v_line( h );
         else
         {
             auto absw = ABS( w );
@@ -54,7 +55,7 @@ struct Raster
     }
 
     //pragma( inline, true )
-    auto ref h_line( W w )
+    auto ref h_line(W)( W w )
     {
         auto _current = this.current;           // local var for optimization
         auto _color   = this.color;             //   put in to CPU registers
@@ -76,7 +77,7 @@ struct Raster
         return this;
     }
 
-    auto ref v_line( H h )
+    auto ref v_line(H)( H h )
     {
         auto _current = current;
         auto _color   = color;
@@ -112,7 +113,7 @@ struct Raster
             return d_line_60( w, h, absw, absh );        // 45..90 degress
     }
 
-    auto ref d_line_45(AW,AH)( W w, H h, AW absw, AH absh )
+    auto ref d_line_45(W,H,AW,AH)( W w, H h, AW absw, AH absh )
     {
         auto _current = current;
         auto _color   = color;
@@ -138,7 +139,7 @@ struct Raster
         return this;
     }
 
-    auto ref d_line_30(AW,AH)( W w, H h, AW absw, AH absh )
+    auto ref d_line_30(W,H,AW,AH)( W w, H h, AW absw, AH absh )
     {
         //                                                          y
         // 0                       1                        2    // _y - y = 1
@@ -264,7 +265,7 @@ struct Raster
         return this;
     }
 
-    auto ref d_line_60(AW,AH)( W w, H h, AW absw, AH absh )
+    auto ref d_line_60(W,H,AW,AH)( W w, H h, AW absw, AH absh )
     {
         auto _current = current;
         auto _color   = color;
