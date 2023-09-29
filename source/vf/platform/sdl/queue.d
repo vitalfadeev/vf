@@ -1,11 +1,11 @@
-module vf.platform.sdl.pool;
+module vf.platform.sdl.queue;
 
 version (SDL):
 import bindbc.sdl;
 import vf.types;
 
 
-struct Pool
+struct Queue
 {
     D front;
 
@@ -13,7 +13,7 @@ struct Pool
     void popFront()
     {
         if ( SDL_WaitEvent( cast( SDL_Event* )&this.front ) == 0 )
-            throw new SDLException( "Pool.popFront: " );
+            throw new SDLException( "Queue.popFront: " );
     }
 
     pragma( inline, true )

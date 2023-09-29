@@ -1,7 +1,7 @@
 module vf.platform.windows.game;
 
 // Linux
-//   pool <- evdev <- device 
+//   queue <- evdev <- device 
 //     D( time, type, code, value )
 //        M32   M16   M16   M32
 // my version
@@ -10,7 +10,7 @@ module vf.platform.windows.game;
 //        R32   R32         R32  // on x86
 //
 // Windows
-//   pool <- GetMessage <- device 
+//   queue <- GetMessage <- device 
 //     D( hwnd, message, wParam, lParam, time, pt,  lPrivate )
 //        M64   M32      M64     M64     M32   M128 M32  // on x86_64
 //        M32   M32      M32     M32     M32   M128 M32  // on x86
@@ -21,10 +21,10 @@ module vf.platform.windows.game;
 //              R32      R32     R32     R32
 
 // OS
-// pool
+// queue
 // sensors
 // go
-//   for d in pool
+//   for d in queue
 //     for s in sensors
 //       s( d )
 
@@ -38,7 +38,7 @@ import vf;
 class Game
 {
     static
-    Pool    pool;
+    Queue   queue;
     //Sensors sensors;
     int     result;
 
@@ -53,7 +53,7 @@ class Game
 
             auto window = new_window();
 
-            foreach( e; pool )
+            foreach( e; queue )
             {
                 TranslateMessage( &e );
                 DispatchMessage( &e );

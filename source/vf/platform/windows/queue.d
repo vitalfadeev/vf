@@ -1,11 +1,11 @@
-module vf.platform.windows.pool;
+module vf.platform.windows.queue;
 
 version (WINDOWS_NATIVE):
 import core.sys.windows.windows;
 import vf.types;
 
 
-struct Pool
+struct Queue
 {
     MSG front;  // MSG
 
@@ -14,7 +14,7 @@ struct Pool
     {
         if ( GetMessage( &this.front, null, 0, 0 ) == 0 ) 
             if ( GetLastError() )
-                throw new WindowsException( "Pool.popFront: " );
+                throw new WindowsException( "Queue.popFront: " );
     }
 
     pragma( inline, true )
