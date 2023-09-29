@@ -258,6 +258,8 @@ struct Raster
 
             auto _limit = _current + (bar1) * _x_inc;
 
+            // x++
+            //   = color
             for ( ; _current != _limit; _current+=_x_inc )
                 *( cast(T*)_current ) = _color;
 
@@ -289,6 +291,8 @@ struct Raster
 
             auto _limit = _current + (bar3) * _x_inc;
 
+            // x++
+            //   = color
             for ( ; _current != _limit; _current+=_x_inc )
                 *( cast(T*)_current ) = _color;
 
@@ -348,6 +352,8 @@ struct Raster
 
             auto _limit = _current + (bar1) * _y_inc;
 
+            // y++
+            //   = color
             for ( ; _current != _limit; _current+=_y_inc )
                 *( cast(T*)_current ) = _color;
 
@@ -379,6 +385,8 @@ struct Raster
 
             auto _limit = _current + (bar3) * _y_inc;
 
+            // y++
+            //   = color
             for ( ; _current != _limit; _current+=_y_inc )
                 *( cast(T*)_current ) = _color;
 
