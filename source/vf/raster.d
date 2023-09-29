@@ -6,6 +6,22 @@ import vf.types;
 import vf.color;
 import vf.ui.window;
 
+// .........
+// ^
+// cursor here
+//
+// h line( 1 )
+// 1px
+// #........
+// ^
+// cursor here
+//
+// h line( 2 )
+// 2px
+// ##.......
+//  ^
+// cursor here
+
 
 struct Raster
 {
@@ -54,6 +70,11 @@ struct Raster
     }
 
     auto ref h_line(W,AW)( W w, AW absw )
+    in 
+    {
+        assert( w != 0 );
+    }
+    do
     {
         auto _current = this.current;           // local var for optimization
         auto _color   = this.color;             //   put in to CPU registers
@@ -85,6 +106,7 @@ struct Raster
             *( cast(T*)_current ) = _color;            
         }
 
+        _current -= _x_inc;  // back 1. set cursor on last pixel
         current = _current;
 
         return this;
@@ -96,6 +118,11 @@ struct Raster
     }
 
     auto ref v_line(H,AH)( H h, AH absh )
+    in
+    {
+        assert( h != 0 );
+    }
+    do
     {
         auto _current = current;
         auto _color   = color;
@@ -112,6 +139,7 @@ struct Raster
         for ( ; _current != _limit; _current+=_y_inc )
             *( cast(T*)_current ) = _color;
 
+        _current -= _y_inc;  // back 1. set cursor on last pixel
         current = _current;
 
         return this;
@@ -134,6 +162,12 @@ struct Raster
     }
 
     auto ref d_line_45(W,H,AW,AH)( W w, H h, AW absw, AH absh )
+    in
+    {
+        assert( w != 0 );
+        assert( h != 0 );
+    }
+    do
     {
         auto _current = current;
         auto _color   = color;
@@ -154,12 +188,19 @@ struct Raster
         for ( ; _current != _limit; _current+=_inc )
             *( cast(T*)_current ) = _color;
 
+        _current -= _inc;  // back 1. set cursor on last pixel
         current = _current;
 
         return this;
     }
 
     auto ref d_line_30(W,H,AW,AH)( W w, H h, AW absw, AH absh )
+    in
+    {
+        assert( w != 0 );
+        assert( h != 0 );
+    }
+    do
     {
         //                                                          y
         // 0                       1                        2    // _y - y = 1
@@ -265,6 +306,9 @@ struct Raster
             for ( ; _current != _y_limit; _current+=_y_inc, _x_limit+=_x_limit_inc )
                 for ( ; _current != _x_limit; _current+=_x_inc )
                     *( cast(T*)_current ) = _color;
+
+            if ( bar3 == 0 )
+                _current -= _x_limit_inc;  // back 1. set cursor on last pixel
         }
 
         // 3..4
@@ -278,8 +322,6 @@ struct Raster
             //   = color
             for ( ; _current != _limit; _current+=_x_inc )
                 *( cast(T*)_current ) = _color;
-
-            _current+=_y_inc;
         }
 
         current = _current;
@@ -288,6 +330,12 @@ struct Raster
     }
 
     auto ref d_line_60(W,H,AW,AH)( W w, H h, AW absw, AH absh )
+    in
+    {
+        assert( w != 0 );
+        assert( h != 0 );
+    }
+    do
     {
         auto _current = current;
         auto _color   = color;
@@ -357,6 +405,9 @@ struct Raster
             for ( ; _current != _x_limit; _current+=_x_inc, _y_limit+=_y_limit_inc )
                 for ( ; _current != _y_limit; _current+=_y_inc )
                     *( cast(T*)_current ) = _color;
+
+            if ( bar3 == 0 )
+                _current -= _y_limit_inc;  // back 1. set cursor on last pixel
         }
 
         // 3..4
