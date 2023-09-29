@@ -53,3 +53,10 @@ struct Event
     UINT _super;
     alias _super this;
 }
+
+struct Code
+{
+    WPARAM _super;
+    alias _super this;
+}
+
