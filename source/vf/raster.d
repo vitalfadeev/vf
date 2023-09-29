@@ -204,34 +204,33 @@ struct Raster
         writeln( "absw%absh: ", absw%absh );
         writeln( "bar2n: ", bar2n );
 
+        auto _y_inc = 
+            ( h < 0 ) ?
+                ( -pitch ) :  // -  ↖↗
+                (  pitch ) ;  // +  ↙↘
+
+        auto _x_inc =
+            ( w < 0 ) ?
+                ( -T.sizeof ) :  // - ↙↖
+                (  T.sizeof ) ;  // + ↗↘
+
         // 0..1
         if (bar1)
         {
             _color = RGBQUAD( 0, 255, 0, 0);
-            auto _inc =
-                ( w < 0 ) ?
-                    -(T.sizeof) :  // -
-                     (T.sizeof) ;  // +
 
-            auto _limit = _current + (bar1) * _inc;
+            auto _limit = _current + (bar1) * _x_inc;
 
-            for ( ; _current != _limit; _current+=_inc )
+            for ( ; _current != _limit; _current+=_x_inc )
                 *( cast(T*)_current ) = _color;
+
+            _current+=_y_inc;
         }
 
         // 1..2..3
         if (bar2)
         {
             _color = RGBQUAD( 0, 255, 255, 0);
-            auto _y_inc = 
-                ( h < 0 ) ?
-                    ( -pitch ) :  // -  ↖↗
-                    (  pitch ) ;  // +  ↙↘
-
-            auto _x_inc =
-                ( w < 0 ) ?
-                    ( -T.sizeof ) :  // - ↙↖
-                    (  T.sizeof ) ;  // + ↗↘
 
             auto _y_limit = _current + 
                 ( (bar2n) * _y_inc ) + 
@@ -250,15 +249,13 @@ struct Raster
         if (bar3)
         {
             _color = RGBQUAD( 255, 0, 255, 0);
-            auto _inc =
-                ( w < 0 ) ?
-                    -(T.sizeof) :  // -
-                     (T.sizeof) ;  // +
 
-            auto _limit = _current + (bar3) * _inc;
+            auto _limit = _current + (bar3) * _x_inc;
 
-            for ( ; _current != _limit; _current+=_inc )
+            for ( ; _current != _limit; _current+=_x_inc )
                 *( cast(T*)_current ) = _color;
+
+            _current+=_y_inc;
         }
 
         current = _current;
