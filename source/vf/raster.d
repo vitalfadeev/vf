@@ -59,14 +59,14 @@ struct Raster
                                                 //   LDC optimize local vars
         auto _x_inc =
             ( w < 0 ) ?
-                -(T.sizeof) :  // - ←
-                 (T.sizeof) ;  // + →
+                -(T.sizeof) :  // ← - 
+                 (T.sizeof) ;  // → + 
 
         auto _limit = _current + absw * _x_inc;
 
-        alias _inc = _x_inc;
-
-        for ( ; _current != _limit; _current+=_inc )
+        // x++
+        //   =color
+        for ( ; _current != _limit; _current+=_x_inc )
             *( cast(T*)_current ) = _color;
 
         current = _current;
@@ -86,14 +86,14 @@ struct Raster
 
         auto _y_inc = 
             ( h < 0 ) ?
-                ( -pitch ) :  // - ↑
-                (  pitch ) ;  // + ↓
+                ( -pitch ) :  // ↑ -
+                (  pitch ) ;  // ↓ +
 
         auto _limit = _current + absh * _y_inc;
 
-        alias _inc = _y_inc;
-
-        for ( ; _current != _limit; _current+=_inc )
+        // y++
+        //   =color
+        for ( ; _current != _limit; _current+=_y_inc )
             *( cast(T*)_current ) = _color;
 
         current = _current;
