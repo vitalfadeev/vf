@@ -17,7 +17,7 @@ class Painter
 
     auto ref go( W w, H h )
     {
-        ops ~= Go();
+        ops ~= Go( OP.GO, OX( w, h ) );
         return this;
     }
 
