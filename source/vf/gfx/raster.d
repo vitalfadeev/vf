@@ -186,6 +186,7 @@ struct Raster(T,W,H)
     {
         assert( w != 0 );
         assert( h != 0 );
+        assert( absh >= 2 );
     }
     do
     {
@@ -238,8 +239,10 @@ struct Raster(T,W,H)
                 (  T.sizeof ) ;  // + ↗↘
 
         //
-        auto barw = absw / absh;
-        auto _    = absw % absh;
+        auto barw = absw / absh;  // 8/5 = 5 * 1 px + 3 px
+        auto _    = absw % absh;  //                  3 px / 5 = each 10101
+                                  // 8%5 = 3
+                                  //       3 on each 5/3
 
         alias TBARW = typeof(barw);
         TBARW bar1;  // width of bar 1
@@ -256,10 +259,10 @@ struct Raster(T,W,H)
         }
         else
         {        
-            bar1  = barw - _;
+            bar1  = barw + _;
             bar2  = barw;
-            bar2n = ( absh <= 2 ) ? 0 : absh - 2;
-            bar3  = ( absh <= 2 ) ? 0 : barw;
+            bar2n = absh - 1;
+            bar3  = 0;
         }
 
         // 0..1
@@ -299,7 +302,7 @@ struct Raster(T,W,H)
         }
 
         // 3..4
-        if (bar3)
+        if (bar3 && 0)
         {
             _color = T( 255, 0, 255, 0);
 
@@ -329,8 +332,10 @@ struct Raster(T,W,H)
         auto _current = current;
         auto _color   = color;
 
-        auto barh = absh / absw;
-        auto _    = absh % absw;
+        auto splits = absw - 1;
+
+        auto barh = absh / splits;
+        auto _    = absh % splits;
 
         alias TBARW = typeof(barh);
         TBARW bar1;  // height of bar 1
@@ -347,10 +352,10 @@ struct Raster(T,W,H)
         }
         else
         {        
-            bar1  = barh - _;
+            bar1  = _;
             bar2  = barh;
-            bar2n = ( absw <= 2 ) ? 0 : absw - 2;
-            bar3  = ( absw <= 2 ) ? 0 : barh;
+            bar2n = splits;
+            bar3  = 0;
         }
 
         auto _y_inc = 
@@ -400,7 +405,7 @@ struct Raster(T,W,H)
         }
 
         // 3..4
-        if (bar3)
+        if (bar3 && 0)
         {
             _color = T( 255, 0, 255, 0);
 

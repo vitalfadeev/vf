@@ -29,7 +29,8 @@ import std.stdio;
 
 import vf;
 
-version=READ;
+//version=READ;
+version=WRITE;
 
 
 void main()
@@ -127,6 +128,25 @@ class MyWindow : Window
 		        	.line( -10,+103 )
 		        	.line( -10,-103 )
 		        	.line( +10,-103 )
+
+                    .go_center()
+                    .go( 0, +10 )
+                    .line( +8,+5 )  // 8/5 = 5 items by 1 px  + 1 item by 3 px
+                    //.line( -8,+3 )
+                    //.line( -8,-3 )
+                    //.line( +8,-3 )
+
+                    .go( 0, +10 )
+                    .line( +3,+3 )
+                    .line( -3,+3 )
+                    .line( -3,-3 )
+                    .line( +3,-3 )
+
+                    .go( 0, +10 )
+                    .line( +2,+2 )
+                    .line( -2,+2 )
+                    .line( -2,-2 )
+                    .line( +2,-2 )
 
                     .tee
                         .to_file( "savegame.sg" )
