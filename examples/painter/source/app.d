@@ -14,6 +14,20 @@ import vf;
 // ---------------|     |-----------------
 // ====================================|==  // queue
 
+// G pipeline
+//   goes, points, lines
+//     add operations, points  // go, point, line
+//     zoom
+//     rotate
+//     brush                   // new lines, remove control line
+//     ...detalization         // 1 point -> 2 point, 2 lines smooth -> 3 lines
+//     crop                    // crop = clip
+//   rasterize
+//     ox -> px
+//     color                   // 
+//     mix bg fg               //
+//     pixels                  //
+
 void main()
 {
 	MyGame().go();
@@ -67,6 +81,7 @@ class MyWindow : Window
     	version(WINDOWS_NATIVE)
     	{
             import vf.platform.windows.raster;
+            import std.stdio : File;
 	        try {
 	            HDC         hdc;
 	            PAINTSTRUCT ps; 
@@ -100,7 +115,8 @@ class MyWindow : Window
 		        	.line( -10,-103 )
 		        	.line( +10,-103 )
 
-		        	.to!Raster( this, hdc )
+                    .tee.to!File( "savegame.sg" )
+                    .to!Raster( this, hdc )
                     .to!Window( this, hdc );
 
 	            EndPaint( hwnd, &ps ) ;
@@ -128,4 +144,25 @@ class MyWindow : Window
     {
         return new T();
     }
+}
+
+auto tee(THIS)( THIS This )
+{
+    struct _Tee
+    {
+        THIS This;
+
+        import std.stdio : File;
+        auto to(T:File)( string filename )
+        {
+            This.to!File( filename );
+            return This;
+        }
+        //auto to(ARGS...)( ARGS args )
+        //{
+        //    This.to( args );
+        //    return This;
+        //}
+    }
+    return _Tee( This );
 }

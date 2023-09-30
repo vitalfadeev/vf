@@ -39,6 +39,7 @@ class Painter
     import vf.platform.windows.ui.window;
     auto to(T:Raster,WINDOW:Window)( WINDOW window, HDC hdc )
     {
+        // rasterize
         auto raster = vf.platform.windows.ui.window.to!Raster( window, hdc );
 
         foreach( op; ops )
