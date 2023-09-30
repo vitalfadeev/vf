@@ -6,11 +6,12 @@ import vf.types;
 
 class Painter
 {
-    Op[] ops;
+    Ops ops;
 
 
     auto ref go_center()
     {
+        ops ~= GoCenter();
         return this;
     }
 
@@ -64,6 +65,26 @@ struct Op
         Point    point;
         Line     line;
     }
+
+    this( GoCenter b )
+    {
+        go_center = b;
+    }
+
+    this( Go b )
+    {
+        go = b;
+    }
+
+    this( Point b )
+    {
+        point = b;
+    }
+
+    this( Line b )
+    {
+        line = b;
+    }
 }
 
 struct GoCenter
@@ -88,3 +109,32 @@ struct Line
     OP type = OP.LINE;
     OX ox;
 }
+
+
+//
+struct Ops
+{
+    Op[] _super;
+    alias _super this;
+
+    void opOpAssign(string op:"~")( GoCenter b )
+    {
+        _super ~= Op( b );
+    }
+
+    void opOpAssign(string op:"~")( Go b )
+    {
+        _super ~= Op( b );
+    }
+
+    void opOpAssign(string op:"~")( Point b )
+    {
+        _super ~= Op( b );
+    }
+
+    void opOpAssign(string op:"~")( Line b )
+    {
+        _super ~= Op( b );
+    }
+}
+
