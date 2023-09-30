@@ -5,7 +5,7 @@
 			"path": "."
 		},
 		{
-			"path": "..\\..\\source\\vf"
+			"path": ".\\..\\..\\source\\vf"
 		}
 	]
 }

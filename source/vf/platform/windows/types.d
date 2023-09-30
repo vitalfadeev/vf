@@ -39,6 +39,13 @@ struct PX
 }
 
 //
+struct OX
+{
+    X x;
+    Y y;
+}
+
+//
 class WindowsException : std.windows.syserror.WindowsException
 {
     this( string msg )
