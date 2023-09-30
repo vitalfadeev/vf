@@ -93,9 +93,10 @@ class MyWindow : Window
                 import vf.painter : to;
                 import vf.raster : to;
                 import vf.platform.windows.raster : to;
-                auto painter = File("savegame.sg").to!Painter();
-
-                auto raster = .to!Raster( painter, this, hdc );
+                auto raster = 
+                    File("savegame.sg")
+                        .to!Painter()
+                        .to!Raster( this, hdc );
                 auto window = .to!Window( raster, cast(Window)this, hdc );
                 }
                 version(WRITE)
