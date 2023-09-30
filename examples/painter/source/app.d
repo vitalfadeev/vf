@@ -66,6 +66,7 @@ class MyWindow : Window
     {
     	version(WINDOWS_NATIVE)
     	{
+            import vf.platform.windows.raster;
 	        try {
 	            HDC         hdc;
 	            PAINTSTRUCT ps; 
@@ -73,10 +74,12 @@ class MyWindow : Window
 	            //RECT        crect;
 	            //GetClientRect( hwnd, &crect );
 
-		        //this.to!Painter( hdc )
-		        //	// WH
-		        //	.go_center()
-		        //	.line(  +10,-10  )
+		        this.to!Painter()
+		        	// WH
+		        	.go_center()
+		        	.line(  +100,0  )
+
+                    //.line(  +10,-10  )
 		        //	//.line(  +40, 0   )
 		        //	//.line(  +50,+50  )
 		        //	//.line(    0,+50  )
@@ -100,8 +103,8 @@ class MyWindow : Window
 		        //	//.line( +10,-103 )
 
 		        //	.Cast!Painter
-		        //	.to!Raster;
-                //    .to!Window( hwnd, hdc );
+		        	.to!Raster( this, hdc )
+                    .to!Window( this, hdc );
 
 	            EndPaint( hwnd, &ps ) ;
 	        } 
@@ -124,8 +127,8 @@ class MyWindow : Window
         return 0;
     }
 
-    Painter to(T:Painter)()
+    T to(T:Painter)()
     {
-        return new Painter();
+        return new T();
     }
 }

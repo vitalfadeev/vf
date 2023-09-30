@@ -200,6 +200,7 @@ LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
 }
 
 
+//import vf.platform.windows.raster;
 T to(T:Raster)( Window This, HDC hdc )
 {
     RECT rect;

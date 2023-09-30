@@ -24,6 +24,24 @@ struct Raster
         this.color   = color;
     }
 
+    auto ref go_center()
+    {
+        _super.go_center();
+        return this;
+    }
+
+    auto ref go( PX px )
+    {
+        _super.go( px.x, px.y );
+        return this;
+    }
+
+    auto ref point()
+    {
+        _super.point();
+        return this;
+    }
+
     auto ref line( PX px )
     {
         _super.line( px.x, px.y );

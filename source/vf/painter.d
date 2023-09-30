@@ -29,12 +29,34 @@ class Painter
 
     auto ref line( W w, H h )
     {
-        ops ~= Line();
+        ops ~= Line( OP.LINE, OX( w,h ) );
         return this;
     }
 
 
     //
+    import vf.platform.windows.raster;
+    import vf.platform.windows.ui.window;
+    auto to(T:Raster,WINDOW:Window)( WINDOW window, HDC hdc )
+    {
+        auto raster = vf.platform.windows.ui.window.to!Raster( window, hdc );
+
+        foreach( op; ops )
+        {
+            final
+            switch ( op.type )
+            {
+                case OP._         : break;
+                case OP.GO_CENTER : raster.go_center(); break;
+                case OP.GO        : raster.go( op.go.ox.to!PX ); break;
+                case OP.POINT     : raster.point() ; break;
+                case OP.LINE      : raster.line( op.line.ox.to!PX ); break;
+            }
+        }
+
+        return raster;
+    }
+
     auto to(T:File)( string filename )
     {
         auto f = File( filename, "w" );
@@ -105,7 +127,6 @@ struct Go
 struct Point
 {
     OP type = OP.POINT;
-    OX ox;
 }
 
 struct Line
@@ -142,3 +163,11 @@ struct Ops
     }
 }
 
+
+T to(T:PX)( OX ox )
+{
+    T px;
+    px.x = ox.x;
+    px.y = ox.y;
+    return px;
+}
