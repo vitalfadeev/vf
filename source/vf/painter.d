@@ -17,20 +17,24 @@ class Painter
 
     auto ref go( W w, H h )
     {
+        ops ~= Go();
         return this;
     }
 
     auto ref point()
     {
+        ops ~= Point();
         return this;
     }
 
     auto ref line( W w, H h )
     {
+        ops ~= Line();
         return this;
     }
 
 
+    //
     auto to(T:File)( string filename )
     {
         auto f = File( filename, "w" );
