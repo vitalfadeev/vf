@@ -177,82 +177,6 @@ class Window
             return DefWindowProc( hwnd, message, wParam, lParam );
         }
     }
-
-    Raster to(T:Raster)( HDC hdc )
-    {
-        RECT rect;
-        int  window_width;
-        int  window_height;
-        int  client_width;
-        int  client_height;
-        if ( GetWindowRect( hwnd, &rect ) )
-        {
-            window_width  = rect.right - rect.left;
-            window_height = rect.bottom - rect.top;
-
-            GetClientRect( hwnd, &rect );
-            client_width  = rect.right - rect.left;
-            client_height = rect.bottom - rect.top;
-        }
-        else
-        {
-            throw new WindowsException( "GetWindowRect: " );
-        }
-
-        //HDC hdc = GetDC( hwnd );
-
-        HDC     capture_dc     = CreateCompatibleDC( hdc );
-        HBITMAP capture_bitmap = CreateCompatibleBitmap( hdc, window_width, window_height );
-        SelectObject( capture_dc, capture_bitmap ); 
-
-        BitBlt( capture_dc, 0, 0, window_width, window_height, hdc, 0,0, SRCCOPY|CAPTUREBLT );
-
-        BITMAPINFO bmi;
-        with ( bmi.bmiHeader )
-        {        
-            biSize          = bmi.bmiHeader.sizeof;
-            biWidth         = window_width;
-            biHeight        = -window_height;
-            biPlanes        = 1;
-            biBitCount      = RGBQUAD.sizeof * 8;
-            biCompression   = BI_RGB;
-            biSizeImage     = window_width * window_height * cast(uint)RGBQUAD.sizeof;
-            //biXPelsPerMeter = 72;
-            //biYPelsPerMeter = 72;
-            biClrUsed       = 0;
-            biClrImportant  = 0;
-        }
-
-        auto pixels = new RGBQUAD[ window_width * window_height ];
-
-        GetDIBits(
-            hdc, 
-            capture_bitmap, 
-            0,  
-            window_height,
-            pixels.ptr, 
-            &bmi,  
-            DIB_RGB_COLORS
-        );  
-
-        // pixels in this.pixels
-
-        //ReleaseDC( hwnd, hdc );
-        DeleteDC( capture_dc );
-        DeleteObject( capture_bitmap );
-
-        import std.conv : to;
-        return
-            Raster(
-                /*pixels*/  pixels,
-                /*w*/       client_width.to!W,
-                /*h*/       client_height.to!H,
-                /*pitch*/   window_width * RGBQUAD.sizeof,
-                /*current*/ pixels.ptr,
-                /*color*/   RGBQUAD(0,0,255,255)
-                );
-
-    }
 }
 
 
@@ -282,4 +206,84 @@ LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
                     return __traits(getMember, This, m)( e, code, value ); 
 
     return DefWindowProc( This.hwnd, cast(UINT)e, code, value );
+}
+
+
+T to(T:Raster)( Window This, HDC hdc )
+{
+    RECT rect;
+    int  window_width;
+    int  window_height;
+    int  client_width;
+    int  client_height;
+    
+    auto hwnd = This.hwnd;
+
+    if ( GetWindowRect( hwnd, &rect ) )
+    {
+        window_width  = rect.right - rect.left;
+        window_height = rect.bottom - rect.top;
+
+        GetClientRect( hwnd, &rect );
+        client_width  = rect.right - rect.left;
+        client_height = rect.bottom - rect.top;
+    }
+    else
+    {
+        throw new WindowsException( "GetWindowRect: " );
+    }
+
+    //HDC hdc = GetDC( hwnd );
+
+    HDC     capture_dc     = CreateCompatibleDC( hdc );
+    HBITMAP capture_bitmap = CreateCompatibleBitmap( hdc, window_width, window_height );
+    SelectObject( capture_dc, capture_bitmap ); 
+
+    BitBlt( capture_dc, 0, 0, window_width, window_height, hdc, 0,0, SRCCOPY|CAPTUREBLT );
+
+    BITMAPINFO bmi;
+    with ( bmi.bmiHeader )
+    {        
+        biSize          = bmi.bmiHeader.sizeof;
+        biWidth         = window_width;
+        biHeight        = -window_height;
+        biPlanes        = 1;
+        biBitCount      = RGBQUAD.sizeof * 8;
+        biCompression   = BI_RGB;
+        biSizeImage     = window_width * window_height * cast(uint)RGBQUAD.sizeof;
+        //biXPelsPerMeter = 72;
+        //biYPelsPerMeter = 72;
+        biClrUsed       = 0;
+        biClrImportant  = 0;
+    }
+
+    auto pixels = new RGBQUAD[ window_width * window_height ];
+
+    GetDIBits(
+        hdc, 
+        capture_bitmap, 
+        0,  
+        window_height,
+        pixels.ptr, 
+        &bmi,  
+        DIB_RGB_COLORS
+    );  
+
+    // pixels in this.pixels
+
+    //ReleaseDC( hwnd, hdc );
+    DeleteDC( capture_dc );
+    DeleteObject( capture_bitmap );
+
+    import std.conv : to;
+    return
+        T(
+            /*pixels*/  pixels,
+            /*w*/       client_width.to!W,
+            /*h*/       client_height.to!H,
+            /*pitch*/   window_width * RGBQUAD.sizeof,
+            /*current*/ pixels.ptr,
+            /*color*/   RGBQUAD(0,0,255,255)
+            );
+
 }

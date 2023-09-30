@@ -1,6 +1,18 @@
 import std.stdio;
 import vf;
 
+// screen
+// ---------------------------------------
+// 
+// 
+// 
+// 
+// 
+// 
+// ---------------|     |-----------------  
+//              1 |  2  | 3                 // selector
+// ---------------|     |-----------------
+// ====================================|==  // queue
 
 void main()
 {
@@ -61,34 +73,35 @@ class MyWindow : Window
 	            //RECT        crect;
 	            //GetClientRect( hwnd, &crect );
 
-		        this.to!Raster( hdc )
-		        	// WH
-		        	.go_center()
-		        	.line(  +10,-10  )
-		        	.line(  +40, 0   )
-		        	.line(  +50,+50  )
-		        	.line(    0,+50  )
-		        	.line( -100,+100 )
-		        	.line( -100,-100 )
-		        	.line(    0,-50  )
-		        	.line(  +50,-50  )
-		        	.line(   40, 0   )
-		        	.line(  +10,+10  )
+		        //this.to!Painter( hdc )
+		        //	// WH
+		        //	.go_center()
+		        //	.line(  +10,-10  )
+		        //	//.line(  +40, 0   )
+		        //	//.line(  +50,+50  )
+		        //	//.line(    0,+50  )
+		        //	//.line( -100,+100 )
+		        //	//.line( -100,-100 )
+		        //	//.line(    0,-50  )
+		        //	//.line(  +50,-50  )
+		        //	//.line(   40, 0   )
+		        //	//.line(  +10,+10  )
 
-		        	.go( 0,-100 )
-		        	.line( +203,+10  )
-		        	.line( -203,+10  )
-		        	.line( -203,-10  )
-		        	.line( +203,-10  )
+		        //	//.go( 0,-100 )
+		        //	//.line( +203,+10  )
+		        //	//.line( -203,+10  )
+		        //	//.line( -203,-10  )
+		        //	//.line( +203,-10  )
 
-		        	.go( 0,-90  )
-		        	.line( +10,+103 )
-		        	.line( -10,+103 )
-		        	.line( -10,-103 )
-		        	.line( +10,-103 )
+		        //	//.go( 0,-90  )
+		        //	//.line( +10,+103 )
+		        //	//.line( -10,+103 )
+		        //	//.line( -10,-103 )
+		        //	//.line( +10,-103 )
 
-		        	.Cast!Raster
-		        	.to!Window( hwnd, hdc );
+		        //	.Cast!Painter
+		        //	.to!Raster;
+                //    .to!Window( hwnd, hdc );
 
 	            EndPaint( hwnd, &ps ) ;
 	        } 
@@ -109,5 +122,10 @@ class MyWindow : Window
         MyGame().quit();
 
         return 0;
+    }
+
+    Painter to(T:Painter)()
+    {
+        return new Painter();
     }
 }

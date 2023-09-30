@@ -1,4 +1,4 @@
-module painter;
+module vf.painter;
 
 import std.stdio;
 import vf.types;

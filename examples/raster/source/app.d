@@ -88,7 +88,7 @@ class MyWindow : Window
 		        	.line( +10,-103 )
 
 		        	.Cast!Raster
-		        	.to!Window( hwnd, hdc );
+		        	.to!Window( this, hdc );
 
 	            EndPaint( hwnd, &ps ) ;
 	        } 
