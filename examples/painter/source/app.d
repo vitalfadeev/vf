@@ -90,16 +90,13 @@ class MyWindow : Window
 
                 {
                 import std.stdio : File;
-                auto file    = File("savegame.sg");
-
                 import vf.painter : to;
-                auto painter = .to!Painter( file );
-
-                import vf.painter : to;
-                auto raster  = .to!Raster( painter, this, hdc );
-
                 import vf.raster : to;
-                auto window  = .to!Window( raster, this, hdc );
+                import vf.platform.windows.raster : to;
+                auto painter = File("savegame.sg").to!Painter();
+
+                auto raster = .to!Raster( painter, this, hdc );
+                auto window = .to!Window( raster, cast(Window)this, hdc );
                 }
                 version(WRITE)
                 {
@@ -156,12 +153,12 @@ class MyWindow : Window
 
         return 0;
     }
-
-    T to(T:Painter)()
-    {
-        return new T();
-    }
 }
+
+//T to(T:Painter)( MyWindow window )
+//{
+//    return new T();
+//}
 
 auto tee(T)( T This )
 {
