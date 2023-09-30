@@ -60,7 +60,27 @@ class Painter
 
     auto to(T:File)( string filename )
     {
+        // header
+        //   SG version
+        // operations
+        //   type
+        //   args
+
+        struct SGFile_Operation
+        {
+            //
+        }
+
+        struct SGFile_Header
+        {
+            char[4]             magic = "SG01";
+            SGFile_Operation[0] operations;
+        }
+
         auto f = File( filename, "w" );
+
+        //
+
         return f;
     }
 }
