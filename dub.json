@@ -11,7 +11,7 @@
 			"targetType"     : "library",
 			"platforms"      : ["windows"],
 			"versions"       : ["WINDOWS_NATIVE"],
-			"libs"           : ["user32", "gdi32"],
+			"libs"           : [],
 			"dependencies"   : {
 			},
 		},
