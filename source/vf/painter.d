@@ -73,13 +73,15 @@ class Painter
 
         struct SGFile_Header
         {
-            char[4]             magic = "SG01";
+            M8[4]               magic = [ 'S', 'G', '0', '1' ];
+            M16                 header_size;
             SGFile_Operation[0] operations;
         }
 
         auto f = File( filename, "w" );
 
-        //
+        SGFile_Header header;
+        f.rawWrite( ( cast(ubyte*)&header )[0..header.sizeof] );
 
         return f;
     }
