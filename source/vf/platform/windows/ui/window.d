@@ -201,7 +201,7 @@ LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
 
 
 //import vf.platform.windows.raster;
-T to(T:Raster)( Window This, HDC hdc )
+Raster to_raster( Window This, HDC hdc )
 {
     RECT rect;
     int  window_width;
@@ -269,7 +269,7 @@ T to(T:Raster)( Window This, HDC hdc )
 
     import std.conv : to;
     return
-        T(
+        Raster(
             /*pixels*/  pixels,
             /*w*/       client_width.to!W,
             /*h*/       client_height.to!H,

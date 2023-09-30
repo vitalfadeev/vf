@@ -50,7 +50,7 @@ struct Raster
 }
 
 
-T to(T:Window)( Raster This, Window window, HDC hdc )
+WINDOW to_window(WINDOW:Window)( Raster This, WINDOW window, HDC hdc )
     // if ( WINDOW inherited from Window )
 {
     auto pixels = This.pixels.ptr;

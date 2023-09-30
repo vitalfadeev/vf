@@ -36,10 +36,10 @@ class Painter
 
 import vf.platform.windows.raster;
 import vf.platform.windows.ui.window;
-auto to(T:Raster,WINDOW:Window)( Painter This, WINDOW window, HDC hdc )
+auto to_raster(WINDOW:Window)( Painter This, WINDOW window, HDC hdc )
 {
     // rasterize
-    auto raster = vf.platform.windows.ui.window.to!Raster( window, hdc );
+    auto raster = vf.platform.windows.ui.window.to_raster( window, hdc );
 
     foreach( op; This.ops )
     {
@@ -48,9 +48,9 @@ auto to(T:Raster,WINDOW:Window)( Painter This, WINDOW window, HDC hdc )
         {
             case OP._         : break;
             case OP.GO_CENTER : raster.go_center(); break;
-            case OP.GO        : raster.go( op.go.ox.to!PX ); break;
+            case OP.GO        : raster.go( op.go.ox.to_px ); break;
             case OP.POINT     : raster.point() ; break;
-            case OP.LINE      : raster.line( op.line.ox.to!PX ); break;
+            case OP.LINE      : raster.line( op.line.ox.to_px ); break;
         }
     }
 
@@ -59,7 +59,7 @@ auto to(T:Raster,WINDOW:Window)( Painter This, WINDOW window, HDC hdc )
 
 // file save / read
 import std.stdio : File;
-auto to(T:File)( Painter This, string filename )
+auto to_file( Painter This, string filename )
 {
     // header
     //   SG version
@@ -82,7 +82,7 @@ auto to(T:File)( Painter This, string filename )
 
 
 import std.stdio : File;
-T to(T:Painter)( File f )
+auto to_painter( File f )
 {
     // header
     SGFile_Header header;
@@ -217,9 +217,9 @@ struct Ops
 }
 
 
-T to(T:PX)( OX ox )
+PX to_px( OX ox )
 {
-    T px;
+    PX px;
     px.x = ox.x;
     px.y = ox.y;
     return px;

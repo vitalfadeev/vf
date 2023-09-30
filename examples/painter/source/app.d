@@ -80,7 +80,6 @@ class MyWindow : Window
     {
     	version(WINDOWS_NATIVE)
     	{
-            import vf.platform.windows.raster;
 	        try {
 	            HDC         hdc;
 	            PAINTSTRUCT ps; 
@@ -90,17 +89,15 @@ class MyWindow : Window
 
                 {
                 import std.stdio : File;
-                import vf.painter : to;
-                import vf.raster : vf_raster_to = to;
                 File("savegame.sg")
-                    .to!Painter()
-                    .to!Raster( this, hdc )
-                    .vf_raster_to!Window( cast(Window)this, hdc );
+                    .to_painter()
+                    .to_raster( this, hdc )
+                    .to_window( cast(Window)this, hdc );
                 }
                 version(WRITE)
                 {
                 import std.stdio : File;
-		        this.to!Painter()
+		        this.to_painter()
 		        	// WH
 		        	.go_center()
                     .line(  +10,-10  )
@@ -127,9 +124,9 @@ class MyWindow : Window
 		        	.line( +10,-103 )
 
                     .tee
-                        .to!File( "savegame.sg" )
-                    .to!Raster( this, hdc )
-                    .to!Window( this, hdc );
+                        .to_file( "savegame.sg" )
+                    .to_raster( this, hdc )
+                    .to_window( this, hdc );
                 }
 
 	            EndPaint( hwnd, &ps ) ;
@@ -154,7 +151,7 @@ class MyWindow : Window
     }
 }
 
-//T to(T:Painter)( MyWindow window )
+//T to_file( MyWindow window )
 //{
 //    return new T();
 //}
@@ -165,7 +162,7 @@ auto tee(T)( T This )
     {
         T _this;
 
-        T to(TO,ARGS...)( ARGS args )
+        T to_file(TO,ARGS...)( ARGS args )
         {
             .to!TO( _this, args );
             return _this;
