@@ -92,7 +92,7 @@ class MyWindow : Window
                 File("savegame.sg")
                     .to_painter()
                     .to_raster( this, hdc )
-                    .to_window( cast(Window)this, hdc );
+                    .to_window( this, hdc );
                 }
                 version(WRITE)
                 {
