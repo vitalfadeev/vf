@@ -80,8 +80,15 @@ class Painter
 
         auto f = File( filename, "w" );
 
+        // header
         SGFile_Header header;
         f.rawWrite( ( cast(ubyte*)&header )[0..header.sizeof] );
+
+        // operations
+        foreach ( op; ops )
+        {
+            f.rawWrite( ( cast(ubyte*)&op )[0..Op.sizeof] );
+        }
 
         return f;
     }
