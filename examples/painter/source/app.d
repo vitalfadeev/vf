@@ -91,12 +91,12 @@ class MyWindow : Window
                 {
                 import std.stdio : File;
                 import vf.painter : to;
-                import vf.raster : to;
+                import vf.raster : vf_raster_to = to;
                 auto raster = 
                     File("savegame.sg")
                         .to!Painter()
-                        .to!Raster( this, hdc );
-                auto window = .to!Window( raster, cast(Window)this, hdc );
+                        .to!Raster( this, hdc )
+                        .vf_raster_to!Window( cast(Window)this, hdc );
                 }
                 version(WRITE)
                 {
