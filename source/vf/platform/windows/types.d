@@ -45,6 +45,16 @@ struct OX
     Y y;
 }
 
+
+PX to_px( OX ox )
+{
+    PX px;
+    px.x = ox.x;
+    px.y = ox.y;
+    return px;
+}
+
+
 //
 class WindowsException : std.windows.syserror.WindowsException
 {
@@ -84,12 +94,12 @@ struct EventValue
     alias _super this;
 }
 
-alias LRESULT = core.sys.windows.windows.LRESULT;
-alias HDC = core.sys.windows.windows.HDC;
-alias PAINTSTRUCT = core.sys.windows.windows.PAINTSTRUCT;
-alias BeginPaint = core.sys.windows.windows.BeginPaint;
-alias EndPaint = core.sys.windows.windows.EndPaint;
-alias MessageBox = core.sys.windows.windows.MessageBox;
-alias MB_OK = core.sys.windows.windows.MB_OK;
+alias LRESULT            = core.sys.windows.windows.LRESULT;
+alias HDC                = core.sys.windows.windows.HDC;
+alias PAINTSTRUCT        = core.sys.windows.windows.PAINTSTRUCT;
+alias BeginPaint         = core.sys.windows.windows.BeginPaint;
+alias EndPaint           = core.sys.windows.windows.EndPaint;
+alias MessageBox         = core.sys.windows.windows.MessageBox;
+alias MB_OK              = core.sys.windows.windows.MB_OK;
 alias MB_ICONEXCLAMATION = core.sys.windows.windows.MB_ICONEXCLAMATION;
-alias NULL = core.sys.windows.windows.NULL;
+alias NULL               = core.sys.windows.windows.NULL;

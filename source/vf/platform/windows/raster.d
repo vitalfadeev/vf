@@ -3,8 +3,6 @@ module vf.platform.windows.raster;
 version(WINDOWS_NATIVE):
 import core.sys.windows.windows;
 import vf.types;
-import vf.color;
-import vf.ui.window;
 import vf.gfx.raster;
 
 
@@ -50,6 +48,7 @@ struct Raster
 }
 
 
+import vf.ui.window;
 WINDOW to_window(WINDOW:Window)( Raster This, WINDOW window, HDC hdc )
     // if ( WINDOW inherited from Window )
 {

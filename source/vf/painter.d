@@ -34,12 +34,19 @@ class Painter
 }
 
 
-import vf.platform.windows.raster;
-import vf.platform.windows.ui.window;
+import vf.ui.window;
+auto to_painter(WINDOW)( WINDOW window, HDC hdc )
+{
+    return new Painter();
+}
+
+
+import vf.raster;
+import vf.ui.window;
 auto to_raster(WINDOW:Window)( Painter This, WINDOW window, HDC hdc )
 {
     // rasterize
-    auto raster = vf.platform.windows.ui.window.to_raster( window, hdc );
+    auto raster = vf.ui.window.to_raster( window, hdc );
 
     foreach( op; This.ops )
     {
@@ -214,13 +221,4 @@ struct Ops
     {
         _super ~= Op( b );
     }
-}
-
-
-PX to_px( OX ox )
-{
-    PX px;
-    px.x = ox.x;
-    px.y = ox.y;
-    return px;
 }

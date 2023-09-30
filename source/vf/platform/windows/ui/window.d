@@ -3,7 +3,6 @@ module vf.platform.windows.ui.window;
 version(WINDOWS_NATIVE):
 import core.sys.windows.windows;
 import vf.types;
-import vf.raster;
 
 
 class Window
@@ -200,7 +199,7 @@ LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
 }
 
 
-//import vf.platform.windows.raster;
+import vf.raster;
 Raster to_raster( Window This, HDC hdc )
 {
     RECT rect;

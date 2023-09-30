@@ -87,6 +87,7 @@ class MyWindow : Window
 	            //RECT        crect;
 	            //GetClientRect( hwnd, &crect );
 
+                version(WRITE)
                 {
                 import std.stdio : File;
                 File("savegame.sg")
@@ -94,10 +95,9 @@ class MyWindow : Window
                     .to_raster( this, hdc )
                     .to_window( this, hdc );
                 }
-                version(WRITE)
                 {
                 import std.stdio : File;
-		        this.to_painter()
+		        this.to_painter( hdc )
 		        	// WH
 		        	.go_center()
                     .line(  +10,-10  )
@@ -151,10 +151,6 @@ class MyWindow : Window
     }
 }
 
-//T to_file( MyWindow window )
-//{
-//    return new T();
-//}
 
 auto tee(T)( T This )
 {
@@ -162,9 +158,9 @@ auto tee(T)( T This )
     {
         T _this;
 
-        T to_file(TO,ARGS...)( ARGS args )
+        T to_file(ARGS...)( ARGS args )
         {
-            .to!TO( _this, args );
+            .to_file( _this, args );
             return _this;
         }
     }
