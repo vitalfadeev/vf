@@ -1,5 +1,4 @@
 import std.stdio;
-import vf;
 
 // screen
 // ---------------------------------------
@@ -27,6 +26,11 @@ import vf;
 //     color                   // 
 //     mix bg fg               //
 //     pixels                  //
+
+import vf;
+
+version=READ;
+
 
 void main()
 {
@@ -87,7 +91,7 @@ class MyWindow : Window
 	            //RECT        crect;
 	            //GetClientRect( hwnd, &crect );
 
-                version(WRITE)
+                version(READ)
                 {
                 import std.stdio : File;
                 File("savegame.sg")
@@ -95,6 +99,7 @@ class MyWindow : Window
                     .to_raster( this, hdc )
                     .to_window( this, hdc );
                 }
+                version(WRITE)
                 {
                 import std.stdio : File;
 		        this.to_painter( hdc )
