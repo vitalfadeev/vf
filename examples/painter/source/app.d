@@ -115,7 +115,8 @@ class MyWindow : Window
 		        	.line( -10,-103 )
 		        	.line( +10,-103 )
 
-                    .tee.to!File( "savegame.sg" )
+                    .tee
+                        .to!File( "savegame.sg" )
                     .to!Raster( this, hdc )
                     .to!Window( this, hdc );
 
@@ -146,23 +147,17 @@ class MyWindow : Window
     }
 }
 
-auto tee(THIS)( THIS This )
+auto tee(T)( T This )
 {
     struct _Tee
     {
-        THIS This;
+        T _this;
 
-        import std.stdio : File;
-        auto to(T:File)( string filename )
+        T to(TO,ARGS...)( ARGS args )
         {
-            This.to!File( filename );
-            return This;
+            .to!TO( _this, args );
+            return _this;
         }
-        //auto to(ARGS...)( ARGS args )
-        //{
-        //    This.to( args );
-        //    return This;
-        //}
     }
     return _Tee( This );
 }

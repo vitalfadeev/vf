@@ -1,6 +1,5 @@
 module vf.painter;
 
-import std.stdio;
 import vf.types;
 
 
@@ -58,49 +57,55 @@ class Painter
         return raster;
     }
 
-    auto to(T:File)( string filename )
-    {
-        // header
-        //   SG version
-        // operations
-        //   type
-        //   args
-
-        struct SGFile_Operation
-        {
-            //
-        }
-
-        struct SGFile_Header
-        {
-            M8[4]               magic = [ 'S', 'G', '0', '1' ];
-            M16                 header_size;
-            SGFile_Operation[0] operations;
-        }
-
-        auto f = File( filename, "w" );
-
-        // header
-        SGFile_Header header;
-        f.rawWrite( ( cast(ubyte*)&header )[0..header.sizeof] );
-
-        // operations
-        foreach ( op; ops )
-        {
-            f.rawWrite( ( cast(ubyte*)&op )[0..Op.sizeof] );
-        }
-
-        return f;
-    }
 }
 
-auto from(T:File)( string filename )
+
+// file save / read
+import std.stdio : File;
+T to(T:File)( Painter This, string filename )
+{
+    // header
+    //   SG version
+    // operations
+    //   type
+    //   args
+
+    auto f = File( filename, "w" );
+
+    // header
+    SGFile_Header header;
+    f.rawWrite( ( cast(ubyte*)&header )[0..header.sizeof] );
+
+    // operations
+    foreach ( op; This.ops )
+    {
+        f.rawWrite( ( cast(ubyte*)&op )[0..Op.sizeof] );
+    }
+
+    return f;
+}
+
+auto to(T:Painter)( string filename )
 {
     auto painter = new Painter();
     return painter;
 }
 
+struct SGFile_Header
+{
+    M8[4]               magic = [ 'S', 'G', '0', '1' ];
+    M16                 header_size;
+    SGFile_Operation[0] operations;
+}
 
+struct SGFile_Operation
+{
+    //
+}
+
+
+
+//
 enum OP
 {
     _,
