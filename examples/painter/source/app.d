@@ -92,7 +92,6 @@ class MyWindow : Window
                 import std.stdio : File;
                 import vf.painter : to;
                 import vf.raster : to;
-                import vf.platform.windows.raster : to;
                 auto raster = 
                     File("savegame.sg")
                         .to!Painter()
