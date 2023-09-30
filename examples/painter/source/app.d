@@ -96,7 +96,7 @@ class MyWindow : Window
                 auto painter = .to!Painter( file );
 
                 import vf.painter : to;
-                auto raster  = .to!Raster( this, hdc );
+                auto raster  = .to!Raster( painter, this, hdc );
 
                 import vf.raster : to;
                 auto window  = .to!Window( raster, this, hdc );
