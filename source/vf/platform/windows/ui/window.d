@@ -120,6 +120,9 @@ class Window
         //
     }
 
+
+    // hwnd -> window
+    // window -> hwnd
     static
     struct WindowManager
     {
@@ -177,18 +180,6 @@ class Window
             return DefWindowProc( hwnd, message, wParam, lParam );
         }
     }
-}
-
-
-nothrow
-void show_throwable( Throwable o )
-{
-    import std.string;
-    import std.utf;
-    try { auto s = o.toString.toUTF16z; 
-        MessageBox( NULL, s, "Error", MB_OK | MB_ICONEXCLAMATION );
-    }
-    catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
 }
 
 

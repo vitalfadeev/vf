@@ -54,6 +54,17 @@ class WindowsException : std.windows.syserror.WindowsException
     }
 }
 
+nothrow
+void show_throwable( Throwable o )
+{
+    import std.string;
+    import std.utf;
+    try { auto s = o.toString.toUTF16z; 
+        MessageBox( NULL, s, "Error", MB_OK | MB_ICONEXCLAMATION );
+    }
+    catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
+}
+
 
 struct Event 
 {
