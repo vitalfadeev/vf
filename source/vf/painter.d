@@ -31,38 +31,35 @@ class Painter
         ops ~= Line( OP.LINE, OX( w,h ) );
         return this;
     }
-
-
-    //
-    import vf.platform.windows.raster;
-    import vf.platform.windows.ui.window;
-    auto to(T:Raster,WINDOW:Window)( WINDOW window, HDC hdc )
-    {
-        // rasterize
-        auto raster = vf.platform.windows.ui.window.to!Raster( window, hdc );
-
-        foreach( op; ops )
-        {
-            final
-            switch ( op.type )
-            {
-                case OP._         : break;
-                case OP.GO_CENTER : raster.go_center(); break;
-                case OP.GO        : raster.go( op.go.ox.to!PX ); break;
-                case OP.POINT     : raster.point() ; break;
-                case OP.LINE      : raster.line( op.line.ox.to!PX ); break;
-            }
-        }
-
-        return raster;
-    }
-
 }
 
 
+import vf.platform.windows.raster;
+import vf.platform.windows.ui.window;
+auto to(T:Raster,WINDOW:Window)( Painter This, WINDOW window, HDC hdc )
+{
+    // rasterize
+    auto raster = vf.platform.windows.ui.window.to!Raster( window, hdc );
+
+    foreach( op; This.ops )
+    {
+        final
+        switch ( op.type )
+        {
+            case OP._         : break;
+            case OP.GO_CENTER : raster.go_center(); break;
+            case OP.GO        : raster.go( op.go.ox.to!PX ); break;
+            case OP.POINT     : raster.point() ; break;
+            case OP.LINE      : raster.line( op.line.ox.to!PX ); break;
+        }
+    }
+
+    return raster;
+}
+
 // file save / read
 import std.stdio : File;
-T to(T:File)( Painter This, string filename )
+auto to(T:File)( Painter This, string filename )
 {
     // header
     //   SG version
@@ -78,18 +75,38 @@ T to(T:File)( Painter This, string filename )
 
     // operations
     foreach ( op; This.ops )
-    {
         f.rawWrite( ( cast(ubyte*)&op )[0..Op.sizeof] );
-    }
 
     return f;
 }
 
-auto to(T:Painter)( string filename )
+
+import std.stdio : File;
+T to(T:Painter)( File f )
 {
+    // header
+    SGFile_Header header;
+    auto head_readed = f.rawRead( (cast(ubyte*)&header)[0..header.sizeof] );
+
+    // Painter
     auto painter = new Painter();
+
+    // operations
+    Op op;
+
+    while ( true )
+    {
+        auto op_readed = f.rawRead( (cast(ubyte*)&op)[0..op.sizeof] );
+        
+        if ( op_readed.length < op.sizeof )
+            break;
+
+        painter.ops ~= op;
+    }
+
     return painter;
 }
+
 
 struct SGFile_Header
 {
@@ -97,6 +114,7 @@ struct SGFile_Header
     M16                 header_size;
     SGFile_Operation[0] operations;
 }
+
 
 struct SGFile_Operation
 {

@@ -81,7 +81,6 @@ class MyWindow : Window
     	version(WINDOWS_NATIVE)
     	{
             import vf.platform.windows.raster;
-            import std.stdio : File;
 	        try {
 	            HDC         hdc;
 	            PAINTSTRUCT ps; 
@@ -89,6 +88,22 @@ class MyWindow : Window
 	            //RECT        crect;
 	            //GetClientRect( hwnd, &crect );
 
+                {
+                import std.stdio : File;
+                auto file    = File("savegame.sg");
+
+                import vf.painter : to;
+                auto painter = .to!Painter( file );
+
+                import vf.painter : to;
+                auto raster  = .to!Raster( this, hdc );
+
+                import vf.raster : to;
+                auto window  = .to!Window( raster, this, hdc );
+                }
+                version(WRITE)
+                {
+                import std.stdio : File;
 		        this.to!Painter()
 		        	// WH
 		        	.go_center()
@@ -119,6 +134,7 @@ class MyWindow : Window
                         .to!File( "savegame.sg" )
                     .to!Raster( this, hdc )
                     .to!Window( this, hdc );
+                }
 
 	            EndPaint( hwnd, &ps ) ;
 	        } 
