@@ -92,61 +92,63 @@ class MyWindow : Window
 	            //RECT        crect;
 	            //GetClientRect( hwnd, &crect );
 
-                version(READ)
-                {
-                import std.stdio : File;
-                File("savegame.sg")
-                    .to_painter()
-                    .to_raster( this, hdc )
-                    .to_window( this, hdc );
-                }
+                //version(READ)
+                //{
+                //import std.stdio : File;
+                //File("savegame.sg")
+                //    .to_painter()
+                //    .to_raster( this, hdc )
+                //    .to_window( this, hdc );
+                //}
                 version(WRITE)
                 {
                 import std.stdio : File;
 		        this.to_painter( hdc )
 		        	// WH
-		        	.go_center()
-                    .line(  +10,-10  )
-		        	.line(  +40, 0   )
-		        	.line(  +50,+50  )
-		        	.line(    0,+50  )
-		        	.line( -100,+100 )
-		        	.line( -100,-100 )
-		        	.line(    0,-50  )
-		        	.line(  +50,-50  )
-		        	.line(   40, 0   )
-		        	.line(  +10,+10  )
+		        	//.go_center()
+                    //.line(  +10,-10  )
+		        	//.line(  +40, 0   )
+		        	//.line(  +50,+50  )
+		        	//.line(    0,+50  )
+		        	//.line( -100,+100 )
+		        	//.line( -100,-100 )
+		        	//.line(    0,-50  )
+		        	//.line(  +50,-50  )
+		        	//.line(   40, 0   )
+		        	//.line(  +10,+10  )
 
-		        	.go( 0,-100 )
-		        	.line( +203,+10  )
-		        	.line( -203,+10  )
-		        	.line( -203,-10  )
-		        	.line( +203,-10  )
+		        	//.go( 0,-100 )
+		        	//.line( +203,+10  )
+		        	//.line( -203,+10  )
+		        	//.line( -203,-10  )
+		        	//.line( +203,-10  )
 
-		        	.go( 0,-90  )
-		        	.line( +10,+103 )
-		        	.line( -10,+103 )
-		        	.line( -10,-103 )
-		        	.line( +10,-103 )
+		        	//.go( 0,-90  )
+		        	//.line( +10,+103 )
+		        	//.line( -10,+103 )
+		        	//.line( -10,-103 )
+		        	//.line( +10,-103 )
 
                     .go_center()
                     .go( 0, +10 )
-                    .line( +8,+5 )  // 8/5 = 5 items by 1 px  + 1 item by 3 px
-                    //.line( -8,+3 )
+                    .line( +5,0 )
+
+                    //.line( +8,+5 )  // 8/5 = 5 items by 1 px  + 1 item by 3 px
+                    //.line( +8,+3 )
                     //.line( -8,-3 )
                     //.line( +8,-3 )
 
-                    .go( 0, +10 )
-                    .line( +3,+3 )
-                    .line( -3,+3 )
-                    .line( -3,-3 )
-                    .line( +3,-3 )
+                    //.go( 0, +10 )
+                    //.line( +3,+3 )
+                    //.line( -3,+3 )
+                    //.line( -3,-3 )
+                    //.line( +3,-3 )
 
-                    .go( 0, +10 )
-                    .line( +2,+2 )
-                    .line( -2,+2 )
-                    .line( -2,-2 )
-                    .line( +2,-2 )
+                    //.go( 0, +10 )
+                    //.line( +2,+2 )
+                    //.line( -2,+2 )
+                    //.line( -2,-2 )
+                    //.line( +2,-2 )
 
                     .tee
                         .to_file( "savegame.sg" )

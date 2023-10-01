@@ -61,7 +61,7 @@ class MyWindow : Window
 	            //RECT        crect;
 	            //GetClientRect( hwnd, &crect );
 
-		        this.to!Raster( hdc )
+		        this.to_raster( hdc )
 		        	// WH
 		        	.go_center()
 		        	.line(  +10,-10  )
@@ -88,7 +88,7 @@ class MyWindow : Window
 		        	.line( +10,-103 )
 
 		        	.Cast!Raster
-		        	.to!Window( this, hdc );
+		        	.to_window( this, hdc );
 
 	            EndPaint( hwnd, &ps ) ;
 	        } 

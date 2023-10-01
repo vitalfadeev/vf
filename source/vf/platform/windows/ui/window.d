@@ -154,9 +154,12 @@ class Window
             _vf_windows = _vf_windows.remove( i );
         }
 
-        extern( Windows ) static nothrow
+        extern( Windows ) 
+        static nothrow
         LRESULT event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam ) 
         {
+            // Microsoft x64 calling convention: RCX, RDX, R8, R9, stack
+            // Microsoft fastcall: ECX, EDX, stack
             try {
                 import std.algorithm.searching : countUntil;
                 auto i = _os_windows.countUntil( hwnd );
@@ -268,7 +271,7 @@ Raster to_raster( Window This, HDC hdc )
 
     import std.conv : to;
     return
-        Raster(
+        new Raster(
             /*pixels*/  pixels,
             /*w*/       client_width.to!W,
             /*h*/       client_height.to!H,

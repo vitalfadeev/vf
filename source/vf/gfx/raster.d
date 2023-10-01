@@ -17,13 +17,13 @@ module vf.gfx.raster;
 // cursor here
 
 
-struct Raster(T,W,H)
+class Raster(T,W,H)
 {
     T[]    pixels;
     W      w;
     H      h;
     size_t pitch;
-    void*  current;
+    T*     current;
     T      color;
 
     auto ref point()
@@ -32,78 +32,35 @@ struct Raster(T,W,H)
         return this;
     }
 
-    auto ref line( W w, H h )
+    auto ref line( long pw, H ph )
     {
-        auto absw = ABS( w );
-        auto absh = ABS( h );
+        import vf.gfx.line;
 
-        if ( w == 0 && h == 0 )
+        auto absw = ABS( pw );
+        auto absh = ABS( ph );
+
+        if ( pw == 0 && ph == 0 )
             {}
         else
-        if ( h == 0 )                    // -
-            h_line( w, absw );
+        if ( ph == 0 )                    // -
+            h_line( pw, absw, current, color );
         else
-        if ( w == 0 )                    // |
-            v_line( h, absh );
+        if ( pw == 0 )                    // |
+            v_line( ph, absh );
         else
-            d_line( w, h, absw, absh );  // /
+            d_line( pw, ph, absw, absh );  // /
 
         return this;
     }
 
-    auto ref h_line(W)( W w )
-    {
-        return h_line( w, ABS(w) );
-    }
-
-    auto ref h_line(W,AW)( W w, AW absw )
-    in 
-    {
-        assert( w != 0 );
-    }
-    do
-    {
-        auto _current = this.current;           // local var for optimization
-        auto _color   = this.color;             //   put in to CPU registers
-                                                //   LDC optimize local vars
-        auto _x_inc =
-            ( w < 0 ) ?
-                -(T.sizeof) :  // ← - 
-                 (T.sizeof) ;  // → + 
-
-        auto _limit = _current + absw * _x_inc;
-
-        // x++
-        //   =color
-        for ( ; _current != _limit; _current+=_x_inc )
-        {
-            // weight
-            auto wei = 5;
-            auto _wei_inc = pitch;
-            auto _wei_current = _current - wei/2*_wei_inc;
-            auto _wei_color = T(0,0,0,255);
-
-            foreach( i; 0..wei )
-            {
-                *( cast(T*)_wei_current ) = _wei_color;
-                _wei_current += _wei_inc;
-            }
-
-            // base line
-            *( cast(T*)_current ) = _color;            
-        }
-
-        _current -= _x_inc;  // back 1. set cursor on last pixel
-        current = _current;
-
-        return this;
-    }
 
     auto ref v_line(H)( H h )
     {
         return v_line( h, ABS(h) );
     }
 
+    pragma( inline, false )
+    //@optStrategy("minsize")// minsize,none,optsize
     auto ref v_line(H,AH)( H h, AH absh )
     in
     {
@@ -111,22 +68,41 @@ struct Raster(T,W,H)
     }
     do
     {
-        auto _current = current;
+        //auto _current = current;
         auto _color   = color;
+        auto _current = cast(T*)current;
+        auto _count = absh;
+        auto _y_inc = pitch / T.sizeof;
 
-        auto _y_inc = 
-            ( h < 0 ) ?
-                ( -pitch ) :  // ↑ -
-                (  pitch ) ;  // ↓ +
+        if ( h < 0 )
+        {
+            for ( ; _count; _count--, _current-=_y_inc )
+                *_current = _color;
 
-        auto _limit = _current + absh * _y_inc;
+            _current += _y_inc;  // back 1. set cursor on last pixel
+        }
+        else
+        {
+            for ( ; _count; _count--, _current+=_y_inc )
+                *_current = _color;
 
-        // y++
-        //   =color
-        for ( ; _current != _limit; _current+=_y_inc )
-            *( cast(T*)_current ) = _color;
+            _current -= _y_inc;  // back 1. set cursor on last pixel
+        }
 
-        _current -= _y_inc;  // back 1. set cursor on last pixel
+
+        //auto _y_inc = 
+        //    ( h < 0 ) ?
+        //        ( -pitch ) :  // ↑ -
+        //        (  pitch ) ;  // ↓ +
+
+        //auto _limit = _current + absh * _y_inc;
+
+        //// y++
+        ////   =color
+        //for ( ; _current != _limit; _current+=_y_inc )
+        //    *( cast(T*)_current ) = _color;
+
+        //_current -= _y_inc;  // back 1. set cursor on last pixel
         current = _current;
 
         return this;
@@ -148,6 +124,7 @@ struct Raster(T,W,H)
             return d_line_60( w, h, absw, absh );        // 45..90 degress
     }
 
+    pragma( inline, false )
     auto ref d_line_45(W,H,AW,AH)( W w, H h, AW absw, AH absh )
     in
     {
@@ -181,6 +158,7 @@ struct Raster(T,W,H)
         return this;
     }
 
+    pragma( inline, false )
     auto ref d_line_30(W,H,AW,AH)( W w, H h, AW absw, AH absh )
     in
     {
@@ -225,13 +203,13 @@ struct Raster(T,W,H)
         // -,+   v   +,+
         //       h
 
-        auto _current = current;
+        auto _current = cast(T*)current;
         auto _color   = color;
 
         auto _y_inc = 
             ( h < 0 ) ?
-                ( -pitch ) :  // -  ↖↗
-                (  pitch ) ;  // +  ↙↘
+                ( -pitch / T.sizeof ) :  // -  ↖↗
+                (  pitch / T.sizeof ) ;  // +  ↙↘
 
         auto _x_inc =
             ( w < 0 ) ?
@@ -239,81 +217,66 @@ struct Raster(T,W,H)
                 (  T.sizeof ) ;  // + ↗↘
 
         //
-        auto barw = absw / absh;  // 8/5 = 5 * 1 px + 3 px
-        auto _    = absw % absh;  //                  3 px / 5 = each 10101
-                                  // 8%5 = 3
-                                  //       3 on each 5/3
+                                       // 8/5
+                                       //   5 bars
+                                       //   8 pixels
+                                       //
+                                       // ##......
+                                       // . #     
+                                       // .  ##   
+                                       // .    #  
+                                       // .     ##
+                                       //
+                                       // 5 bars / pairs = 
+                                       // 5 bars / 2
+        auto pairs = absh / 2;         // = 2 pairs
+        auto _     = absh % 2;         // + 1 rest
+        auto pl    = ( absw - _ ) / 2; // pair len = 8 - 1 rest / 2 pairs
+        auto pl_   = ( absw - _ ) % 2; //          =          7 / 2
+                                       //          =          3 (+ 1 rest)
+        auto pa = ( pl / 2 ) * 2;      // pair.a = (pair len / 2) * 2 = (3 / 2) * 2 = 2
+        auto pb = ( pl % 2 );          // pair.b = (pair len % 2)     = (3 % 2)     = 1
+                                       //
+                                       // 2 pair
+                                       // ##     +_inc_x +_inc_x +_inc_y
+                                       //   #                            +_inc_x
+        auto tail = 8 - (pl * pairs);  //     ... rest = 8 - (pair len * pairs)
+                                       //              = 8 - (3 * 2)
+                                       //              = 2
 
-        alias TBARW = typeof(barw);
-        TBARW bar1;  // width of bar 1
-        TBARW bar2;
-        TBARW bar2n;
-        TBARW bar3;
-
-        if ( _ == 0 )
+                                       // 8x3
+                                       // ##......
+                                       // ..####..
+                                       // ......##
+        // pairs
+        for ( ;pairs ;pairs-- )
         {
-            bar1  = 0;
-            bar2  = barw;
-            bar2n = absh;
-            bar3  = 0;
-        }
-        else
-        {        
-            bar1  = barw + _;
-            bar2  = barw;
-            bar2n = absh - 1;
-            bar3  = 0;
-        }
+            // a
+            if ( pa )
+            {
+                for ( auto _counter=pa; _counter; _counter--, _current++ )
+                    *_current = _color;
 
-        // 0..1
-        if (bar1)
-        {
-            _color = T( 0, 255, 0, 0);
+                _current += _y_inc;
+            }
 
-            auto _limit = _current + (bar1) * _x_inc;
+            // b
+            if ( pb )
+            {            
+                for ( auto _counter=pb; _counter; _counter--, _current++ )
+                    *_current = _color;
 
-            // x++
-            //   = color
-            for ( ; _current != _limit; _current+=_x_inc )
-                *( cast(T*)_current ) = _color;
-
-            _current+=_y_inc;
-        }
-
-        // 1..2..3
-        if (bar2)
-        {
-            _color = T( 0, 255, 255, 0);
-
-            auto _x_inc_bar2  = _x_inc * (bar2);
-            auto _x_limit_inc = _y_inc   + _x_inc_bar2;
-            auto _x_limit     = _current + _x_inc_bar2;
-            auto _y_limit     = _current + _x_limit_inc * (bar2n);
-
-            // y++
-            //   x++
-            //     = color
-            for ( ; _current != _y_limit; _current+=_y_inc, _x_limit+=_x_limit_inc )
-                for ( ; _current != _x_limit; _current+=_x_inc )
-                    *( cast(T*)_current ) = _color;
-
-            if ( bar3 == 0 )
-                _current -= _x_limit_inc;  // back 1. set cursor on last pixel
+                _current += _y_inc;
+            }
         }
 
-        // 3..4
-        if (bar3 && 0)
+        // tail
+        if ( tail )
         {
-            _color = T( 255, 0, 255, 0);
+            for ( auto _counter=tail; _counter; _counter--, _current++ )
+                *_current = _color;
 
-            auto _limit = _current + (bar3) * _x_inc;
-
-            // x++
-            //   = color
-            for ( ; _current != _limit; _current+=_x_inc )
-                *( cast(T*)_current ) = _color;
-
-            _current -= _x_inc;  // back 1. set cursor on last pixel
+            _current--;
         }
 
         current = _current;
@@ -427,9 +390,11 @@ struct Raster(T,W,H)
     auto ref go_center()
     {
         current = 
-            (cast(void*)pixels.ptr) + 
-            h / 2 * pitch + 
-            w / 2 * T.sizeof;
+            cast(T*)(
+                (cast(void*)pixels.ptr) + 
+                h / 2 * pitch + 
+                w / 2 * T.sizeof
+            );
         return this;
     }
 

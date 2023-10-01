@@ -43,12 +43,12 @@ auto to_painter(WINDOW)( WINDOW window, HDC hdc )
 
 import vf.raster;
 import vf.ui.window;
-auto to_raster(WINDOW:Window)( Painter This, WINDOW window, HDC hdc )
+auto to_raster(WINDOW:Window)( Painter painter, WINDOW window, HDC hdc )
 {
     // rasterize
     auto raster = vf.ui.window.to_raster( window, hdc );
 
-    foreach( op; This.ops )
+    foreach( op; painter.ops )
     {
         final
         switch ( op.type )
@@ -66,7 +66,7 @@ auto to_raster(WINDOW:Window)( Painter This, WINDOW window, HDC hdc )
 
 // file save / read
 import std.stdio : File;
-auto to_file( Painter This, string filename )
+auto to_file( Painter painter, string filename )
 {
     // header
     //   SG version
@@ -81,7 +81,7 @@ auto to_file( Painter This, string filename )
     f.rawWrite( ( cast(ubyte*)&header )[0..header.sizeof] );
 
     // operations
-    foreach ( op; This.ops )
+    foreach ( op; painter.ops )
         f.rawWrite( ( cast(ubyte*)&op )[0..Op.sizeof] );
 
     return f;

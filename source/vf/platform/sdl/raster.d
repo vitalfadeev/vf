@@ -8,11 +8,9 @@ import vf.ui.window;
 import vf.gfx.raster;
 
 
-struct Raster
+class Raster : vf.gfx.raster.Raster!(SDL_Color,W,H)
 {
     alias T = SDL_Color;
-    vf.gfx.raster.Raster!(T,W,H) _super;
-    alias _super this;
 
     this( T[] pixels, W w, H h, size_t pitch, void*  current, T color )
     {
@@ -23,16 +21,10 @@ struct Raster
         this.current = current;
         this.color   = color;
     }
-
-    auto ref line( PX px )
-    {
-        _super.line( px.x, px.y );
-        return this;
-    }
 }
 
 
-void to_window( Raster This, HWND hwnd, HDC hdc )
+void to_window( Raster raster, HWND hwnd, HDC hdc )
 {
     RECT rect;
     int  window_width;
@@ -71,7 +63,7 @@ void to_window( Raster This, HWND hwnd, HDC hdc )
         /*ySrc*/        0,
         /*StartScan*/   0,
         /*cLines*/      window_height,
-        /*lpvBits*/     This.pixels.ptr,
+        /*lpvBits*/     raster.pixels.ptr,
         /*lpbmi*/       &bmi,
         /*ColorUse*/    DIB_RGB_COLORS
     );

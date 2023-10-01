@@ -6,13 +6,11 @@ import vf.types;
 import vf.gfx.raster;
 
 
-struct Raster
+class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
 {
     alias T = RGBQUAD;
-    vf.gfx.raster.Raster!(T,W,H) _super;
-    alias _super this;
 
-    this( T[] pixels, W w, H h, size_t pitch, void*  current, T color )
+    this( T[] pixels, W w, H h, size_t pitch, T*  current, T color )
     {
         this.pixels  = pixels;
         this.w       = w;
@@ -22,27 +20,15 @@ struct Raster
         this.color   = color;
     }
 
-    auto ref go_center()
+    typeof(this) go( PX px )
     {
-        _super.go_center();
+        super.go( px.x, px.y );
         return this;
     }
 
-    auto ref go( PX px )
+    typeof(this) line( PX px )
     {
-        _super.go( px.x, px.y );
-        return this;
-    }
-
-    auto ref point()
-    {
-        _super.point();
-        return this;
-    }
-
-    auto ref line( PX px )
-    {
-        _super.line( px.x, px.y );
+        super.line( px.x, px.y );
         return this;
     }
 }

@@ -61,7 +61,7 @@ template hasMethod(T,string M)
 // Raster
 //   .line(x,y)
 //   .Cast!Raster
-//   .to!Window( hdc, hwmd )
+//   .to_window( hdc, hwmd )
 auto Cast(TO,FROM)(FROM from)
 {
     return cast(TO)from;
