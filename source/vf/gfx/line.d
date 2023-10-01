@@ -38,21 +38,21 @@ version(OPTIMIZED_WINDOWS_X86_64)
         pragma(LDC_never_inline);
         __asm("
                 .intel_syntax noprefix;
-                test  rdx, rdx
-                js TO_LEFT
-            TO_RIGHT:
-                cld
+                test  rdx, rdx  # if w < 0
+                js TO_LEFT      #   left
+            TO_RIGHT:           # else
+                cld             #   right
                 jmp LOOP
             TO_LEFT:
-                std
+                std             # left
             LOOP:
-                mov r10, rdi
-                 mov  rdi, r8
-                 mov  rax, r9
-                 repnz stosd
-                mov rdi, r10
+                mov r10, rdi    # save RDI
+                 mov  rdi, r8   #  current
+                 mov  rax, r9   #  color
+                 repnz stosd    #  for w..0: *current = color
+                mov rdi, r10    # restore RDI
             ", 
-            "~{memory},~{rax},~{rdi},~{rcx},~{r10}", 
+            "~{memory},~{flags},~{rax},~{rdi},~{rcx},~{r10}", 
         );
     }
 }
