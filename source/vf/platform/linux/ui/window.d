@@ -1,13 +1,15 @@
-module vf.platform.windows.ui.window;
+module vf.platform.linux.ui.window;
 
-version(WINDOWS_NATIVE):
-import core.sys.windows.windows;
+version(LINUX_X11):
+import x11;  //xlib
 import vf.types;
 
 
 class Window
 {
-    HWND hwnd;
+    Window   x_mainwindow;
+    Display* x_display;
+    Screen   x_screen;
 
     alias T = typeof(this);
 
@@ -28,57 +30,71 @@ class Window
     private
     void _create_window( int cmd_show, PX size, string name )
     {
-        import std.utf : toUTF16z;
-        import std.traits;
+        char*                displayname = null;
+        XSetWindowAttributes attribs;
+        XGCValues            xgcvalues;
 
-        HINSTANCE hInstance = GetModuleHandle(NULL);
-        
-        auto className = toUTF16z( fullyQualifiedName!(typeof(this)) );
-        WNDCLASS wndClass;
-
-        // Create Window Class
-        wndClass.style         = CS_HREDRAW | CS_VREDRAW;
-        wndClass.lpfnWndProc   = &WindowManager.event;
-        wndClass.cbClsExtra    = 0;
-        wndClass.cbWndExtra    = 0;
-        wndClass.hInstance     = hInstance;
-        wndClass.hIcon         = LoadIcon( null, IDI_EXCLAMATION );
-        wndClass.hCursor       = LoadCursor( null, IDC_CROSS );
-        wndClass.hbrBackground = GetStockObject( DKGRAY_BRUSH );
-        wndClass.lpszMenuName  = null;
-        wndClass.lpszClassName = className;
-
-        // Register class
-        if ( !RegisterClass( &wndClass ) ) 
-            throw new WindowsException( "Unable to register class" );
-
-        // Create Window
-        hwnd = CreateWindow(
-            className,            //Window class used.
-            name.toUTF16z,        //Window caption.
-            WS_OVERLAPPEDWINDOW,  //Window style.
-            CW_USEDEFAULT,        //Initial x position.
-            CW_USEDEFAULT,        //Initial y position.
-            size.x,               //Initial x size.
-            size.y,               //Initial y size.
-            null,                 //Parent window handle.
-            null,                 //Window menu handle.
-            hInstance,            //Program instance handle.
-            null                  //Creation parameters.
-        );                           
-
-        if ( hwnd == NULL )
-            throw new WindowsException( "Unable to create window"  );
-
-        // Link HWND -> Window
-        WindowManager.register( hwnd, this );
-
-        // Show
-        if ( cmd_show )
+        x_display = XOpenDisplay( displayname );
+        if ( !x_display )
         {
-            ShowWindow( hwnd, cmd_show );
-            UpdateWindow( hwnd ); 
+            import std.format;
+
+            if ( displayname )
+                throw new LinuxX11Exception( format!"Could not open display [%s]"( displayname ) );
+            else
+                throw new LinuxX11Exception( format!"Could not open display (DISPLAY=[%s])"( getenv("DISPLAY") ) );
         }
+
+        x_screen = DefaultScreen( x_display );
+
+        x_width  = SCREENWIDTH;
+        x_height = SCREENHEIGHT;
+
+        x_cmap = 
+            XCreateColormap( 
+                x_display, 
+                RootWindow( x_display, x_screen ), 
+                x_visual, 
+                AllocAll );
+
+        attribmask = CWEventMask | CWColormap | CWBorderPixel;
+
+        attribs.event_mask =
+            KeyPressMask
+            | KeyReleaseMask
+            // | PointerMotionMask | ButtonPressMask | ButtonReleaseMask
+            | ExposureMask;
+
+        attribs.colormap = X_cmap;
+        attribs.border_pixel = 0;
+
+        x_mainwindow = 
+            XCreateWindow(   
+                x_display,
+                RootWindow( x_display, x_screen ),
+                size.x, size.y,
+                x_width, x_height,
+                0, // borderwidth
+                8, // depth
+                InputOutput,
+                x_visual,
+                attribmask,
+                &attribs );
+
+        // create the GC
+        valuemask = GCGraphicsExposures;
+        xgcvalues.graphics_exposures = False;
+
+        x_gc = 
+            XCreateGC(   
+                x_display,
+                x_mainwindow,
+                valuemask,
+                &xgcvalues );
+
+        XMapWindow( x_display, x_mainwindow );
+
+        
     }
 
 

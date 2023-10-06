@@ -53,7 +53,7 @@ class Game
 
             auto window = new_window();
 
-            foreach( e; queue )
+            foreach( ref e; queue )
             {
                 TranslateMessage( &e );
                 DispatchMessage( &e );
