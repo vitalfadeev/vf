@@ -1,136 +1,98 @@
 module vf.gfx.dline30;
 
 
-version(X86_64)
-version(Win64)
+version(X86)
 {
-    //
+// D_LINE_30:
+// mov  cx, length      // _line_length_by_x
+// test cx, cx
+//   jz   ok            // if count == 0 goto ok
+//
+// mov  esi, pitch      // _y_inc
+// mov  eax, color      // color
+// cld                  // direction +
+//
+// loop:
+//   stosd              // POINT(x,y,color)
+//                      //   add di, 4  // x += _x_inc
+//                      // or 
+//                      // mov %eax, (%edi)
+//
+//   dec  cx            // count--
+//   jz   ok            // if count == 0 goto ok
+//           
+//   dec  dx            // fraq--
+//   jnz  next_x        // if fraq == 0
+//     add  di, si      //   y++
+//     mov  dx, bx      //   fraq = x_base
+//
+//   next_x:
+//     jmp loop
+//
+// ok:
+//   //
 }
 else  // native D
 {
     pragma( inline, false )
-    auto ref d_line_30(W,H,AW,AH)( W w, H h, AW absw, AH absh )
-    in
+    auto ref d_line_30( int* current, int color, int wh, int pitch )
     {
-        assert( w != 0 );
-        assert( h != 0 );
-        assert( absh >= 2 );
-    }
-    do
-    {
-        //                                                          y
-        // 0                       1                        2    // _y - y = 1
-        // #########################                             // 0
-        //                          #########################    // 1
-        //
-        //
-        // 0               1                2               3_   // _y - y = 2
-        // #################                                     // 0
-        //                  #################                    // 1
-        //                                   ################    // 2
-        //
-        // 0      1                2                3       4    // _y - y = 2
-        // ########                                              // 2_
-        //         #################                             // 0
-        //                          #################            // 1
-        //                                           ########    // _2
-        //
-        //
-        // 0          1            2            3           4    // _y - y = 3
-        // ############                                          // 0
-        //             #############                             // 1
-        //                          #############                // 2
-        //                                       ############    // 3
-        //                                                          y
-        // |<-------->|
-        //     barw     = ( _x - x ) / ( _y - y )
-        //
+        auto w = (wh >> 16) & 0xFFFF;
+        auto h = wh & 0xFFFF;
 
-        // -,-   |   +,-
-        //       |     
-        // ------+-----> w
-        //       |      
-        // -,+   v   +,+
-        //       h
+        auto _dst   = current;
+        auto _color = color;
+        auto _count = ABS(w);
 
-        auto _current = cast(T*)current;
-        auto _color   = color;
+        auto _x_inc = color.sizeof;
+        auto _y_inc = pitch;
 
-        auto _y_inc = 
-            ( h < 0 ) ?
-                ( -pitch / T.sizeof ) :  // -  ↖↗
-                (  pitch / T.sizeof ) ;  // +  ↙↘
+        auto _fraq_base = w/h;
+        auto _fraq      = _fraq_base;
 
-        auto _x_inc =
-            ( w < 0 ) ?
-                ( -T.sizeof ) :  // - ↙↖
-                (  T.sizeof ) ;  // + ↗↘
+        if ( _count == 0 )
+            return;
 
-        //
-                                       // 8/5
-                                       //   5 bars
-                                       //   8 pixels
-                                       //
-                                       // ##......
-                                       // . #     
-                                       // .  ##   
-                                       // .    #  
-                                       // .     ##
-                                       //
-                                       // 5 bars / pairs = 
-                                       // 5 bars / 2
-        auto pairs = absh / 2;         // = 2 pairs
-        auto _     = absh % 2;         // + 1 rest
-        auto pl    = ( absw - _ ) / 2; // pair len = 8 - 1 rest / 2 pairs
-        auto pl_   = ( absw - _ ) % 2; //          =          7 / 2
-                                       //          =          3 (+ 1 rest)
-        auto pa = ( pl / 2 ) * 2;      // pair.a = (pair len / 2) * 2 = (3 / 2) * 2 = 2
-        auto pb = ( pl % 2 );          // pair.b = (pair len % 2)     = (3 % 2)     = 1
-                                       //
-                                       // 2 pair
-                                       // ##     +_inc_x +_inc_x +_inc_y
-                                       //   #                            +_inc_x
-        auto tail = 8 - (pl * pairs);  //     ... rest = 8 - (pair len * pairs)
-                                       //              = 8 - (3 * 2)
-                                       //              = 2
-
-                                       // 8x3
-                                       // ##......
-                                       // ..####..
-                                       // ......##
-        // pairs
-        for ( ;pairs ;pairs-- )
+        while (1)
         {
-            // a
-            if ( pa )
+            *_dst = color;
+
+            _count--;
+            if ( _count == 0 )
+                break;
+
+            _fraq--;
+            if ( _fraq == 0 )
             {
-                for ( auto _counter=pa; _counter; _counter--, _current++ )
-                    *_current = _color;
-
-                _current += _y_inc;
+                _dst += _y_inc;
+                _fraq = _fraq_base;
             }
 
-            // b
-            if ( pb )
-            {            
-                for ( auto _counter=pb; _counter; _counter--, _current++ )
-                    *_current = _color;
-
-                _current += _y_inc;
-            }
+            _dst += _x_inc;
         }
-
-        // tail
-        if ( tail )
-        {
-            for ( auto _counter=tail; _counter; _counter--, _current++ )
-                *_current = _color;
-
-            _current--;
-        }
-
-        current = _current;
-
-        return this;
     }
 }
+
+
+// y    y'
+// - = ---
+// x   x+1
+//
+// y' = y(x+1)/x = yx/x + y/x = y + y/x
+// y' = y + y/x
+//
+// y/x = ... y on x-based system = fraq
+//
+// x++
+// fraq++
+// if fraq == x 
+//   y++
+//   fraq = 0
+// 
+// optimized
+// x++
+// fraq--
+// if flags.zero   // fraq == 0
+//   y++
+//   fraq = fraq_init = x_base
+//

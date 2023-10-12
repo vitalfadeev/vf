@@ -28,7 +28,8 @@ class Raster(T,W,H)
 
     auto ref point()
     {
-        *(cast(T*)current) = color;
+        import vf.gfx.point;
+        point( current, color );
         return this;
     }
 

@@ -65,8 +65,36 @@ version(X86)  // 32 bit registers
 extern(D):
 alias X   = short;
 alias Y   = short;
+alias M32 = uint;
 alias M64 = ulong;
 
+version (x86)
+alias M32 = uint;
+extern(C)
+struct PX
+{
+    M32 reg;  // XY
+              // X.
+              // .Y
+
+    pragma(inline, true)
+    auto get_y()
+    {
+        return reg & 0xFF;
+        //movl    4(%esp), %eax
+        //movzbl  (%eax), %eax
+    }    
+
+    pragma(inline, true)
+    auto get_x()
+    {
+        return ( reg >> 16 ) & 0xFF;
+        //movl    4(%esp), %eax
+        //movzbl  2(%eax), %eax
+    }
+}
+
+version (X86_64)
 struct PX
 {
     M64 reg;  // ..XY
@@ -77,6 +105,16 @@ struct PX
     auto get_y()
     {
         return reg & 0xFF;
+        //movzbl  (%rdi), %eax
+        //retq    
+    }    
+
+    pragma(inline, true)
+    auto get_x()
+    {
+        return ( reg >> 16 ) & 0xFF;
+        //movzbl  2(%rdi), %eax
+        //retq
     }
 }
 
