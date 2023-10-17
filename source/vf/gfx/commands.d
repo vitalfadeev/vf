@@ -98,6 +98,16 @@ struct Pixels
 }
 
 
+version(X86_64)
+version(Win64)
+void render( Queue queue, Pixels pixels )
+{
+    //
+}
+
+// default
+static if ( !__traits(compiles, "&.render" ) )
+pragma( inline, true )
 void render( Queue queue, Pixels pixels )
 {
     foreach( gfxi; queue )
@@ -113,12 +123,43 @@ void render( Queue queue, Pixels pixels )
     }
 }
 
+// MS 
+//   x86_64: RCX, RDX, R8, R9
+//     preserved:  RBX, RBP, RDI, RSI, RSP, R12, R13, R14, and R15 are considered nonvolatile (callee-saved)
+//     scratch:    RAX, RCX, RDX, R8, R9, R10, R11 are considered volatile (caller-saved)
+//
+// linux
+//   x86_64: RDI, RSI, RDX, RCX, R8, R9
+//     preserved:  RBX, RSI, RDI, RBP
+//     scratch:    RAX, RCX, RDX
+
+version(X86_64)
+version(Win64)
+pragma( inline, true )
+void point( Pixels pixels, PointGFXI point )
+{
+    // EDI = current
+    // EAX = color
+    // ECX = count // w for h_line, h for v_line
+    // ... = _x_inc
+    // ESI = _y_inc
+
+    asm
+    {
+        naked;
+        mov dword ptr [RDI], EAX;
+    }
+}
+
+// default
+static if ( !__traits(compiles, "&.point" ) )
 pragma( inline, true )
 void point( Pixels pixels, PointGFXI point )
 {
     pixels += point.px;
     *pixels = pixels.color;
 }
+
 
 pragma( inline, true )
 void line( Pixels pixels, LineGFXI line )
@@ -159,6 +200,39 @@ auto is_d( LineGFXI line )
 }
 
 
+version(X86_64)
+version(Win64)
+pragma( inline, true )
+void h_line( Pixels pixels, LineGFXI line )
+{
+    // EDI = current
+    // EAX = color
+    // ECX = count // w for h_line, h for v_line. + to right, - to left
+    // ... = _x_inc
+    // ESI = _y_inc
+    asm
+    {
+        naked          ;
+
+        test  RCX, RCX ;# if count < 0
+        js    TO_LEFT  ;#   left
+                        # else 
+    TO_RIGHT:          ;#   right
+        cld            ;#   
+        jmp   LOOP     ;#
+
+    TO_LEFT:            # left
+        std            ;#   left
+        neg   RCX      ;#   ABS(x)
+
+    LOOP:              ;#
+        rep            ;#
+        stosd          ;#  for 0..count: *current = color
+    }
+}
+
+// default
+static if ( !__traits(compiles, "&.h_line" ) )
 pragma( inline, true )
 void h_line( Pixels pixels, LineGFXI line )
 {
@@ -169,20 +243,72 @@ void h_line( Pixels pixels, LineGFXI line )
     if ( _count == 0 )
         return;
 
-    while (1)
+    if ( _count < 0 )
     {
-        *_dst = _color;
+        while (1)
+        {
+            *_dst = _color;
 
-        _count--;
-        if ( _count == 0 )
-            break;
+            _count--;
+            if ( _count == 0 )
+                break;
 
-        _dst++;
+            _dst++;
+        }
+        pixels.a = _dst-1;
     }
+    else
+    {
+        while (1)
+        {
+            *_dst = _color;
 
-    pixels.a = _dst-1;
+            _count--;
+            if ( _count == 0 )
+                break;
+
+            _dst--;
+        }
+        pixels.a = _dst-1;
+    }
 }
 
+version(X86_64)
+version(Win64)
+pragma( inline, true )
+void v_line( Pixels pixels, LineGFXI line )
+{
+    // EDI = current
+    // EAX = color
+    // ECX = count // w for h_line, h for v_line. + to down, - to up
+    // ... = _x_inc
+    // ESI = _y_inc
+    //
+    // EDX = _inc =
+    //   (count >= 0) ? 
+    //     _y_inc : 
+    //    -_y_inc
+    asm
+    {
+        naked           ;
+
+        mov   RDX, RSI  ;# _inc = _y_inc
+
+        test  RCX, RCX  ;# if count >= 0
+        jns   V_LOOP    ;#   _inc
+        neg   RDX       ;# else 
+        neg   RCX       ;#   -count
+                        ;#   -_inc
+    V_LOOP:             ;#
+        mov   dword ptr [RDI], EAX;  # *current = color
+        add   RDI, RDX  ; current += _inc
+        dec   RCX       ; count--
+        jnz   V_LOOP    ; if count != 0 continue
+    }
+}
+
+// default
+static if ( !__traits(compiles, "&.v_line" ) )
 pragma( inline, true )
 void v_line( Pixels pixels, LineGFXI line )
 {
@@ -221,6 +347,45 @@ void d_line( Pixels pixels, LineGFXI line )
 }
 
 
+version(X86_64)
+version(Win64)
+pragma( inline, true )
+void d_line_45( Pixels pixels, LineGFXI line )
+{
+    // EDI = current
+    // EAX = color
+    // ECX = count // w for h_line, h for v_line. + to down, - to up
+    //       xy
+    // ... = _x_inc
+    // ESI = _y_inc
+    //
+    // EDX = _inc
+    //   _inc = 
+    //     (dx >= 0) && (dy >= 0):  _x_inc + _y_inc 
+    //     (dx >= 0) && (dy <  0):  _x_inc - _y_inc 
+    //     (dx <  0) && (dy >= 0): -_x_inc + _y_inc 
+    //     (dx <  0) && (dy <  0): -_x_inc - _y_inc 
+    asm
+    {
+        naked           ;
+
+        mov   RDX, RSI  ;# _inc = _y_inc
+
+        test  RCX, RCX  ;# if count >= 0
+        jns   D_LOOP    ;#   _inc
+        neg   RDX       ;# else 
+        neg   RCX       ;#   -count
+                        ;#   -_inc
+    D_LOOP:             ;#
+        mov   dword ptr [RDI], EAX;  # *current = color
+        add   RDI, RDX  ; current += _inc
+        dec   RCX       ; count--
+        jnz   V_LOOP    ; if count != 0 continue
+    }
+}
+
+// default
+static if ( !__traits(compiles, "&.d_line_45" ) )
 pragma( inline, true )
 void d_line_45( Pixels pixels, LineGFXI line )
 {
