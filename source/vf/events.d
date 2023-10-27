@@ -147,6 +147,18 @@
 // module
 //   on_...( Event* e )
 
+// OPTIMIZATION
+// on_... <= 2 
+//   if event.type == EVENT_TYPE... { ...; goto _exit; }
+//   if event.type == EVENT_TYPE... { ...; goto _exit; }
+// on_... >= 3
+//   jmp_table
+//   
+//   REDUCE TABLE SIZE
+//     analaize EVENT_TYPEs
+//     make slices
+
+
 alias REG = size_t;
 
 enum EVENT_TYPE

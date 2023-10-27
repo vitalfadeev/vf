@@ -33,16 +33,65 @@ class Painter
     }
 }
 
-
+//
 import vf.ui.window;
+
+version(LINUX_X11)
+auto to_painter(WINDOW)( WINDOW window )
+{
+    return new Painter();
+}
+
+version(LINUX_X11)
+auto to_painter(WINDOW)( WINDOW window )
+{
+    return new Painter();
+}
+version(LINUX_X11)
+auto to_raster(WINDOW:Window)( Painter painter, WINDOW window )
+{
+    // window -> raster
+    auto raster = to_raster( window );
+
+    foreach( op; painter.ops )
+    {
+        final
+        switch ( op.type )
+        {
+            case OP._         : break;
+            case OP.GO_CENTER : raster.go_center(); break;
+            case OP.GO        : raster.go( op.go.ox.to_px ); break;
+            case OP.POINT     : raster.point() ; break;
+            case OP.POINTS    : break;
+            case OP.POINTS    : break;
+            case OP.LINE      : raster.line( op.line.ox.to_px ); break;
+            case OP.LINES     : break;
+            case OP.TRIANGLE  : break;
+            case OP.TRIANGLES : break;
+            case OP.QUAD      : break;
+            case OP.QUADS     : break;
+            case OP.CIRCLE    : break;
+            case OP.CIRCLES   : break;
+            case OP.ARC       : break;
+            case OP.ARCS      : break;
+        }
+    }
+
+    return raster;
+}
+
+
+version(WINDOWS_NATIVE)
 auto to_painter(WINDOW)( WINDOW window, HDC hdc )
 {
     return new Painter();
 }
 
-
+version(WINDOWS_NATIVE)
 import vf.raster;
+version(WINDOWS_NATIVE)
 import vf.ui.window;
+version(WINDOWS_NATIVE)
 auto to_raster(WINDOW:Window)( Painter painter, WINDOW window, HDC hdc )
 {
     // rasterize
@@ -57,7 +106,18 @@ auto to_raster(WINDOW:Window)( Painter painter, WINDOW window, HDC hdc )
             case OP.GO_CENTER : raster.go_center(); break;
             case OP.GO        : raster.go( op.go.ox.to_px ); break;
             case OP.POINT     : raster.point() ; break;
+            case OP.POINTS    : break;
+            case OP.POINTS    : break;
             case OP.LINE      : raster.line( op.line.ox.to_px ); break;
+            case OP.LINES     : break;
+            case OP.TRIANGLE  : break;
+            case OP.TRIANGLES : break;
+            case OP.QUAD      : break;
+            case OP.QUADS     : break;
+            case OP.CIRCLE    : break;
+            case OP.CIRCLES   : break;
+            case OP.ARC       : break;
+            case OP.ARCS      : break;
         }
     }
 
@@ -131,13 +191,23 @@ struct SGFile_Operation
 
 
 //
-enum OP
+enum OP : M16  // 16-bit because AH:GROUP, AL:ACTION
 {
-    _,
-    GO_CENTER,
-    GO,
-    POINT,
-    LINE,
+    _         = 0b00000000_00000000,
+    GO_CENTER = 0b00000001_00000001,
+    GO        = 0b00000001_00000010,
+    POINT     = 0b00000010_00000001,
+    POINTS    = 0b00000010_00000010,
+    LINE      = 0b00000100_00000001,
+    LINES     = 0b00000100_00000010,
+    TRIANGLE  = 0b00001000_00000001,
+    TRIANGLES = 0b00001000_00000010,
+    QUAD      = 0b00010000_00000001,
+    QUADS     = 0b00010000_00000010,
+    CIRCLE    = 0b00100000_00000001,
+    CIRCLES   = 0b00100000_00000010,
+    ARC       = 0b01000000_00000001,
+    ARCS      = 0b01000000_00000010,
 }
 
 
@@ -149,7 +219,10 @@ struct Op
         GoCenter go_center;
         Go       go;
         Point    point;
+        PointAt  point_at;
+        Points   points;
         Line     line;
+        Lines    lines;
     }
 
     this( GoCenter b )
@@ -189,10 +262,28 @@ struct Point
     OP type = OP.POINT;
 }
 
+struct PointAt
+{
+    OP type = OP.POINTAT;
+    OX ox;
+}
+
+struct Points
+{
+    OP   type = OP.POINTS;
+    OX[] oxs;
+}
+
 struct Line
 {
     OP type = OP.LINE;
     OX ox;
+}
+
+struct Lines
+{
+    OP   type = OP.LINES;
+    OX[] oxs;
 }
 
 
@@ -222,3 +313,31 @@ struct Ops
         _super ~= Op( b );
     }
 }
+
+
+// object
+//   drawable
+//     button
+//
+// drawable
+//   point
+//   points
+//   line
+//   lines
+//
+// object
+//   clickable
+//     button
+//
+// clickable
+//   click
+//
+// interface clickable
+//   click
+//   on_click
+//   event( ClickEvent* )
+//   event( Event* )
+// 
+// enum Events
+//   click
+

@@ -8,4 +8,7 @@ else
 version (WINDOWS_NATIVE)
 public import vf.platform.windows.game;
 else
+version (LINUX_X11)
+public import vf.platform.linux.game;
+else
 static assert( 0, "Unsupported platform" );

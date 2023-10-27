@@ -1,9 +1,8 @@
-module vf.platform.windows.types;
+module vf.platform.linux.types;
 
 version (LINUX_X11):
-import core.sys.windows.windows;
 import std.traits;
-import std.windows.syserror;
+import xcb.xcb;
 import vf.traits;
 
 
@@ -58,7 +57,37 @@ PX to_px( OX ox )
 //
 class LinuxX11Exception : Exception
 {
-    //
+    this( string s )
+    {
+        _super( s );
+    }
+}
+
+class LinuxX11XCBException : Exception
+{
+    import xcb.xcb;
+
+    this( string s, xcb_connection_t* c )
+    {
+        auto err = xcb_connection_has_error(c);
+        switch ( err ) {
+            case XCB_CONN_ERROR: 
+                s ~= ": [XCB_CONN_ERROR]: because of socket errors, pipe errors or other stream errors"; break;
+            case XCB_CONN_CLOSED_EXT_NOTSUPPORTED:
+                s ~= ": [XCB_CONN_CLOSED_EXT_NOTSUPPORTED]: when extension not supported"; break;
+            case XCB_CONN_CLOSED_MEM_INSUFFICIENT:
+                s ~= ": [XCB_CONN_CLOSED_MEM_INSUFFICIENT]: when memory not available"; break;
+            case XCB_CONN_CLOSED_REQ_LEN_EXCEED:
+                s ~= ": [XCB_CONN_CLOSED_REQ_LEN_EXCEED]: exceeding request length that server accepts"; break;
+            case XCB_CONN_CLOSED_PARSE_ERR:
+                s ~= ": [XCB_CONN_CLOSED_PARSE_ERR]: error during parsing display string"; break;
+            case XCB_CONN_CLOSED_INVALID_SCREEN:
+                s ~= ": [XCB_CONN_CLOSED_INVALID_SCREEN]: because the server does not have a screen matching the display"; break;
+            default:
+        }
+
+        _super( s );
+    }
 }
 
 nothrow
@@ -72,31 +101,12 @@ void show_throwable( Throwable o )
     catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
 }
 
+alias EVENT_TYPE = xcb_generic_event_t*;
 
-struct Event 
+struct Event
 {
-    UINT _super;
+    xcb_generic_event_t _super;
     alias _super this;
 }
 
-struct EventCode
-{
-    WPARAM _super;
-    alias _super this;
-}
-
-struct EventValue
-{
-    LPARAM _super;
-    alias _super this;
-}
-
-alias LRESULT            = core.sys.windows.windows.LRESULT;
-alias HDC                = core.sys.windows.windows.HDC;
-alias PAINTSTRUCT        = core.sys.windows.windows.PAINTSTRUCT;
-alias BeginPaint         = core.sys.windows.windows.BeginPaint;
-alias EndPaint           = core.sys.windows.windows.EndPaint;
-alias MessageBox         = core.sys.windows.windows.MessageBox;
-alias MB_OK              = core.sys.windows.windows.MB_OK;
-alias MB_ICONEXCLAMATION = core.sys.windows.windows.MB_ICONEXCLAMATION;
-alias NULL               = core.sys.windows.windows.NULL;
+alias ERESULT = void;

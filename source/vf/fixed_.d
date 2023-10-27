@@ -1,5 +1,7 @@
 module vf.fixed_;
 
+
+/*
 import std.stdio;
 
 alias M32 = int;
@@ -136,3 +138,4 @@ auto ABS(T)(T a)
             ( a);
 }
 
+*/

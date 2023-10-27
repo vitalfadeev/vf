@@ -76,101 +76,138 @@ class MyWindow : Window
     }
 
     override
-    LRESULT event( Event e, EventCode code, EventValue value )
+    ERESULT event( EVENT_TYPE event_type, Event* event ) 
     {
-        return auto_route_event( this, e, code, value );
+        return auto_route_event( this, event_type, event );
     }
 
-    LRESULT on_WM_PAINT( Event e, EventCode code, EventValue value )
+    // Linux
+    version(LINUX_X11)
+    ERESULT on_XCB_EXPOSE( EVENT_TYPE event_type, Event* event ) 
     {
-    	version(WINDOWS_NATIVE)
-    	{
-	        try {
-	            HDC         hdc;
-	            PAINTSTRUCT ps; 
-	            hdc = BeginPaint( hwnd, &ps );
-	            //RECT        crect;
-	            //GetClientRect( hwnd, &crect );
+        HDC         hdc;
+        PAINTSTRUCT ps; 
+        hdc = BeginPaint( hwnd, &ps );
 
-                //version(READ)
-                //{
-                //import std.stdio : File;
-                //File("savegame.sg")
-                //    .to_painter()
-                //    .to_raster( this, hdc )
-                //    .to_window( this, hdc );
-                //}
-                version(WRITE)
-                {
-                import std.stdio : File;
-		        this.to_painter( hdc )
-		        	// WH
-		        	//.go_center()
-                    //.line(  +10,-10  )
-		        	//.line(  +40, 0   )
-		        	//.line(  +50,+50  )
-		        	//.line(    0,+50  )
-		        	//.line( -100,+100 )
-		        	//.line( -100,-100 )
-		        	//.line(    0,-50  )
-		        	//.line(  +50,-50  )
-		        	//.line(   40, 0   )
-		        	//.line(  +10,+10  )
+        xcb_gcontext_t foreground;
+        foreground = xcb_generate_id( c );
 
-		        	//.go( 0,-100 )
-		        	//.line( +203,+10  )
-		        	//.line( -203,+10  )
-		        	//.line( -203,-10  )
-		        	//.line( +203,-10  )
+        // geometric objects
+        xcb_point_t[4] points = [
+            {10, 10},
+            {10, 20},
+            {20, 10},
+            {20, 20}
+        ];
+        xcb_poly_point( c, XCB_COORD_MODE_ORIGIN, win, foreground, points.length, points.ptr );
 
-		        	//.go( 0,-90  )
-		        	//.line( +10,+103 )
-		        	//.line( -10,+103 )
-		        	//.line( -10,-103 )
-		        	//.line( +10,-103 )
+        this
+            .to_painter()               // window  -> painter  (get pixels)
+              .go_center()
+              .go( 0, +10 )
+              .line( +5,0 )
+              .tee
+                .to_file( "savegame.sg" )
+            .to_raster( this, this.c )  // painter -> raster   (rasterize)
+            .to_window( this );         // raster  -> window   (put pixels)
 
-                    .go_center()
-                    .go( 0, +10 )
-                    .line( +5,0 )
+        EndPaint( hwnd, &ps );
 
-                    //.line( +8,+5 )  // 8/5 = 5 items by 1 px  + 1 item by 3 px
-                    //.line( +8,+3 )
-                    //.line( -8,-3 )
-                    //.line( +8,-3 )
+        return ERESULT.init;
+    }
 
-                    //.go( 0, +10 )
-                    //.line( +3,+3 )
-                    //.line( -3,+3 )
-                    //.line( -3,-3 )
-                    //.line( +3,-3 )
 
-                    //.go( 0, +10 )
-                    //.line( +2,+2 )
-                    //.line( -2,+2 )
-                    //.line( -2,-2 )
-                    //.line( +2,-2 )
+    // Windows
+	version(WINDOWS_NATIVE)
+    ERESULT on_WM_PAINT( EVENT_TYPE event_type, Event* event ) 
+    {
+        try {
+            HDC         hdc;
+            PAINTSTRUCT ps; 
+            hdc = BeginPaint( hwnd, &ps );
+            //RECT        crect;
+            //GetClientRect( hwnd, &crect );
 
-                    .tee
-                        .to_file( "savegame.sg" )
-                    .to_raster( this, hdc )
-                    .to_window( this, hdc );
-                }
+            //version(READ)
+            //{
+            //import std.stdio : File;
+            //File("savegame.sg")
+            //    .to_painter()
+            //    .to_raster( this, hdc )
+            //    .to_window( this, hdc );
+            //}
+            version(WRITE)
+            {
+            import std.stdio : File;
+	        this.to_painter( hdc )
+	        	// WH
+	        	//.go_center()
+                //.line(  +10,-10  )
+	        	//.line(  +40, 0   )
+	        	//.line(  +50,+50  )
+	        	//.line(    0,+50  )
+	        	//.line( -100,+100 )
+	        	//.line( -100,-100 )
+	        	//.line(    0,-50  )
+	        	//.line(  +50,-50  )
+	        	//.line(   40, 0   )
+	        	//.line(  +10,+10  )
 
-	            EndPaint( hwnd, &ps ) ;
-	        } 
-	        catch (Throwable o) { o.show_throwable; }
-	    }
+	        	//.go( 0,-100 )
+	        	//.line( +203,+10  )
+	        	//.line( -203,+10  )
+	        	//.line( -203,-10  )
+	        	//.line( +203,-10  )
+
+	        	//.go( 0,-90  )
+	        	//.line( +10,+103 )
+	        	//.line( -10,+103 )
+	        	//.line( -10,-103 )
+	        	//.line( +10,-103 )
+
+                .go_center()
+                .go( 0, +10 )
+                .line( +5,0 )
+
+                //.line( +8,+5 )  // 8/5 = 5 items by 1 px  + 1 item by 3 px
+                //.line( +8,+3 )
+                //.line( -8,-3 )
+                //.line( +8,-3 )
+
+                //.go( 0, +10 )
+                //.line( +3,+3 )
+                //.line( -3,+3 )
+                //.line( -3,-3 )
+                //.line( +3,-3 )
+
+                //.go( 0, +10 )
+                //.line( +2,+2 )
+                //.line( -2,+2 )
+                //.line( -2,-2 )
+                //.line( +2,-2 )
+
+                .tee
+                    .to_file( "savegame.sg" )
+                .to_raster( this, hdc )
+                .to_window( this, hdc );
+            }
+
+            EndPaint( hwnd, &ps ) ;
+        } 
+        catch (Throwable o) { o.show_throwable; }
 
         return 0;
     }
 
-    LRESULT on_WM_LBUTTONDOWN( Event e, EventCode code, EventValue value )
+    version(WINDOWS_NATIVE)
+    ERESULT on_WM_LBUTTONDOWN( Event e, EventCode code, EventValue value )
     {
     	MessageBox( NULL, "on_WM_LBUTTONDOWN", "info", MB_OK | MB_ICONEXCLAMATION );
         return 0;
     }
 
-    LRESULT on_WM_DESTROY( Event e, EventCode code, EventValue value )
+    version(WINDOWS_NATIVE)
+    ERESULT on_WM_DESTROY( Event e, EventCode code, EventValue value )
     {
         MyGame().quit();
 

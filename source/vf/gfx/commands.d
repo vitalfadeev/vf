@@ -14,13 +14,13 @@ alias BYTE   = ubyte ;  //   8
 alias WORD   = ushort;  //  16
 alias DWORD  = uint  ;  //  32
 alias QWORD  = ulong ;  //  64
-alias DQWORD = ucent ;  // 128
+//alias DQWORD = core.int128.Cent ;  // 128
 
 alias M8     = BYTE  ;  //   8
 alias M16    = WORD  ;  //  16
 alias M32    = DWORD ;  //  32
 alias M64    = QWORD ;  //  64
-alias M128   = DQWORD;  // 128
+//alias M128   = DQWORD;  // 128
 
 // POINTER
 alias PTR    = void*;   // 64 on x86_64, 32 on x86
@@ -53,6 +53,14 @@ struct GFXI
     GFXI* next;
 }
 
+struct PX
+{
+    short x;
+    short y;
+}
+
+alias Color = uint;
+
 struct PointGFXI
 {
     GFXI_CODE code = GFXI_CODE.POINT;
@@ -62,13 +70,13 @@ struct PointGFXI
 struct LineGFXI
 {
     GFXI_CODE code = GFXI_CODE.LINE;
-    PX px;
+    PX dxdy;
 }
 
 struct ColorGFXI
 {
     GFXI_CODE code = GFXI_CODE.LINE;
-    COLOR color;
+    Color color;
 }
 
 enum GFXI_CODE
@@ -80,16 +88,66 @@ enum GFXI_CODE
 }
 
 
-struct Queue
-{
-    GFXI a;
+//alias Queue = queue.Queue!GFXI;
+alias Queue = GrowableCircularQueue!GFXI;
+
+struct GrowableCircularQueue(T) {
+    public size_t length;
+    private size_t first, last;
+    private T[] A = [T.init];
+
+    this(T[] items...) pure nothrow @safe {
+        foreach (x; items)
+            push(x);
+    }
+
+    @property bool empty() const pure nothrow @safe @nogc {
+        return length == 0;
+    }
+
+    @property T front() pure nothrow @safe @nogc {
+        assert(length != 0);
+        return A[first];
+    }
+
+    T opIndex(in size_t i) pure nothrow @safe @nogc {
+        assert(i < length);
+        return A[(first + i) & (A.length - 1)];
+    }
+
+    void push(T item) pure nothrow @safe {
+        if (length >= A.length) { // Double the queue.
+            immutable oldALen = A.length;
+            A.length *= 2;
+            if (last < first) {
+                A[oldALen .. oldALen + last + 1] = A[0 .. last + 1];
+                static if (hasIndirections!T)
+                    A[0 .. last + 1] = T.init; // Help for the GC.
+                last += oldALen;
+            }
+        }
+        last = (last + 1) & (A.length - 1);
+        A[last] = item;
+        length++;
+    }
+
+    @property T pop() pure nothrow @safe @nogc {
+        assert(length != 0);
+        auto saved = A[first];
+        static if (hasIndirections!T)
+            A[first] = T.init; // Help for the GC.
+        first = (first + 1) & (A.length - 1);
+        length--;
+        return saved;
+    }
 }
 
 
 struct Pixels
 {
     Color* a;
-    int    pitch;
+    PX     size;
+    Color  color;
 
     void opOpAssign( string op : "+" )( PX px )
     {
@@ -98,28 +156,44 @@ struct Pixels
 }
 
 
+version(stub)
 version(X86_64)
 version(Win64)
-void render( Queue queue, Pixels pixels )
+void render( Queue queue, void* stub, Pixels* pixels )
+//                 RDI          RSI           RDX
 {
     //
 }
 
 // default
-static if ( !__traits(compiles, "&.render" ) )
+static if ( !is( typeof( .render ) ) )
 pragma( inline, true )
-void render( Queue queue, Pixels pixels )
+void render( Queue queue, void* stub, Pixels* pixels )
+//                 RDI          RSI           RDX
 {
+    Queue queue = new Queue;
+
+    queue.put( PointGFXI( GFXI_CODE.POINT, PX( 100, 100 ) ) );
+    queue.put( PointGFXI( GFXI_CODE.POINT, PX( 101, 100 ) ) );
+    queue.put( PointGFXI( GFXI_CODE.POINT, PX( 102, 100 ) ) );
+    queue.put( PointGFXI( GFXI_CODE.POINT, PX( 103, 100 ) ) );
+    queue.put( PointGFXI( GFXI_CODE.POINT, PX( 104, 100 ) ) );
+
     foreach( gfxi; queue )
+        render_one( gfxi.code, &gfxi );
+}
+
+pragma( inline, true )
+void render_one( GFXI_CODE gfxi_code, GFXI* gfxi, Pixels* pixels )
+//                    RDI              RSI           RDX
+{
+    final
+    switch ( gfxi_code )  // auto-optomized by DMD, LDC to jmp-table
     {
-        final
-        switch ( gfxi.code )
-        {
-            case GFXI_CODE._    : { break; };
-            case GFXI_CODE.POINT: { point( pixels, gfxi.point ); break; };
-            case GFXI_CODE.LINE : { line ( pixels, gfxi.line  ); break; };
-            case GFXI_CODE.COLOR: { color( pixels, gfxi.color ); break; };
-        }
+        case GFXI_CODE._    : { break; }
+        case GFXI_CODE.POINT: { point( gfxi_code, cast(PointGFXI*)gfxi, pixels ); break; }
+        case GFXI_CODE.LINE : { line ( gfxi_code, cast(LineGFXI* )gfxi, pixels ); break; }
+        case GFXI_CODE.COLOR: { color( gfxi_code, cast(colorGFXI*)gfxi, pixels ); break; }
     }
 }
 
@@ -136,7 +210,7 @@ void render( Queue queue, Pixels pixels )
 version(X86_64)
 version(Win64)
 pragma( inline, true )
-void point( Pixels pixels, PointGFXI point )
+void point( GFXI_CODE gfxi_code, PointGFXI* point, Pixels* pixels )
 {
     // EDI = current
     // EAX = color
@@ -152,9 +226,9 @@ void point( Pixels pixels, PointGFXI point )
 }
 
 // default
-static if ( !__traits(compiles, "&.point" ) )
+static if ( !is( typeof( .point ) ) )
 pragma( inline, true )
-void point( Pixels pixels, PointGFXI point )
+void point( GFXI_CODE gfxi_code, PointGFXI* point, Pixels* pixels )
 {
     pixels += point.px;
     *pixels = pixels.color;
@@ -162,7 +236,7 @@ void point( Pixels pixels, PointGFXI point )
 
 
 pragma( inline, true )
-void line( Pixels pixels, LineGFXI line )
+void line( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
 {
     if ( line.is_h )
         h_line( pixels, line );
@@ -175,7 +249,7 @@ void line( Pixels pixels, LineGFXI line )
 
 
 pragma( inline, true )
-void color( Pixels pixels, ColorGFXI color )
+void color( GFXI_CODE gfxi_code, ColorGFXI* color, Pixels* pixels )
 {
     pixels.color = color.color;
 }
@@ -184,32 +258,34 @@ void color( Pixels pixels, ColorGFXI color )
 pragma( inline, true )
 auto is_h( LineGFXI line )
 {
-    return line.px.y == 0;
+    return line.dxdy.y == 0;
 }
 
 pragma( inline, true )
 auto is_v( LineGFXI line )
 {
-    return line.px.x == 0;
+    return line.dxdy.x == 0;
 }
 
 pragma( inline, true )
 auto is_d( LineGFXI line )
 {
-    return line.px.x != 0 && line.px.y != 0;
+    return line.dxdy.x != 0 && line.dxdy.y != 0;
 }
 
 
+version(stub)
 version(X86_64)
 version(Win64)
 pragma( inline, true )
-void h_line( Pixels pixels, LineGFXI line )
+void h_line( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
+//                     RDI                  RSI           RDX
 {
-    // EDI = current
-    // EAX = color
-    // ECX = count // w for h_line, h for v_line. + to right, - to left
-    // ... = _x_inc
-    // ESI = _y_inc
+    // RDX = pixels.a
+    // EAX = pixels.color
+    // RCX = line.dxdy // w for h_line, h for v_line. + to right, - to left
+    //     
+/*
     asm
     {
         naked          ;
@@ -229,54 +305,49 @@ void h_line( Pixels pixels, LineGFXI line )
         rep            ;#
         stosd          ;#  for 0..count: *current = color
     }
+*/
 }
 
 // default
-static if ( !__traits(compiles, "&.h_line" ) )
+static if ( !is( typeof( .h_line ) ) )
 pragma( inline, true )
-void h_line( Pixels pixels, LineGFXI line )
+void h_line( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
 {
-    auto _count = ABS(line.px.x);
-    auto _dst   = pixels.a;
-    auto _color = pixels.color;
+    auto _count = line.dxdy.x;
 
     if ( _count == 0 )
         return;
 
+    auto _dst   = pixels.a;
+    auto _color = pixels.color;
+    auto _x_inc = 1;
+
     if ( _count < 0 )
     {
-        while (1)
-        {
-            *_dst = _color;
-
-            _count--;
-            if ( _count == 0 )
-                break;
-
-            _dst++;
-        }
-        pixels.a = _dst-1;
+        _count = -_count;
+        _x_inc = -_x_inc;
     }
-    else
+
+    while (1)
     {
-        while (1)
-        {
-            *_dst = _color;
+        *_dst = _color;
 
-            _count--;
-            if ( _count == 0 )
-                break;
+        _count--;
+        if ( _count == 0 )
+            break;
 
-            _dst--;
-        }
-        pixels.a = _dst-1;
+        _dst += _x_inc;
     }
+
+    pixels.a = _dst - _x_inc;
 }
 
+version(stub)
 version(X86_64)
 version(Win64)
 pragma( inline, true )
-void v_line( Pixels pixels, LineGFXI line )
+void v_line( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
+//                     RDI                  RSI           RDX
 {
     // EDI = current
     // EAX = color
@@ -288,6 +359,7 @@ void v_line( Pixels pixels, LineGFXI line )
     //   (count >= 0) ? 
     //     _y_inc : 
     //    -_y_inc
+/*
     asm
     {
         naked           ;
@@ -305,20 +377,28 @@ void v_line( Pixels pixels, LineGFXI line )
         dec   RCX       ; count--
         jnz   V_LOOP    ; if count != 0 continue
     }
+*/
 }
 
 // default
-static if ( !__traits(compiles, "&.v_line" ) )
+static if ( !is( typeof( .v_line ) ) )
 pragma( inline, true )
-void v_line( Pixels pixels, LineGFXI line )
+void v_line( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
 {
-    auto _count = ABS(line.px.y);
-    auto _dst   = pixels.a;
-    auto _color = pixels.color;
-    auto _pitch = pixels.pitch;
+    auto _count = line.dxdy.y;
 
     if ( _count == 0 )
         return;
+
+    auto _dst   = pixels.a;
+    auto _color = pixels.color;
+    auto _y_inc = pixels.size.w;
+
+    if ( _count < 0 )
+    {
+        _count = -_count;
+        _y_inc = -_y_inc;
+    }
 
     while (1)
     {
@@ -328,14 +408,14 @@ void v_line( Pixels pixels, LineGFXI line )
         if ( _count == 0 )
             break;
 
-        _dst += _pitch;
+        _dst += _y_inc;
     }
 
-    pixels.a = _dst - _pitch;
+    pixels.a = _dst - _y_inc;
 }
 
 pragma( inline, true )
-void d_line( Pixels pixels, LineGFXI line )
+void d_line( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
 {
     if ( line.px.x = line.px.y )
         d_line_45();
@@ -347,10 +427,12 @@ void d_line( Pixels pixels, LineGFXI line )
 }
 
 
+version(stub)
 version(X86_64)
 version(Win64)
 pragma( inline, true )
-void d_line_45( Pixels pixels, LineGFXI line )
+void d_line_45( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
+//                        RDI                  RSI           RDX
 {
     // EDI = current
     // EAX = color
@@ -365,6 +447,7 @@ void d_line_45( Pixels pixels, LineGFXI line )
     //     (dx >= 0) && (dy <  0):  _x_inc - _y_inc 
     //     (dx <  0) && (dy >= 0): -_x_inc + _y_inc 
     //     (dx <  0) && (dy <  0): -_x_inc - _y_inc 
+/*
     asm
     {
         naked           ;
@@ -382,25 +465,34 @@ void d_line_45( Pixels pixels, LineGFXI line )
         dec   RCX       ; count--
         jnz   V_LOOP    ; if count != 0 continue
     }
+*/
 }
 
 // default
-static if ( !__traits(compiles, "&.d_line_45" ) )
+static if ( !is( typeof( .d_line_45 ) ) )
 pragma( inline, true )
-void d_line_45( Pixels pixels, LineGFXI line )
+void d_line_45( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
 {
-    auto x = line.px.x;
-    auto y = line.px.y;
+    auto _x = line.dxdy.x;
+    auto _y = line.dxdy.y;
 
     auto _dst   = pixels.a;
     auto _color = pixels.color;
-    auto _count = ABS(x);
+    auto _count = _x;
 
-    auto _x_inc = color.sizeof;
-    auto _y_inc = pixels.pitch;
+    auto _x_inc = 1;
+    auto _y_inc = pixels.size.w;
 
     if ( _count == 0 )
         return;
+
+    if ( _count < 0 )
+        _x_inc = -_x_inc;
+
+    if ( _y < 0 )
+        _y_inc = -_y_inc;
+
+    auto _inc = _x_inc + _y_inc;
 
     while (1)
     {
@@ -410,28 +502,43 @@ void d_line_45( Pixels pixels, LineGFXI line )
         if ( _count == 0 )
             break;
 
-        _dst += _x_inc + _y_inc;
+        _dst += _inc;
     }
+
+    _dst -= _inc;
 }
 
 pragma( inline, true )
-void d_line_30( Pixels pixels, LineGFXI line )
+void d_line_30( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
 {
-    auto x = line.px.x;
-    auto y = line.px.y;
+    auto _x = line.dxdy.x;
+    auto _y = line.dxdy.y;
 
-    auto _dst   = pixels.a;
-    auto _color = pixels.color;
-    auto _count = ABS(x);
-
-    auto _x_inc = color.sizeof;
-    auto _y_inc = pixels.pitch;
-
-    auto _fraq_base = x/y;
-    auto _fraq      = _fraq_base;
+    auto _count = _x;
 
     if ( _count == 0 )
         return;
+
+    auto _dst   = pixels.a;
+    auto _color = pixels.color;
+
+    auto _x_inc = 1;
+    auto _y_inc = pixels.size.w;
+
+    auto _fraq_base = _x/_y;
+    if ( _fraq_base < 0 )
+        _fraq_base = -_fraq_base;
+
+    auto _fraq = _fraq_base;
+
+    if ( _count < 0 )
+    {
+        _count = - _count;
+        _x_inc = -_x_inc;
+    }
+
+    if ( _y < 0 )
+        _y_inc = -_y_inc;
 
     while (1)
     {
@@ -453,23 +560,35 @@ void d_line_30( Pixels pixels, LineGFXI line )
 }
 
 pragma( inline, true )
-void d_line_60( Pixels pixels, LineGFXI line )
+void d_line_60( GFXI_CODE gfxi_code, LineGFXI* line, Pixels* pixels )
 {
-    auto x = line.px.x;
-    auto y = line.px.y;
+    auto _x = line.dx.x;
+    auto _y = line.dx.y;
 
-    auto _dst   = pixels.a;
-    auto _color = pixels.color;
-    auto _count = ABS(x);
-
-    auto _x_inc = color.sizeof;
-    auto _y_inc = pixels.pitch;
-
-    auto _fraq_base = y/x;
-    auto _fraq      = _fraq_base;
+    auto _count = _x;
 
     if ( _count == 0 )
         return;
+
+    auto _dst   = pixels.a;
+    auto _color = pixels.color;
+    auto _x_inc = 1;
+    auto _y_inc = pixels.size.w;
+
+    auto _fraq_base = y/x;
+    if ( _fraq_base < 0 )
+        _fraq_base = -_fraq_base;
+
+    auto _fraq = _fraq_base;
+
+    if ( _count < 0 )
+    {
+        _count = - _count;
+        _x_inc = -_x_inc;
+    }
+
+    if ( _y < 0 )
+        _y_inc = -_y_inc;
 
     while (1)
     {
@@ -489,12 +608,3 @@ void d_line_60( Pixels pixels, LineGFXI line )
         _dst += _y_inc;
     }
 }
-
-auto ABS(T)(T a)
-{
-    return 
-        ( a < 0 ) ? 
-            (-a):
-            ( a);
-}
-

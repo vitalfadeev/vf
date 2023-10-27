@@ -9,6 +9,6 @@
 		"vf" : { "version": "*", "path": "../.." }
 	},
 	"subConfigurations" : {
-		"vf": "WINDOWS_NATIVE"
+		"vf": "LINUX_X11"
 	}
 }

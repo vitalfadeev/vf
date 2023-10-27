@@ -57,15 +57,17 @@ struct Fixed_16_16
         // ? = ---------
         //        100
 
-        real frac;
-        real intpart;
-        frac = modf( a, intpart );
-        this.h = intpart.to!M16;
-        this.l = 
-            ( 
-                ( nearbyint(frac * 1_000) * (1<<16) ) / 
-                1_000
-            ).to!M16;
+        //real frac;
+        //real intpart;
+        //frac = modf( a, intpart );
+        //this.h = intpart.to!M16;
+        //this.l = 
+        //    ( 
+        //        ( nearbyint(frac * 1_000) * (1<<16) ) / 
+        //        1_000
+        //    ).to!M16;
+        this.h = a.to!M16;
+        this.l = ((a - a.to!int)*65536/1000).to!M16;
     }
 
     this( Fixed_16_16 fxd )

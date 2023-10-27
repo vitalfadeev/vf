@@ -13,17 +13,17 @@ version(X86_64)
 {
     version(Windows)
     {
-        alias AR1 = "RCX";
-        alias AR2 = "RDX";
-        alias AR3 = "R8";
-        alias AR4 = "R9";
+        enum AR1 = "RCX";
+        enum AR2 = "RDX";
+        enum AR3 = "R8";
+        enum AR4 = "R9";
     }
     version(linux)
     {
-        alias AR1 = "RDI";
-        alias AR2 = "RSI";
-        alias AR3 = "RDX";
-        alias AR4 = "RCX";
+        enum AR1 = "RDI";
+        enum AR2 = "RSI";
+        enum AR3 = "RDX";
+        enum AR4 = "RCX";
         // R8, R9
     }
 
@@ -36,10 +36,10 @@ version(X86)  // 32 bit registers
     version(Windows)
     {   // pass arguments on the stack
         // thiscall
-        alias AR1 = "ECX";
-        alias AR2 = "";
-        alias AR3 = "";
-        alias AR4 = "";
+        enum AR1 = "ECX";
+        enum AR2 = "";
+        enum AR3 = "";
+        enum AR4 = "";
         //// fastcall, __fastcall, __msfastcall
         //alias AR1 = "ECX";
         //alias AR2 = "EDX";
@@ -48,10 +48,10 @@ version(X86)  // 32 bit registers
     }
     version(linux)
     {
-        alias AR1 = "EDI";
-        alias AR2 = "ESI";
-        alias AR3 = "EDX";
-        alias AR4 = "ECX";
+        enum AR1 = "EDI";
+        enum AR2 = "ESI";
+        enum AR3 = "EDX";
+        enum AR4 = "ECX";
         // R8, R9
     }
 
@@ -66,7 +66,7 @@ extern(D):
 alias X   = short;
 alias Y   = short;
 alias M32 = uint;
-alias M64 = ulong;
+//alias M64 = ulong;
 
 version (x86)
 alias M32 = uint;
@@ -94,6 +94,7 @@ struct PX
     }
 }
 
+version (stub)
 version (X86_64)
 struct PX
 {
@@ -118,6 +119,8 @@ struct PX
     }
 }
 
+version(LDC)
+{
 import ldc.llvmasm;
 import ldc.attributes;
 pragma(inline, true)
@@ -133,6 +136,7 @@ M64 px_get_y( ref ulong px )
             ", 
             "=r,r",px
         );
+}
 }
 
 void test( PX px )
