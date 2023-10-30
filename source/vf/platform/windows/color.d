@@ -1,8 +1,8 @@
-module vf.color;
+module vf.platform.windows.color;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.types;
+import vf.platform.windows.types;
 
 struct Color32
 {

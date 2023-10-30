@@ -1,13 +1,16 @@
 module vf.platform;
 
 version (SDL)
-public import vf.platform.sdl.platform;
+public import vf.platform.sdl;
 else
 version (WINDOWS)
-public import vf.platform.windows.platform;
+public import vf.platform.windows;
 else
 version (XCB)
-public import vf.platform.xcb.platform;
+public import vf.platform.xcb;
+else
+version (XLIB)
+public import vf.platform.xlib;
 else
 static assert( 0, "Unsupported platform" );
 

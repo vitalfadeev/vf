@@ -38,7 +38,7 @@ class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
 }
 
 
-import vf.ui.window;
+import vf.window;
 WINDOW to_window(WINDOW:Window)( Raster This, WINDOW window, HDC hdc )
     // if ( WINDOW inherited from Window )
 {

@@ -1,11 +1,11 @@
-module vf.platform.xcb.ui.window;
+module vf.platform.xcb.window;
 
 version(XCB):
 import xcb.xcb;
 import vf.platform;
 import vf.event;
 import vf.sensor;
-import vf.ui.window_manager;
+import vf.window_manager;
 import vf.types : PX;
 
 

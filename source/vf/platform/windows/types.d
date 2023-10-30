@@ -4,7 +4,7 @@ version (WINDOWS):
 import core.sys.windows.windows;
 import std.traits;
 import std.windows.syserror;
-import vf.event;
+import vf.platform.windows.event;
 import vf.traits;
 
 

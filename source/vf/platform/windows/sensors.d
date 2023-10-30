@@ -2,8 +2,8 @@ module vf.platform.windows.sensors;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.event;
-import vf.sensor;
+import vf.platform.windows.event;
+import vf.platform.windows.sensor;
 
 
 struct Sensors

@@ -4,7 +4,7 @@ version(XCB):
 import xcb.xcb;
 import vf.platform;
 import vf.event;
-import vf.ui.window : Window;
+import vf.window : Window;
 
 
 struct Queue

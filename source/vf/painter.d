@@ -1,6 +1,6 @@
 module vf.painter;
 
-import vf.types;
+import vf;
 
 
 class Painter
@@ -34,7 +34,7 @@ class Painter
 }
 
 //
-import vf.ui.window;
+import vf;
 
 version(LINUX_X11)
 auto to_painter(WINDOW)( WINDOW window )
@@ -88,14 +88,12 @@ auto to_painter(WINDOW)( WINDOW window, HDC hdc )
 }
 
 version(WINDOWS)
-import vf.raster;
-version(WINDOWS)
-import vf.ui.window;
+import vf;
 version(WINDOWS)
 auto to_raster(WINDOW:Window)( Painter painter, WINDOW window, HDC hdc )
 {
     // rasterize
-    auto raster = vf.ui.window.to_raster( window, hdc );
+    auto raster = vf.window.to_raster( window, hdc );
 
     foreach( op; painter.ops )
     {

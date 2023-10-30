@@ -2,7 +2,7 @@ module vf.platform.windows.raster;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.types;
+import vf.platform.windows.types;
 import vf.gfx.raster;
 
 
@@ -34,7 +34,7 @@ class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
 }
 
 
-import vf.ui.window;
+import vf.platform.windows.window;
 WINDOW to_window(WINDOW:Window)( Raster This, WINDOW window, HDC hdc )
     // if ( WINDOW inherited from Window )
 {

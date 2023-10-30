@@ -33,7 +33,7 @@ import xcb.xcb;
 import vf.platform;
 import vf.queue;
 import vf.sensors;
-import vf.ui.window;
+import vf.window;
 
 
 class Game

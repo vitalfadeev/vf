@@ -1,13 +1,13 @@
-module vf.platform.windows.ui.window;
+module vf.platform.windows.window;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.event : Event, EVENT_TYPE;
-import vf.types;
-import vf.sensor;
+import vf.platform.windows.event : Event, EVENT_TYPE;
+import vf.platform.windows.types;
+import vf.platform.windows.sensor;
 
 
-class Window : ISensor
+class Window : ISensor  // ISensAble, IClickAble, IDrawAble
 {
     HWND hwnd;
 
@@ -32,7 +32,7 @@ class Window : ISensor
     {
         import std.utf : toUTF16z;
         import std.traits;
-        import vf.ui.window_manager : window_manager;
+        import vf.platform.windows.window_manager : window_manager;
 
         HINSTANCE hInstance = GetModuleHandle(NULL);
         
@@ -74,7 +74,7 @@ class Window : ISensor
             throw new WindowsException( "Unable to create window"  );
 
         // Link HWND -> Window
-        import vf.ui.window_manager : window_manager;
+        import vf.platform.windows.window_manager : window_manager;
         window_manager.register( hwnd, this );
 
         // Show
@@ -156,7 +156,7 @@ string _auto_route_event( alias This, alias event, alias event_type )()
 }
 
 
-import vf.raster;
+import vf.platform.windows.raster;
 Raster to_raster( Window This, HDC hdc )
 {
     RECT rect;

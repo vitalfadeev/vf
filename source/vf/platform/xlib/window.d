@@ -1,4 +1,4 @@
-module vf.platform.linux.ui.window_xlib;
+module vf.platform.linux.window_xlib;
 
 version(LINUX_X11):
 import xcb.xcb;  // x11.xcb

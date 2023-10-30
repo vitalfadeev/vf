@@ -2,8 +2,8 @@ module vf.platform.windows.queue;
 
 version (WINDOWS):
 import core.sys.windows.windows;
-import vf.event : Event;
-import vf.types : WindowsException;
+import vf.platform.windows.event : Event;
+import vf.platform.windows.types : WindowsException;
 
 
 struct Queue

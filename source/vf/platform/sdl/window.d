@@ -1,4 +1,4 @@
-module vf.platform.sdl.ui.window;
+module vf.platform.sdl.window;
 
 version(SDL):
 import bindbc.sdl;

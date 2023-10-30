@@ -4,7 +4,7 @@ version(SDL):
 import bindbc.sdl;
 import vf.types;
 import vf.color;
-import vf.ui.window;
+import vf.window;
 import vf.gfx.raster;
 
 

@@ -1,4 +1,4 @@
-module vf.platform.xcb.ui.window_manager;
+module vf.platform.xcb.window_manager;
 
 version(XCB):
 import xcb.xcb;
@@ -73,5 +73,5 @@ class _WindowManager(T,W) : ISensor
 }
 
 
-import vf.ui.window : Window;
+import vf.window : Window;
 alias WindowManager = _WindowManager!(Window,xcb_window_t);  // alias xcb_window_t = uint32_t;

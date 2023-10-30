@@ -1,9 +1,9 @@
-module vf.platform.windows.ui.window_manager;
+module vf.platform.windows.window_manager;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.event;
-import vf.sensor;
+import vf.platform.windows.event;
+import vf.platform.windows.sensor;
 
 // hwnd -> window
 // window -> hwnd
@@ -87,7 +87,7 @@ class _WindowManager(T,W) : ISensor
 }
 
 
-import vf.ui.window : Window;
+import vf.platform.windows.window : Window;
 alias WindowManager = _WindowManager!(Window,HWND);  // alias xcb_window_t = uint32_t;
 
 WindowManager window_manager;

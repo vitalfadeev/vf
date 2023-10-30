@@ -30,10 +30,10 @@ module vf.platform.windows.game;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.sensors           : Sensors;
-import vf.queue             : Queue;
-import vf.ui.window         : Window;
-import vf.ui.window_manager : window_manager;
+import vf.platform.windows.sensors        : Sensors;
+import vf.platform.windows.queue          : Queue;
+import vf.platform.windows.window         : Window;
+import vf.platform.windows.window_manager : window_manager;
 
 
 class Game

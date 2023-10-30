@@ -35,7 +35,7 @@ import std.functional : toDelegate;
 import bindbc.sdl;
 import vf.queue : Queue;
 import vf.types;
-public import vf.ui.window;
+public import vf.window;
 
 
 class Game

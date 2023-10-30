@@ -2,7 +2,7 @@ module vf.platform.windows.sensor;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.event;
+import vf.platform.windows.event;
 
 
 interface ISensor
