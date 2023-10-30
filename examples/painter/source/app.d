@@ -90,7 +90,7 @@ class MyWindow : Window
     override
     void sense( Event* event, EVENT_TYPE event_type ) 
     {
-        auto_route_event( this, event, event_type );
+        auto_route_event!( this, event, event_type );
     }
 
     // Linux

@@ -125,32 +125,32 @@ class Window : ISensor
 }
 
 
-void auto_route_event(T)( T This, Event* event, EVENT_TYPE event_type )
+void auto_route_event( alias This, alias event, alias event_type )()
 {
-    mixin( _auto_route_event( This, event, event_type ) );
+    mixin( _auto_route_event!( This, event, event_type )() );
 }
 
-string _auto_route_event(T)( T This, Event* event, EVENT_TYPE event_type )
+string _auto_route_event( alias This, alias event, alias event_type )()
 {
     import std.traits;
     import std.string;
     import std.format;
     import vf.traits;
 
+    alias T = typeof( This );
+
     string s;
-    s ~= 
-        "switch (event_type) {";
+    s ~= "import core.sys.windows.windows;";
+
+    s ~= "switch (event_type) {";
 
     static foreach( h; Handlers!T )
-        s ~=
-            "case ( event_type == mixin( (HandlerName!h)[3..$] ) )
-            mixin( "This."~(HandlerName!h)~"( event, event_type );" );
+        s ~= "case "~(HandlerName!h)[3..$]~":  { This."~(HandlerName!h)~"( event, event_type ); break; } ";
 
-    s ~= 
-    DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );
+    //
+        s ~= "default: DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );";
 
-    s ~= 
-        "}";
+    s ~= "}";
 
     return s;
 }
