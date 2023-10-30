@@ -4,6 +4,7 @@ version (WINDOWS):
 import core.sys.windows.windows;
 import std.traits;
 import std.windows.syserror;
+import vf.event;
 import vf.traits;
 
 
@@ -14,8 +15,8 @@ alias M16     = ushort;
 alias M32     = uint;
 alias M64     = ulong;
 alias MPTR    = void*;
-alias SENSOR  = void delegate( Event m );
-alias SENSORF = void function( Event m );
+alias SENSOR  = void delegate(              Event* m, EVENT_TYPE event_type );
+alias SENSORF = void function( void* _this, Event* m, EVENT_TYPE event_type );
 alias X       = short;
 alias Y       = short;
 alias W       = X;
@@ -75,24 +76,6 @@ void show_throwable( Throwable o )
     catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
 }
 
-
-struct Event 
-{
-    UINT _super;
-    alias _super this;
-}
-
-struct EventCode
-{
-    WPARAM _super;
-    alias _super this;
-}
-
-struct EventValue
-{
-    LPARAM _super;
-    alias _super this;
-}
 
 alias LRESULT            = core.sys.windows.windows.LRESULT;
 alias HDC                = core.sys.windows.windows.HDC;

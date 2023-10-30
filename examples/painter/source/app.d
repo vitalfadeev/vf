@@ -213,19 +213,17 @@ class MyWindow : Window
         return 0;
     }
 
-    version(WINDOWS_NATIVE)
-    ERESULT on_WM_LBUTTONDOWN( Event e, EventCode code, EventValue value )
+    version(WINDOWS_)
+    void on_WM_LBUTTONDOWN( Event* e, EVENT_TYPE event_type )
     {
     	MessageBox( NULL, "on_WM_LBUTTONDOWN", "info", MB_OK | MB_ICONEXCLAMATION );
         return 0;
     }
 
-    version(WINDOWS_NATIVE)
-    ERESULT on_WM_DESTROY( Event e, EventCode code, EventValue value )
+    version(WINDOWS)
+    void on_WM_DESTROY( Event* event, EVENT_TYPE event_type )
     {
         MyGame().quit();
-
-        return 0;
     }
 }
 

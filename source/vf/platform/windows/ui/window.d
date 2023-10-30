@@ -124,7 +124,7 @@ class Window
 }
 
 
-LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
+LRESULT auto_route_event(T)( T This, Event* e, EVENT_TYPE event_type )
 {
     import std.traits;
     import std.string;
@@ -135,9 +135,9 @@ LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
         static if ( isCallable!(__traits(getMember, T, m)) )
             static if ( m.startsWith( "on_" ) )
                 if ( e == mixin( m[3..$] ) )
-                    return __traits(getMember, This, m)( e, code, value ); 
+                    return __traits(getMember, This, m)( event, event_type ); 
 
-    return DefWindowProc( This.hwnd, cast(UINT)e, code, value );
+    return DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );
 }
 
 
