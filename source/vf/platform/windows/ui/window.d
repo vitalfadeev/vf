@@ -4,9 +4,10 @@ version(WINDOWS):
 import core.sys.windows.windows;
 import vf.event : Event, EVENT_TYPE;
 import vf.types;
+import vf.sensor;
 
 
-class Window
+class Window : ISensor
 {
     HWND hwnd;
 
@@ -124,20 +125,34 @@ class Window
 }
 
 
-LRESULT auto_route_event(T)( T This, Event* e, EVENT_TYPE event_type )
+void auto_route_event(T)( T This, Event* event, EVENT_TYPE event_type )
+{
+    mixin( _auto_route_event( This, event, event_type ) );
+}
+
+string _auto_route_event(T)( T This, Event* event, EVENT_TYPE event_type )
 {
     import std.traits;
     import std.string;
     import std.format;
+    import vf.traits;
 
-    // on_
-    static foreach( m; __traits( allMembers, T ) )
-        static if ( isCallable!(__traits(getMember, T, m)) )
-            static if ( m.startsWith( "on_" ) )
-                if ( e == mixin( m[3..$] ) )
-                    return __traits(getMember, This, m)( event, event_type ); 
+    string s;
+    s ~= 
+        "switch (event_type) {";
 
-    return DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );
+    static foreach( h; Handlers!T )
+        s ~=
+            "case ( event_type == mixin( (HandlerName!h)[3..$] ) )
+            mixin( "This."~(HandlerName!h)~"( event, event_type );" );
+
+    s ~= 
+    DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );
+
+    s ~= 
+        "}";
+
+    return s;
 }
 
 

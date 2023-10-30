@@ -87,11 +87,11 @@ class MyWindow : Window
         show();
     }
 
-    //override
-    //void sense( Event* event, EVENT_TYPE event_type ) 
-    //{
-    //    auto_route_event( this, event, event_type );
-    //}
+    override
+    void sense( Event* event, EVENT_TYPE event_type ) 
+    {
+        auto_route_event( this, event, event_type );
+    }
 
     // Linux
     version(XCB)
@@ -213,17 +213,16 @@ class MyWindow : Window
         return 0;
     }
 
-    version(WINDOWS_)
-    void on_WM_LBUTTONDOWN( Event* e, EVENT_TYPE event_type )
+    version(WINDOWS)
+    void on_WM_LBUTTONDOWN( Event* event, EVENT_TYPE event_type )
     {
     	MessageBox( NULL, "on_WM_LBUTTONDOWN", "info", MB_OK | MB_ICONEXCLAMATION );
-        return 0;
     }
 
     version(WINDOWS)
     void on_WM_DESTROY( Event* event, EVENT_TYPE event_type )
     {
-        MyGame().quit();
+        Game.quit();
     }
 }
 

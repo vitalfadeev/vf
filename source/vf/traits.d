@@ -114,11 +114,12 @@ template Handlers(T)
 template isHandler(T, string name)
 {
     import std.algorithm.searching : startsWith;
+    import std.traits : isCallable;
 
     alias member = __traits( getMember, T, name );
 
     static if (
-        __traits( isStaticFunction, member ) &&
+        isCallable!member &&
         name.startsWith("on_")
     )
         enum isHandler = true;
@@ -182,6 +183,12 @@ template hasHandler(T, alias M)
     enum hasHandler = 
         __traits( hasMember, T, proc_name ) &&
         isHandler!(T, proc_name);
+}
+
+
+template HandlerName(alias T)
+{
+    enum HandlerName = __traits( identifier, T );
 }
 
 

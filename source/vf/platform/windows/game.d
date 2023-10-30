@@ -30,9 +30,10 @@ module vf.platform.windows.game;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.sensors;
-import vf.queue;
-import vf.ui.window;
+import vf.sensors           : Sensors;
+import vf.queue             : Queue;
+import vf.ui.window         : Window;
+import vf.ui.window_manager : window_manager;
 
 
 class Game
@@ -45,6 +46,7 @@ class Game
     void go()
     {
         auto window = new_window();
+        sensors ~= window_manager;
 
         foreach( ref event; queue )
             sensors.sense( &event, event.type );
