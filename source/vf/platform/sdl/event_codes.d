@@ -1,5 +1,6 @@
 module vf.platform.sdl.event_codes;
 
+version(SDL):
 static import winapi=core.sys.windows.windows;
 
 enum WM_PAINT = winapi.WM_PAINT;

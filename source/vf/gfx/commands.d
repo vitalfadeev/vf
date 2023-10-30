@@ -1,5 +1,6 @@
 module vf.gfx.commands;
 
+version(stub):
 
 // Instruction
 // Queue
@@ -171,8 +172,6 @@ pragma( inline, true )
 void render( Queue queue, void* stub, Pixels* pixels )
 //                 RDI          RSI           RDX
 {
-    Queue queue = new Queue;
-
     queue.put( PointGFXI( GFXI_CODE.POINT, PX( 100, 100 ) ) );
     queue.put( PointGFXI( GFXI_CODE.POINT, PX( 101, 100 ) ) );
     queue.put( PointGFXI( GFXI_CODE.POINT, PX( 102, 100 ) ) );

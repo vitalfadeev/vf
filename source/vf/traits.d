@@ -66,3 +66,140 @@ auto Cast(TO,FROM)(FROM from)
 {
     return cast(TO)from;
 }
+
+
+// get all handlers of T
+// example:
+//   alias handlers = Handlers!HandlerStruct;
+// example of valid T:
+//  struct HandlerStruct
+//  {
+//      static
+//      void on_T1( REG edi, Event* event )
+//      {
+//          //
+//      }
+//  }
+template Handlers(T)
+{
+    import std.meta : AliasSeq, Filter;
+
+    static if (
+        is(T == struct) || 
+        is(T == union) ||
+        is(T == class) || 
+        is(T == interface)
+    )
+    {
+        alias all_members = __traits( allMembers, T );
+        alias Handlers = AliasSeq!();
+
+        static foreach ( name; all_members )
+            static if ( isHandler!(T,name) )
+                Handlers = AliasSeq!( Handlers, __traits( getMember, T, name ) );
+    }
+    else
+        alias Handlers = AliasSeq!T;
+}
+
+// check T for:
+//   static
+//   on_...
+// example of valid T:
+//   static
+//   void on_T1( REG edi, Event* event )
+//   {
+//       //
+//   }
+template isHandler(T, string name)
+{
+    import std.algorithm.searching : startsWith;
+
+    alias member = __traits( getMember, T, name );
+
+    static if (
+        __traits( isStaticFunction, member ) &&
+        name.startsWith("on_")
+    )
+        enum isHandler = true;
+    else
+        enum isHandler = false;
+}
+
+
+// Handled event types
+template HandledEvents(T)
+{
+    import std.meta : AliasSeq, Filter;
+
+    static if (
+        is(T == struct) || 
+        is(T == union) ||
+        is(T == class) || 
+        is(T == interface)
+    )
+    {
+        alias all_members = __traits( allMembers, T );
+        alias HandledEvents = AliasSeq!();
+
+        static foreach ( name; all_members )
+            static if ( isHandler!(T,name) )
+                HandledEvents = AliasSeq!( HandledEvents, name[ 3..$ ] );  // strip "on_"
+    }
+    else
+        alias HandledEvents = AliasSeq!T;
+}
+
+
+// Handled event types returns enum values
+template HandledEventsE(T,alias E)
+{
+    import std.meta : AliasSeq, Filter;
+
+    static if (
+        is(T == struct) || 
+        is(T == union) ||
+        is(T == class) || 
+        is(T == interface)
+    )
+    {
+        alias all_members = __traits( allMembers, T );
+        alias HandledEventsE = AliasSeq!();
+
+        static foreach ( name; all_members )
+            static if ( isHandler!(T,name) )
+                HandledEventsE = AliasSeq!( HandledEventsE, __traits(getMember, E, name[ 3..$ ]) );  // Event.ENUM_MEMBER
+    }
+    else
+        alias HandledEventsE = AliasSeq!T;
+}
+
+
+// hasHandler!(Handler,__traits(getMember,Handler,on_T1))
+template hasHandler(T, alias M)
+{
+    enum proc_name = "on_" ~ __traits( identifier, M );
+    enum hasHandler = 
+        __traits( hasMember, T, proc_name ) &&
+        isHandler!(T, proc_name);
+}
+
+
+string Platf( string name )
+{
+    import std.string : toLower;
+    import std.format : format;
+    string[] versions = ["SDL","WINDOWS","XCB"];
+
+    string s;
+
+    foreach( v; versions )
+        s ~=  
+            format!
+                "version (%s) public import vf.platform.%s.%s;"
+                ( v, v.toLower, name );
+
+    s ~= "else static assert( 0, \"Unsupported platform\" );";
+
+    return s;
+}

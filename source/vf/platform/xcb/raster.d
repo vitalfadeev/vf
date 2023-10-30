@@ -1,6 +1,6 @@
-module vf.platform.linux.raster;
+module vf.platform.xcb.raster;
 
-version(LINUX_X11):
+version(XCB):
 import xcb.xcb;
 import vf.types;
 import vf.gfx.raster;
@@ -22,6 +22,7 @@ class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
         this.color   = color;
     }
 
+/*
     typeof(this) go( PX px )
     {
         super.go( px.x, px.y );
@@ -33,6 +34,7 @@ class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
         super.line( px.x, px.y );
         return this;
     }
+*/
 }
 
 
@@ -101,6 +103,22 @@ WINDOW to_window(WINDOW:Window)( Raster This, WINDOW window, HDC hdc )
 //     .to_window( this ); // raster  -> window
 Raster to_raster( Window This, xcb_connection_t *c )
 {
+    static int[] pixels;
+    // GetImage
+    return
+        new Raster(
+            /*pixels*/  pixels,
+            /*w*/       1,
+            /*h*/       1,
+            /*pitch*/   1,
+            /*current*/ pixels.ptr,
+            /*color*/   0
+            );
+}
+
+/+
+Raster to_raster( Window This, xcb_connection_t *c )
+{
     xcb_pixmap_t pixmap = xcb_generate_id( c );
 
     /* Create a black graphic context for drawing in the foreground */
@@ -113,7 +131,7 @@ Raster to_raster( Window This, xcb_connection_t *c )
         xcb_create_gc( c, gc, win, mask, value );
 
     // Get pixel
-    uint32_t pixel = xcb_image_get_pixel(xcb_image_get(conn, screen->root, x, y, 1, 1, AllPlanes, XYPixmap), 0, 0);
+    uint32_t pixel = xcb_image_get_pixel(xcb_image_get(conn, screen.root, x, y, 1, 1, AllPlanes, XYPixmap), 0, 0);
 
     xcb_void_cookie_t area = 
         xcb_copy_area (
@@ -204,5 +222,5 @@ Raster to_raster( Window This, xcb_connection_t *c )
             /*current*/ pixels.ptr,
             /*color*/   RGBQUAD(0,0,255,255)
             );
-
 }
++/

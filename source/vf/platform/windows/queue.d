@@ -1,18 +1,19 @@
 module vf.platform.windows.queue;
 
-version (WINDOWS_NATIVE):
+version (WINDOWS):
 import core.sys.windows.windows;
-import vf.types;
+import vf.event : Event;
+import vf.types : WindowsException;
 
 
 struct Queue
 {
-    MSG front;  // MSG
+    Event front;  // MSG
 
     pragma( inline, true )
     void popFront()
     {
-        if ( GetMessage( &this.front, null, 0, 0 ) == 0 ) 
+        if ( GetMessage( &this.front.msg, null, 0, 0 ) == 0 ) 
             if ( GetLastError() )
                 throw new WindowsException( "Queue.popFront: " );
     }
@@ -20,7 +21,7 @@ struct Queue
     pragma( inline, true )
     bool empty()
     {
-        return ( front.message == WM_QUIT );
+        return ( front.msg.message == WM_QUIT );
     }
 
     pragma( inline, true )

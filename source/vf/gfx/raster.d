@@ -25,7 +25,7 @@ class Raster(T,W,H)
     size_t pitch;
     T*     current;
     T      color;
-
+/*
     auto ref point()
     {
         import vf.gfx.point;
@@ -76,8 +76,9 @@ class Raster(T,W,H)
 
         return this;
     }
+    */
 }
-
+/*
 auto ABS(T)(T a)
 {
     return 
@@ -86,3 +87,4 @@ auto ABS(T)(T a)
             ( a);
 }
 
+*/

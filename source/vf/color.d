@@ -1,6 +1,6 @@
 module vf.color;
 
-version(WINDOWS_NATIVE):
+version(WINDOWS):
 import core.sys.windows.windows;
 import vf.types;
 

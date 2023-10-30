@@ -1,6 +1,6 @@
 module vf.platform.windows.raster;
 
-version(WINDOWS_NATIVE):
+version(WINDOWS):
 import core.sys.windows.windows;
 import vf.types;
 import vf.gfx.raster;
@@ -22,13 +22,13 @@ class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
 
     typeof(this) go( PX px )
     {
-        super.go( px.x, px.y );
+        //super.go( px.x, px.y );
         return this;
     }
 
     typeof(this) line( PX px )
     {
-        super.line( px.x, px.y );
+        //super.line( px.x, px.y );
         return this;
     }
 }

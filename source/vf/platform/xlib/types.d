@@ -1,6 +1,6 @@
-module vf.platform.linux.types;
+module vf.platform.xlib.types;
 
-version (LINUX_X11):
+version (XLIB):
 import std.traits;
 import xcb.xcb;
 import vf.traits;
@@ -101,7 +101,7 @@ void show_throwable( Throwable o )
     catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
 }
 
-alias EVENT_TYPE = xcb_generic_event_t*;
+alias EVENT_TYPE = ubyte;
 
 struct Event
 {

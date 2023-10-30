@@ -1,6 +1,6 @@
 module vf.platform.windows.types;
 
-version (WINDOWS_NATIVE):
+version (WINDOWS):
 import core.sys.windows.windows;
 import std.traits;
 import std.windows.syserror;

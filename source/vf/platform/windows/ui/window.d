@@ -1,7 +1,8 @@
 module vf.platform.windows.ui.window;
 
-version(WINDOWS_NATIVE):
+version(WINDOWS):
 import core.sys.windows.windows;
+import vf.event : Event, EVENT_TYPE;
 import vf.types;
 
 
@@ -19,9 +20,9 @@ class Window
     }
 
     //
-    LRESULT event( Event e, EventCode code, EventValue value ) 
+    void sense( Event* event, EVENT_TYPE event_type ) 
     {
-        return DefWindowProc( hwnd, cast(UINT)e, cast(WPARAM)code, cast(LPARAM)value );
+        DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );
     }
 
     // private
@@ -30,6 +31,7 @@ class Window
     {
         import std.utf : toUTF16z;
         import std.traits;
+        import vf.ui.window_manager : window_manager;
 
         HINSTANCE hInstance = GetModuleHandle(NULL);
         
@@ -38,7 +40,7 @@ class Window
 
         // Create Window Class
         wndClass.style         = CS_HREDRAW | CS_VREDRAW;
-        wndClass.lpfnWndProc   = &WindowManager.event;
+        wndClass.lpfnWndProc   = &window_manager.window_proc_sense;
         wndClass.cbClsExtra    = 0;
         wndClass.cbWndExtra    = 0;
         wndClass.hInstance     = hInstance;
@@ -71,7 +73,8 @@ class Window
             throw new WindowsException( "Unable to create window"  );
 
         // Link HWND -> Window
-        WindowManager.register( hwnd, this );
+        import vf.ui.window_manager : window_manager;
+        window_manager.register( hwnd, this );
 
         // Show
         if ( cmd_show )
@@ -117,70 +120,6 @@ class Window
     void _create_renderer()
     {
         //
-    }
-
-
-    // hwnd -> window
-    // window -> hwnd
-    static
-    struct WindowManager
-    {
-        static HWND[] _os_windows;
-        static T[]    _vf_windows;
-
-        static
-        T vf_window( HWND hwnd )
-        {
-            import std.algorithm.searching : countUntil;
-            auto i = _os_windows.countUntil( hwnd );
-
-            return _vf_windows[i];
-        }
-
-        static 
-        void register( HWND hwnd, Window _this )
-        {
-            _os_windows ~= hwnd;
-            _vf_windows ~= _this;
-        }
-
-        static nothrow
-        void unregister( HWND hwnd )
-        {
-            import std.algorithm.searching : countUntil;
-            import std.algorithm.mutation : remove;
-            auto i = _os_windows.countUntil( hwnd );
-            _os_windows = _os_windows.remove( i );
-            _vf_windows = _vf_windows.remove( i );
-        }
-
-        extern( Windows ) 
-        static nothrow
-        LRESULT event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
-        {   //              RCX,       RDX,            R8,            R9
-            // Microsoft x64 calling convention:
-            //   RCX, RDX, R8, R9
-            try {
-                import std.algorithm.searching : countUntil;
-                auto i = _os_windows.countUntil( hwnd );
-                if ( i != -1 )
-                {
-                    if ( message == WM_DESTROY )
-                    {
-                        auto ret = _vf_windows[i].event( Event(message), EventCode(wParam), EventValue(lParam) );
-                        unregister( hwnd );
-                        return ret;
-                    }
-                    else
-                    {
-                        return _vf_windows[i].event( Event(message), EventCode(wParam), EventValue(lParam) );
-                    }
-                }
-            } 
-            catch (Throwable o) { o.show_throwable; }
-
-            return DefWindowProc( hwnd, message, wParam, lParam );
-        }
     }
 }
 

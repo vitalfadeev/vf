@@ -1,4 +1,4 @@
-module vf.platform.windows.game;
+module vf.platform.linux.game;
 
 // Linux
 //   queue <- evdev <- device 
@@ -28,26 +28,36 @@ module vf.platform.windows.game;
 //     for s in sensors
 //       s( d )
 
-version(WINDOWS):
-import core.sys.windows.windows;
-import vf.sensors;
-import vf.queue;
-import vf.ui.window;
-
+version(LINUX_X11):
+import std.container.dlist : DList;
+import std.stdio : writeln;
+import std.functional : toDelegate;
+import vf;
 
 class Game
 {
-    Sensors sensors;
+    static
     Queue   queue;
+    Sensors sensors;
     int     result;
 
     //
     void go()
     {
-        auto window = new_window();
+        import core.runtime;
 
-        foreach( ref event; queue )
-            sensors.sense( &event, event.type );
+        try
+        {
+            Runtime.initialize();
+
+            auto window = new_window();
+
+            foreach( e; queue )
+                sensors.sense( e.type, e );
+
+            Runtime.terminate();
+        }
+        catch (Throwable o) { o.show_throwable; }
     }
 
     Window new_window()
@@ -63,3 +73,10 @@ class Game
 }
 
 
+struct Sensors
+{
+    void sense( EVENT_TYPE event_type, Event* e )
+    {
+        //
+    }
+}

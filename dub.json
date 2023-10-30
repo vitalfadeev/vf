@@ -7,20 +7,20 @@
 	"dflags"         : ["-mixin=mixins.d"],
 	"configurations" : [
 		{
-			"name"           : "LINUX_X11",
+			"name"           : "XCB",
 			"targetType"     : "library",
 			"platforms"      : ["linux"],
-			"versions"       : ["LINUX_X11"],
+			"versions"       : ["XCB"],
 			"libs"           : [],
 			"dependencies"   : {
                                 "xcb-d"                         : "~>2.1.1+1.11.1"
 			},
 		},
 		{
-			"name"           : "WINDOWS_NATIVE",
+			"name"           : "WINDOWS",
 			"targetType"     : "library",
 			"platforms"      : ["windows"],
-			"versions"       : ["WINDOWS_NATIVE"],
+			"versions"       : ["WINDOWS"],
 			"libs"           : ["user32", "gdi32"],
 			"dependencies"   : {
 			},

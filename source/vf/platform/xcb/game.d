@@ -1,4 +1,4 @@
-module vf.platform.linux.game;
+module vf.platform.xcb.game;
 
 // Linux
 //   queue <- evdev <- device 
@@ -28,41 +28,31 @@ module vf.platform.linux.game;
 //     for s in sensors
 //       s( d )
 
-version(LINUX_X11):
-import std.container.dlist : DList;
-import std.stdio : writeln;
-import std.functional : toDelegate;
-import core.sys.windows.windows;
-import vf;
+version(XCB):
+import xcb.xcb;
+import vf.platform;
+import vf.queue;
+import vf.sensors;
+import vf.ui.window;
+
 
 class Game
 {
-    static
-    Queue   queue;
-    //Sensors sensors;
-    int     result;
+    Sensors  sensors;
+    Queue    queue;
+    int      result;
 
     //
     void go()
     {
-        import core.runtime;
+        //
+        sensors ~= Window.window_manager;
 
-        try
-        {
-            Runtime.initialize();
+        auto window = new_window();
 
-            auto window = new_window();
-
-            foreach( ref e; queue )
-            {
-                TranslateMessage( &e );
-                DispatchMessage( &e );
-                //sensors.sense( e );
-            }
-
-            Runtime.terminate();
-        }
-        catch (Throwable o) { o.show_throwable; }
+        //
+        foreach( event; queue )
+            sensors.sense( event, event.type );
     }
 
     Window new_window()
@@ -73,6 +63,6 @@ class Game
     static
     void quit( int quit_code=0 )
     {   
-        PostQuitMessage( quit_code );
+        //
     }
 }

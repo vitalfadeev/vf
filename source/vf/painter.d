@@ -81,17 +81,17 @@ auto to_raster(WINDOW:Window)( Painter painter, WINDOW window )
 }
 
 
-version(WINDOWS_NATIVE)
+version(WINDOWS)
 auto to_painter(WINDOW)( WINDOW window, HDC hdc )
 {
     return new Painter();
 }
 
-version(WINDOWS_NATIVE)
+version(WINDOWS)
 import vf.raster;
-version(WINDOWS_NATIVE)
+version(WINDOWS)
 import vf.ui.window;
-version(WINDOWS_NATIVE)
+version(WINDOWS)
 auto to_raster(WINDOW:Window)( Painter painter, WINDOW window, HDC hdc )
 {
     // rasterize
@@ -198,6 +198,7 @@ enum OP : M16  // 16-bit because AH:GROUP, AL:ACTION
     GO        = 0b00000001_00000010,
     POINT     = 0b00000010_00000001,
     POINTS    = 0b00000010_00000010,
+    POINTAT   = 0b00000010_00000100,
     LINE      = 0b00000100_00000001,
     LINES     = 0b00000100_00000010,
     TRIANGLE  = 0b00001000_00000001,

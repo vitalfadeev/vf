@@ -253,3 +253,112 @@ module vf.ui.ui;
 //     DT_LA
 //       foreach o in rect
 //         o.la()
+
+// Clickable
+// +-----+
+// |     |
+// +-----+
+//
+// edit mode of clickable
+// +----------------------------------------------------------+
+// |  queue                                                   |
+// |  +---+                                                   |
+// |  |   |-  event                                           |
+// |  +---+ | +---+                                           |
+// |         -|   |-  switch                                  |
+// |          +---+ | +----+                                  |
+// |                 -|    |-  handler                        |
+// |                  +----+ | +-----+                        |
+// |                         |-|     |                        |
+// |                         | +-----+                        |
+// |minimap of clickable     | +-----+                        |
+// +-----+                    -|     |                        |
+// |     |                     +-----+                        |
+// +-----+----------------------------------------------------+
+// 
+
+// view
+//   limits rect
+//   sense ( event )
+//     draw ( event.context: at_point, limit )
+//   on_draw ( event.context: drawable )
+//     drawable.point
+//     drawable.line
+//     inner.sense( event, canvas, outer, outer_loc, inner_loc )
+//   inner ( view | layout )
+//     sense ( event )
+//       case draw   : draw
+//       case layout : layout
+//     on_draw
+//       event, canvas, outer, outer_loc, inner_loc
+//       outer_loc : at_point, limits
+//       inner_loc : at_point, limits
+//   
+//   limits_mode : by_inner | by_outer
+//       
+// all relative
+
+// outer
+//   inner.sense( event, canvas, outer, outer_loc, inner_loc )
+//   inner_canvas
+//     scale_to_outer
+//       up_size
+//       down_size
+//     fixed
+//
+// outer
+//   scanle_to_inner
+//     outer.up_size
+//     outer.down_size
+//   fixed
+
+version(beta):
+class SensAble
+{
+    void sense( Event* event, EVENT_TYPE event_type ) {}
+}
+
+class DrawAble : SensAble
+{
+    override
+    void sense( Event* event, EVENT_TYPE event_type ) {
+        switch ( event_type )
+        {
+            case ON_DRAW : on_draw(); break;
+            default      : super.sense( event, event_type );
+        }
+    }
+
+    void on_draw( Event* event ) {
+        //
+    }
+}
+
+class ClickAble : DrawAble
+{
+    override
+    void sense( Event* event, EVENT_TYPE event_type ) {
+        switch ( event_type )
+        {
+            case ON_CLICK : on_click(); break;
+            default       : super.sense( event, event_type );
+        }
+    }
+
+    void on_click( Event* event ) {
+        //
+    }
+}
+
+// ClipBoard
+//   Selection
+//   global hotkey CTRL+C
+//   active window
+//     get selection
+//       selection -> clipboard
+//
+// Selection
+//   Text
+//   Sensable
+//   DrawAble
+

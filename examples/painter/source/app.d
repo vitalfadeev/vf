@@ -35,8 +35,20 @@ version=WRITE;
 
 void main()
 {
-	MyGame().go();
+    import core.runtime : Runtime;
+    import vf : show_throwable;
+
+    try
+    {
+        Runtime.initialize();
+
+    	MyGame().go();
+
+        Runtime.terminate();
+    }
+    catch ( Throwable o ) { o.show_throwable; }
 }
+
 
 
 class MyGame : Game
@@ -75,16 +87,17 @@ class MyWindow : Window
         show();
     }
 
-    override
-    ERESULT event( EVENT_TYPE event_type, Event* event ) 
-    {
-        return auto_route_event( this, event_type, event );
-    }
+    //override
+    //void sense( Event* event, EVENT_TYPE event_type ) 
+    //{
+    //    auto_route_event( this, event, event_type );
+    //}
 
     // Linux
-    version(LINUX_X11)
-    ERESULT on_XCB_EXPOSE( EVENT_TYPE event_type, Event* event ) 
+    version(XCB)
+    void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
+        /*
         HDC         hdc;
         PAINTSTRUCT ps; 
         hdc = BeginPaint( hwnd, &ps );
@@ -114,12 +127,13 @@ class MyWindow : Window
         EndPaint( hwnd, &ps );
 
         return ERESULT.init;
+        */
     }
 
 
     // Windows
 	version(WINDOWS_NATIVE)
-    ERESULT on_WM_PAINT( EVENT_TYPE event_type, Event* event ) 
+    ERESULT on_WM_PAINT( Event* event, EVENT_TYPE event_type ) 
     {
         try {
             HDC         hdc;
