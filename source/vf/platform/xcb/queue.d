@@ -15,19 +15,23 @@ struct Queue
     pragma( inline, true )
     void popFront()
     {
-        import std.stdio : writeln;
-        writeln( __FUNCTION__ );
-
-        import core.stdc.stdlib : free;
-        free( front );
-
-        front = cast(Event*)xcb_wait_for_event( platform.c );
+        if ( !started )
+            started = true;
+        else
+        {
+            import core.stdc.stdlib : free;
+            free( front );
+            front = cast(Event*)xcb_wait_for_event( platform.c );
+        }
     }
 
     pragma( inline, true )
     bool empty()
     {
-        return ( started && front is null );  // XCB_DESTROY_NOTIFY
+        if ( !started )
+            front = cast(Event*)xcb_wait_for_event( platform.c );
+
+        return ( front is null );  // XCB_DESTROY_NOTIFY
     }
 
     //alias put(T) = opOpAssign!("~", T)(T t);

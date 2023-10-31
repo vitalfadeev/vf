@@ -15,6 +15,9 @@ struct Sensors
     //      this       event             event_type
     //      RDI        RSI               RDX
     {
+        import std.stdio : writeln;
+        writeln( __FUNCTION__, ": event_type: ", event_type );
+
         foreach( sen; sensors )
             sen.sense( event, event_type );
     }

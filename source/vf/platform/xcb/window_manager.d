@@ -35,6 +35,7 @@ class _WindowManager(T,W) : ISensor
         _vf_windows = _vf_windows.remove( i );
     }
 
+    // ISensor
     void sense( Event* event, EVENT_TYPE event_type )
     //    this         event             event_type
     //    RDI          RSI               RDX
