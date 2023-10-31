@@ -21,11 +21,11 @@ class Draw : IDraw
         return this;
     }
 
-    auto ref point()
-    {
-        ops ~= Point();
-        return this;
-    }
+    //auto ref point()
+    //{
+    //    ops ~= Point();
+    //    return this;
+    //}
 
     auto ref line( W w, H h )
     {
@@ -131,6 +131,7 @@ auto to_raster(WINDOW:Window)( Painter painter, WINDOW window, HDC hdc )
 
 // file save / read
 import std.stdio : File;
+version(stub)
 auto to_file( Painter painter, string filename )
 {
     // header
@@ -154,6 +155,7 @@ auto to_file( Painter painter, string filename )
 
 
 import std.stdio : File;
+version(stub)
 auto to_painter( File f )
 {
     // header
@@ -347,3 +349,10 @@ struct Ops
 // enum Events
 //   click
 
+IDraw draw;
+
+static
+this()
+{
+    draw = new Draw();
+}

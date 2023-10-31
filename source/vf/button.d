@@ -10,9 +10,65 @@ class Button : ISense, IOuter
 {
     mixin auto_methods!(typeof(this));
 
-    void on_DRAW( Event* event, EVENT_TYPE event_type )
+    void draw()
     {
-        auto d = event.draw.idraw;
-        d.point( 0, 0 );
+        point( 0, 0 );  // drawable
     }
-}
+
+    void to_pressed()
+    {
+        //
+    }
+
+    void to_disabled()
+    {
+        //
+    }
+
+    //
+    class Pressed
+    {
+        void draw()
+        {
+            point( 0, 0 );  // drawable
+        }
+
+        void to_()
+        {
+            //
+        }
+
+        void to_disabled()
+        {
+            //
+        }
+    }
+
+    class Disabled
+    {
+        void draw()
+        {
+            point( 0, 0 );  // drawable
+        }
+
+        void to_pressed()
+        {
+            //
+        }
+
+        void to_()
+        {
+            //
+        }
+    }
+} 
+
+
+// on PAINT
+//   rasterize
+//
+// on PAINT rect
+//   find objects in rect
+//   foreach
+//     get draw
+//     rasterize
