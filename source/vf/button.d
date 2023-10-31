@@ -4,9 +4,13 @@ import vf.interfaces;
 import vf.auto_methods;
 import vf : Event, EVENT_TYPE;
 
-enum DRAW = 1;
 
-class Button : ISense, IOuter
+class World : ISensAble, IEnterAble
+{
+    mixin auto_methods!(typeof(this));
+}
+
+class Button : ISensAble, IEnterAble, IDrawAble
 {
     mixin auto_methods!(typeof(this));
 
@@ -26,8 +30,10 @@ class Button : ISense, IOuter
     }
 
     //
-    class Pressed
+    class Pressed : ISensAble, IEnterAble, IDrawAble
     {
+        mixin auto_methods!(typeof(this));
+
         void draw()
         {
             point( 0, 0 );  // drawable
@@ -44,8 +50,10 @@ class Button : ISense, IOuter
         }
     }
 
-    class Disabled
+    class Disabled : ISensAble, IEnterAble, IDrawAble
     {
+        mixin auto_methods!(typeof(this));
+
         void draw()
         {
             point( 0, 0 );  // drawable
@@ -64,11 +72,27 @@ class Button : ISense, IOuter
 } 
 
 
+void init_world()
+{
+    import vf : DrawEvent;
+
+    auto world = new World();
+    world.enter.put( new Button() );
+
+    Event event;
+    event.draw = DrawEvent();
+    world.sense( &event, event.type );
+}
+
 // on PAINT
 //   rasterize
 //
 // on PAINT rect
 //   find objects in rect
 //   foreach
-//     get draw
+//     get limits
+//       get draw
+//       get limits
 //     rasterize
+//
+

@@ -1,10 +1,10 @@
 module vf.draw;
 
-import vf.interfaces : IDraw;
+import vf.interfaces : IDrawAble;
 import vf.platform   : M16, OX, PX;
 
 
-class Draw : IDraw
+class Draw : IDrawAble
 {
     Ops ops;
 
@@ -349,7 +349,7 @@ struct Ops
 // enum Events
 //   click
 
-IDraw draw;
+IDrawAble draw;
 
 static
 this()

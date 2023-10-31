@@ -49,10 +49,12 @@ struct Event
 
 alias EVENT_TYPE = uint;
 
+enum VF_DRAW = 0x80_01;
 
-import vf.interfaces : IDraw;
+import vf.interfaces : IDrawAble;
 struct DrawEvent
 {
-    IDraw idraw;
+    EVENT_TYPE type = VF_DRAW;
+    IDrawAble drawable;
 }
 
