@@ -5,7 +5,7 @@ import xcb.xcb;
 import vf.platform.xcb.event;
 
 
-interface ISensor
+interface ISense
 {
     void sense( Event* event, EVENT_TYPE event_type );
     //      this       event             event_type         

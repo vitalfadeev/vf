@@ -8,7 +8,7 @@ import vf.platform.windows.sensor;
 import vf.platform.windows.window_manager : window_manager;
 
 
-class Window : ISensor  // ISensAble, IClickAble, IDrawAble
+class Window : ISense  // ISensAble, IClickAble, IDrawAble
 {
     HWND hwnd;
 

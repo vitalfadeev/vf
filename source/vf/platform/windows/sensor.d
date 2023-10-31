@@ -5,7 +5,7 @@ import core.sys.windows.windows;
 import vf.platform.windows.event;
 
 
-interface ISensor
+interface ISense
 {
     void sense( Event* event, EVENT_TYPE event_type );
     //      this       event             event_type         

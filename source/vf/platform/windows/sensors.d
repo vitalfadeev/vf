@@ -8,7 +8,7 @@ import vf.platform.windows.sensor;
 
 struct Sensors
 {
-    ISensor[] sensors;
+    ISense[] sensors;
     alias sensors this;
 
     void sense( Event* event, EVENT_TYPE event_type )

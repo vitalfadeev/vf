@@ -1,9 +1,10 @@
-module vf.painter;
+module vf.draw;
 
-import vf;
+import vf.interfaces : IDraw;
+import vf.platform   : M16, OX, PX;
 
 
-class Painter
+class Draw : IDraw
 {
     Ops ops;
 
@@ -30,6 +31,12 @@ class Painter
     {
         ops ~= Line( OP.LINE, OX( w,h ) );
         return this;
+    }
+
+    //
+    void point( int x, int y )
+    {
+        //
     }
 }
 

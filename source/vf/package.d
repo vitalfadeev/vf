@@ -1,5 +1,5 @@
 module vf;
 
 public import vf.platform;
-public import vf.painter;
+public import vf.draw;
 public import vf.traits;

@@ -7,7 +7,7 @@ import vf.platform.windows.sensor;
 
 // hwnd -> window
 // window -> hwnd
-class _WindowManager(T,W) : ISensor
+class _WindowManager(T,W) : ISense
 {
     W[] _os_windows;
     T[] _vf_windows;

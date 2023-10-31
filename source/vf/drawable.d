@@ -1,4 +1,4 @@
-module vf.gfx.commands;
+module vf.drawable;
 
 version(stub):
 

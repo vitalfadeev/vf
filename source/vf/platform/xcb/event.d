@@ -37,6 +37,8 @@ struct Event
         xcb_client_message_event_t    client_message;
         xcb_mapping_notify_event_t    mapping_notify;
         xcb_ge_generic_event_t        ge_generic;
+        //
+        DrawEvent draw;
     }
 
     auto type()
@@ -46,3 +48,11 @@ struct Event
 }
 
 alias EVENT_TYPE = uint;
+
+
+import vf.interfaces : IDraw;
+struct DrawEvent
+{
+    IDraw idraw;
+}
+

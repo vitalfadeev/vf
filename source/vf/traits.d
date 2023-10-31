@@ -210,3 +210,13 @@ string Platf( string name )
 
     return s;
 }
+
+
+template hasInterface(T,I)
+{
+     import std.traits : InterfacesTuple;
+     import std.meta   : staticIndexOf, AliasSeq;
+
+     enum hasInterface = 
+        ( staticIndexOf!( AliasSeq!( I, InterfacesTuple!T ) ) != -1 );
+}

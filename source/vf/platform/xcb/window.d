@@ -9,7 +9,7 @@ import vf.platform.xcb.window_manager;
 import vf.platform.xcb.types : PX;
 
 
-class Window : ISensor
+class Window : ISense
 {
     xcb_window_t hwnd;
 
@@ -22,7 +22,7 @@ class Window : ISensor
         _create_renderer();
     }
 
-    // ISensor
+    // ISense
     void sense( Event* event, EVENT_TYPE event_type ) 
     //      this       event             event_type
     //      RDI        RSI               RDX

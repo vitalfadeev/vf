@@ -7,7 +7,7 @@ import vf.platform.xcb.event;
 
 // hwnd -> window
 // window -> hwnd
-class _WindowManager(T,W) : ISensor
+class _WindowManager(T,W) : ISense
 {
     W[] _os_windows;
     T[] _vf_windows;
@@ -35,7 +35,7 @@ class _WindowManager(T,W) : ISensor
         _vf_windows = _vf_windows.remove( i );
     }
 
-    // ISensor
+    // ISense
     void sense( Event* event, EVENT_TYPE event_type )
     //    this         event             event_type
     //    RDI          RSI               RDX
