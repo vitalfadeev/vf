@@ -2,8 +2,8 @@ module vf.platform.xcb.sensors;
 
 version(XCB):
 import xcb.xcb;
-import vf.event;
-import vf.sensor;
+import vf.platform.xcb.event;
+import vf.platform.xcb.sensor;
 
 
 struct Sensors

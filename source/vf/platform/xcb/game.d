@@ -31,9 +31,9 @@ module vf.platform.xcb.game;
 version(XCB):
 import xcb.xcb;
 import vf.platform;
-import vf.queue;
-import vf.sensors;
-import vf.window;
+import vf.platform.xcb.queue;
+import vf.platform.xcb.sensors;
+import vf.platform.xcb.window;
 
 
 class Game

@@ -3,10 +3,10 @@ module vf.platform.xcb.window;
 version(XCB):
 import xcb.xcb;
 import vf.platform;
-import vf.event;
-import vf.sensor;
-import vf.window_manager;
-import vf.types : PX;
+import vf.platform.xcb.event;
+import vf.platform.xcb.sensor;
+import vf.platform.xcb.window_manager;
+import vf.platform.xcb.types : PX;
 
 
 class Window : ISensor
@@ -87,32 +87,30 @@ class Window : ISensor
 }
 
 
-void auto_route_event(T)( T This, Event* event, EVENT_TYPE event_type )
+void auto_route_event( alias This, alias event, alias event_type )()
+{
+    mixin( _auto_route_event!( This, event, event_type )() );
+}
+
+string _auto_route_event( alias This, alias event, alias event_type )()
 {
     import std.traits;
     import std.string;
     import std.format;
     import vf.traits;
 
-    // on_
-    mixin( _auto_route_event!(Handlers!T)() );
-}
+    alias T = typeof( This );
 
+    string s;
+    s ~= "import xcb.xcb;";
 
-string _auto_route_event(T)()
-{
-    string s = "switch ( event_type ) {";
-        
-    static foreach( h; T )
-    {
-        s ~= 
-            "case __traits( identifier, h )[3..$] {
-                h( event, event_type ); 
-                break;
-            }";
-    }
-        s ~= 
-            "default:";
+    s ~= "switch (event_type) {";
+
+    static foreach( h; Handlers!T )
+        s ~= "case "~(HandlerName!h)[3..$]~":  { This."~(HandlerName!h)~"( event, event_type ); break; } ";
+
+    //
+        s ~= "default: {}";
 
     s ~= "}";
 

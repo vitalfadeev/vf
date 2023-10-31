@@ -2,7 +2,7 @@ module vf.platform.xcb.sensor;
 
 version(XCB):
 import xcb.xcb;
-import vf.event;
+import vf.platform.xcb.event;
 
 
 interface ISensor

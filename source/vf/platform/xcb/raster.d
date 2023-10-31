@@ -2,7 +2,7 @@ module vf.platform.xcb.raster;
 
 version(XCB):
 import xcb.xcb;
-import vf.types;
+import vf.platform.xcb.types;
 import vf.gfx.raster;
 
 alias RGBQUAD = int;
@@ -38,7 +38,7 @@ class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
 }
 
 
-import vf.window;
+import vf.platform.xcb.window;
 WINDOW to_window(WINDOW:Window)( Raster This, WINDOW window, HDC hdc )
     // if ( WINDOW inherited from Window )
 {

@@ -2,8 +2,8 @@ module vf.platform.xcb.window_manager;
 
 version(XCB):
 import xcb.xcb;
-import vf.sensor;
-import vf.event;
+import vf.platform.xcb.sensor;
+import vf.platform.xcb.event;
 
 // hwnd -> window
 // window -> hwnd
@@ -39,7 +39,7 @@ class _WindowManager(T,W) : ISensor
     //    this         event             event_type
     //    RDI          RSI               RDX
     {
-        import vf.types : show_throwable;
+        import vf.platform.xcb.types : show_throwable;
 
         try {
             import std.algorithm.searching : countUntil;
@@ -73,5 +73,13 @@ class _WindowManager(T,W) : ISensor
 }
 
 
-import vf.window : Window;
+import vf.platform.xcb.window : Window;
 alias WindowManager = _WindowManager!(Window,xcb_window_t);  // alias xcb_window_t = uint32_t;
+
+WindowManager window_manager;
+
+static
+this()
+{
+    window_manager = new WindowManager();
+}

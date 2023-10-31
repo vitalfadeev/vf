@@ -4,7 +4,7 @@ version(XCB):
 import std.traits;
 import xcb.xcb;
 import vf.traits;
-import vf.event;
+import vf.platform.xcb.event;
 
 
 alias M       = void;
