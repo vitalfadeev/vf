@@ -81,9 +81,6 @@ class Window : ISensor
     {
         //
     }
-
-    static 
-    WindowManager window_manager;
 }
 
 
@@ -115,11 +112,4 @@ string _auto_route_event( alias This, alias event, alias event_type )()
     s ~= "}";
 
     return s;
-}
-
-
-static
-this()
-{
-    Window.window_manager = new WindowManager();
 }

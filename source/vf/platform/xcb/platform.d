@@ -26,3 +26,11 @@ struct Platform
         screen = xcb_setup_roots_iterator( xcb_get_setup( c ) ).data;
     }
 }
+
+Platform platform = void;
+
+static
+this()
+{
+    platform.do_init();
+}

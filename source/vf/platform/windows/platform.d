@@ -14,3 +14,11 @@ struct Platform
         //
     }
 }
+
+Platform platform = void;
+
+static
+this()
+{
+    platform.do_init();
+}

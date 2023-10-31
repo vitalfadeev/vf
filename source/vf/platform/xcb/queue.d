@@ -15,6 +15,9 @@ struct Queue
     pragma( inline, true )
     void popFront()
     {
+        import std.stdio : writeln;
+        writeln( __FUNCTION__ );
+
         import core.stdc.stdlib : free;
         free( front );
 

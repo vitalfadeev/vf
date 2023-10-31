@@ -5,6 +5,7 @@ import core.sys.windows.windows;
 import vf.platform.windows.event : Event, EVENT_TYPE;
 import vf.platform.windows.types;
 import vf.platform.windows.sensor;
+import vf.platform.windows.window_manager : window_manager;
 
 
 class Window : ISensor  // ISensAble, IClickAble, IDrawAble
@@ -32,7 +33,6 @@ class Window : ISensor  // ISensAble, IClickAble, IDrawAble
     {
         import std.utf : toUTF16z;
         import std.traits;
-        import vf.platform.windows.window_manager : window_manager;
 
         HINSTANCE hInstance = GetModuleHandle(NULL);
         
@@ -74,7 +74,6 @@ class Window : ISensor  // ISensAble, IClickAble, IDrawAble
             throw new WindowsException( "Unable to create window"  );
 
         // Link HWND -> Window
-        import vf.platform.windows.window_manager : window_manager;
         window_manager.register( hwnd, this );
 
         // Show

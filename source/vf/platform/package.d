@@ -13,12 +13,3 @@ version (XLIB)
 public import vf.platform.xlib;
 else
 static assert( 0, "Unsupported platform" );
-
-
-Platform platform = void;
-
-static
-this()
-{
-    platform.do_init();
-}

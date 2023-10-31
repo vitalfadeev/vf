@@ -34,6 +34,7 @@ import vf.platform;
 import vf.platform.xcb.queue;
 import vf.platform.xcb.sensors;
 import vf.platform.xcb.window;
+import vf.platform.xcb.window_manager;
 
 
 class Game
@@ -45,8 +46,11 @@ class Game
     //
     void go()
     {
+        import std.stdio : writeln;
+        writeln( __FUNCTION__ );
+
         //
-        sensors ~= Window.window_manager;
+        sensors ~= window_manager;
 
         auto window = new_window();
 
