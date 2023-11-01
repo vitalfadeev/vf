@@ -16,21 +16,19 @@ struct Queue
     pragma( inline, true )
     void popFront()
     {
-        if ( !started )
-            started = true;
-        else
-        {
-            import core.stdc.stdlib : free;
-            free( front );
-            front = cast(Event*)xcb_wait_for_event( platform.c );
-        }
+        import core.stdc.stdlib : free;
+        free( front );
+        front = cast(Event*)xcb_wait_for_event( platform.c );
     }
 
     pragma( inline, true )
     bool empty()
     {
         if ( !started )
+        {
+            started = true;
             front = cast(Event*)xcb_wait_for_event( platform.c );
+        }
 
         return ( front is null );  // XCB_DESTROY_NOTIFY
     }

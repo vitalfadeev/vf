@@ -19,7 +19,7 @@ struct Sensors
         import std.stdio : writeln;
         writeln( __FUNCTION__, ": event_type: ", event_type );
 
-        foreach( sen; sensors )
-            sen.sense( event, event_type );
+        foreach( sensor; sensors )
+            sensor.sense( event, event_type );
     }
 }

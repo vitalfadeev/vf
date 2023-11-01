@@ -38,13 +38,14 @@ import vf.platforms.xcb.window : Window;
 import vf.platforms.xcb.window_manager : window_manager;
 
 
-class Game
+class Game : vf.base.game.Game
 {
     Sensors  sensors;
     Queue    queue;
     int      result;
 
     //
+    override
     void go()
     {
         //
@@ -62,7 +63,7 @@ class Game
         return window_manager.new_window!Window();
     }
 
-    static
+    override 
     void quit( int quit_code=0 )
     {   
         //
