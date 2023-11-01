@@ -1,8 +1,7 @@
 module vf.interfaces;
 
 import std.range : InputRange;
-version(XCB)
-import vf.platforms.xcb.event : Event, EVENT_TYPE;
+import vf.event  : Event, EVENT_TYPE;
 
 
 //
