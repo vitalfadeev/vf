@@ -1,4 +1,6 @@
 module vf;
 
-public import vf.platform;
-public import vf.traits;
+public import vf.event;
+public import vf.game;
+public import vf.types;
+public import vf.window;

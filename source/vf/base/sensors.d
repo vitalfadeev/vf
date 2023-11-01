@@ -1,0 +1,1 @@
+module vf.base.sensors;

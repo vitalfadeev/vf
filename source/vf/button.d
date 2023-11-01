@@ -40,6 +40,7 @@ string _auto_cap_enum(alias M)()
     return s;
 }
 
+
 class Button : ISensAble, IEnterAble, IDrawAble
 {
     mixin auto_methods!(typeof(this));

@@ -1,7 +1,7 @@
 module vf.drawable;
 
 import vf.interfaces : IDrawAble;
-import vf.platform   : M16, OX, PX;
+import vf.types      : M16, OX, PX;
 
 
 // IDrawAble

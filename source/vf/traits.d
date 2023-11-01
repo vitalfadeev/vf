@@ -203,7 +203,7 @@ string Platf( string name )
     foreach( v; versions )
         s ~=  
             format!
-                "version (%s) public import vf.platform.%s.%s;"
+                "version (%s) public import vf.platforms.%s.%s;"
                 ( v, v.toLower, name );
 
     s ~= "else static assert( 0, \"Unsupported platform\" );";

@@ -50,15 +50,16 @@ void main()
 }
 
 
-
+import vf.interfaces : IWindow;
 class MyGame : Game
 {
 	alias T = typeof(this);
 
 	override
-    Window new_window()
+    IWindow new_window()
     {
-        return new MyWindow();
+        import vf.window_manager : window_manager;
+        return window_manager.new_window!MyWindow();
     }
 
     // for able 
