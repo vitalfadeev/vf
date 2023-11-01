@@ -16,7 +16,11 @@ struct Platform
     void do_init()
     {
         import vf.platforms.xcb.types : XCBException;
-        import core.stdc.stdlib      : getenv;
+        import core.stdc.stdlib       : getenv;
+        import std.string             : fromStringz;
+
+        import std.stdio : writeln;
+        writeln( __FUNCTION__, ": DISPLAY: ", getenv( "DISPLAY" ).fromStringz );
 
         // Open the connection to the X server 
         c = xcb_connect( getenv( "DISPLAY" ), null );

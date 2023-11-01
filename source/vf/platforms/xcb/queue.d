@@ -16,6 +16,9 @@ struct Queue
     pragma( inline, true )
     void popFront()
     {
+        import std.stdio : writeln;
+        writeln( __FUNCTION__ );
+
         import core.stdc.stdlib : free;
         free( front );
         front = cast(Event*)xcb_wait_for_event( platform.c );
@@ -24,11 +27,25 @@ struct Queue
     pragma( inline, true )
     bool empty()
     {
+        import std.stdio : writeln;
+        writeln( __FUNCTION__, " started: ", started );
+        writeln( __FUNCTION__, " platform.c: ", platform.c );
+
         if ( !started )
         {
             started = true;
-            front = cast(Event*)xcb_wait_for_event( platform.c );
+            writeln( __FUNCTION__, " xcb_wait_for_event: ", xcb_wait_for_event( platform.c ) );
+            //c = cast(Event*)xcb_wait_for_event( platform.c );
+
+            if ( front !is null && front.type == 0 ) 
+            {
+                import std.stdio : writeln;
+                writeln( __FUNCTION__, " front.type: ", front.type );
+                writeln( __FUNCTION__, " xcb_generic_error_t: ", *cast(xcb_generic_error_t*)front );
+            }
         }
+
+        writeln( __FUNCTION__, " front: ", front );
 
         return ( front is null );  // XCB_DESTROY_NOTIFY
     }
