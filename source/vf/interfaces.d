@@ -1,8 +1,7 @@
 module vf.interfaces;
 
 import std.range : InputRange;
-import vf : Event, EVENT_TYPE;
-public import vf : ISense;
+import vf        : Event, EVENT_TYPE;
 
 
 //
@@ -41,6 +40,12 @@ interface IDrawAble
     void point( int x, int y );
 }
 
+interface IHitAble
+{
+    void hit( int x, int y );
+}
+
+//
 interface ISensAble
 {
     void sense( Event* event, EVENT_TYPE event_type );

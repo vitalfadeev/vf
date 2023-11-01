@@ -2,13 +2,13 @@ module vf.platform.xcb.sensors;
 
 version(XCB):
 import xcb.xcb;
-import vf.platform.xcb.event;
-import vf.platform.xcb.sensor;
+import vf.interfaces : ISensAble;
+import vf.platform.xcb.event : Event, EVENT_TYPE;
 
 
 struct Sensors
 {
-    ISense[] sensors;
+    ISensAble[] sensors;
     alias sensors this;
 
     void sense( Event* event, EVENT_TYPE event_type )

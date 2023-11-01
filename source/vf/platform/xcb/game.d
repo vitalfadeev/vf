@@ -30,10 +30,10 @@ module vf.platform.xcb.game;
 
 version(XCB):
 import xcb.xcb;
-import vf.platform;
+//import vf.platform;
 import vf.platform.xcb.queue;
 import vf.platform.xcb.sensors;
-import vf.platform.xcb.window;
+import vf.platform.xcb.window : Window;
 import vf.platform.xcb.window_manager : window_manager;
 
 

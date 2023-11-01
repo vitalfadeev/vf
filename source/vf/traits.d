@@ -220,3 +220,40 @@ template hasInterface(T,I)
      enum hasInterface = 
         ( staticIndexOf!( AliasSeq!( I, InterfacesTuple!T ) ) != -1 );
 }
+
+template interfaces_of(T)
+{
+     import std.traits : InterfacesTuple;
+
+     alias interfaces_of = InterfacesTuple!T;
+}
+
+template all_interfaces(alias M)
+    if ( is( M == module ) )
+{
+    import std.meta : AliasSeq, Filter;
+    import std.traits : InterfacesTuple;
+
+    alias all_members = __traits( allMembers, M );
+    alias all_interfaces = AliasSeq!();
+
+    static foreach ( name; all_members )
+        static if ( is_interface!(M,name) )
+            all_interfaces = AliasSeq!( all_interfaces, __traits( getMember, M, name ) );
+}
+template is_interface(alias T,string name)
+{
+    import std.algorithm.searching : startsWith;
+    import std.traits : isCallable;
+
+    alias member = __traits( getMember, T, name );
+
+    static if ( is( member == interface ))
+        enum is_interface = true;
+    else
+        enum is_interface = false;
+}
+template interface_name(alias T)
+{
+    enum interface_name = __traits( identifier, T );
+}

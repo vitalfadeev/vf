@@ -2,12 +2,12 @@ module vf.platform.xcb.window_manager;
 
 version(XCB):
 import xcb.xcb;
-import vf.platform.xcb.sensor;
-import vf.platform.xcb.event;
+import vf.interfaces : ISensAble;
+import vf.platform.xcb.event : Event, EVENT_TYPE;
 
 // hwnd -> window
 // window -> hwnd
-class _WindowManager(T,W) : ISense
+class _WindowManager(T,W) : ISensAble
 {
     W[] _os_windows;
     T[] _vf_windows;
@@ -75,7 +75,7 @@ class _WindowManager(T,W) : ISense
     }
 }
 
-
+//import vf.platform.xcb.window_manager : _WindowManager;
 import vf.platform.xcb.window : Window;
 alias WindowManager = _WindowManager!(Window,xcb_window_t);  // alias xcb_window_t = uint32_t;
 

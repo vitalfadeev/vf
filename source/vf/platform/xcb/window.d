@@ -2,14 +2,14 @@ module vf.platform.xcb.window;
 
 version(XCB):
 import xcb.xcb;
-import vf.platform;
-import vf.platform.xcb.event;
-import vf.platform.xcb.sensor;
-import vf.platform.xcb.window_manager;
-import vf.platform.xcb.types : PX;
+import vf.platform.xcb.platform       : platform;
+import vf.platform.xcb.event          : Event, EVENT_TYPE;
+import vf.interfaces                  : ISensAble;
+import vf.platform.xcb.window_manager : window_manager;
+import vf.platform.xcb.types          : PX;
 
 
-class Window : ISense
+class Window : ISensAble
 {
     xcb_window_t hwnd;
 

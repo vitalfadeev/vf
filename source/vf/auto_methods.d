@@ -55,12 +55,9 @@ mixin template auto_enterable(T)
 
 mixin template auto_drawable(T)
 {
-    //DrawAble _drawable;
+    import vf.drawable;
 
-    void point( int x, int y )
-    {
-        //_drawable.point( x, y );
-    }
+    mixin DrawAble!T;
 
     void on_VF_DRAW( Event* event, EVENT_TYPE event_type )
     {
@@ -71,7 +68,7 @@ mixin template auto_drawable(T)
 
 mixin template auto_methods(T)
 {
-    import vf.interfaces : IEnterAble, ISensAble;
+    import vf.interfaces : IEnterAble, IDrawAble, ISensAble;
     import vf.traits : hasInterface;
 
     static if ( hasInterface!( T, IEnterAble ) )
@@ -82,4 +79,25 @@ mixin template auto_methods(T)
 
     static if ( hasInterface!( T, ISensAble ) )
         mixin auto_sensable!(typeof(this));    
+}
+
+
+mixin template auto_cap(T)
+{
+    uint auto_cap = mixin( _get_cap!T );
+}
+string _get_cap(T)()
+{
+    import std.format : format;
+    import std.string : toUpper;
+    import vf.traits : interfaces_of, interface_name;
+
+    string s;
+
+    s ~= "CAP._";
+
+    static foreach( I; interfaces_of!T )
+        s ~= format!" | CAP.%s"( interface_name!I.toUpper );
+
+    return s;
 }

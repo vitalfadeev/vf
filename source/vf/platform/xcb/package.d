@@ -7,7 +7,6 @@ public import vf.platform.xcb.event;
 //public import vf.platform.xcb.painter;
 public import vf.platform.xcb.platform;
 public import vf.platform.xcb.queue;
-public import vf.platform.xcb.sensor;
 public import vf.platform.xcb.sensors;
 public import vf.platform.xcb.raster;
 //public import vf.platform.xcb.traits;
