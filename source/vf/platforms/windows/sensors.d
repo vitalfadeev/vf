@@ -2,13 +2,13 @@ module vf.platforms.windows.sensors;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.platforms.windows.event;
-import vf.platforms.windows.sensor;
+import vf.event      : Event, EVENT_TYPE;
+import vf.interfaces : ISensAble;
 
 
 struct Sensors
 {
-    ISense[] sensors;
+    ISensAble[] sensors;
     alias sensors this;
 
     void sense( Event* event, EVENT_TYPE event_type )

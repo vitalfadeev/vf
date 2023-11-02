@@ -3,10 +3,10 @@ module vf.platforms.xcb.window;
 version(XCB):
 import xcb.xcb;
 public import vf.base.window;
-import vf.platform              : platform;
-import vf.platforms.xcb.event   : Event, EVENT_TYPE;
-import vf.interfaces            : IWindow, ISensAble;
-import vf.platforms.xcb.types   : PX;
+import vf.platform      : platform;
+import vf.event         : Event, EVENT_TYPE;
+import vf.interfaces    : IWindow, ISensAble;
+import vf.types         : PX;
 
 
 class Window : IWindow, ISensAble

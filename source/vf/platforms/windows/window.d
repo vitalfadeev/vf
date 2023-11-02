@@ -2,13 +2,12 @@ module vf.platforms.windows.window;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.platforms.windows.event : Event, EVENT_TYPE;
-import vf.platforms.windows.types;
-import vf.platforms.windows.sensor;
-import vf.platforms.windows.window_manager : window_manager;
+import vf.event          : Event, EVENT_TYPE;
+import vf.interfaces     : IWindow, ISensAble;
+import vf.types          : PX, WindowsException, W, H;
 
 
-class Window : ISense  // ISensAble, IClickAble, IDrawAble
+class Window : IWindow, ISensAble
 {
     HWND hwnd;
 
@@ -41,7 +40,7 @@ class Window : ISense  // ISensAble, IClickAble, IDrawAble
 
         // Create Window Class
         wndClass.style         = CS_HREDRAW | CS_VREDRAW;
-        wndClass.lpfnWndProc   = &window_manager.window_proc_sense;
+        wndClass.lpfnWndProc   = &window_proc_sense;
         wndClass.cbClsExtra    = 0;
         wndClass.cbWndExtra    = 0;
         wndClass.hInstance     = hInstance;
@@ -72,9 +71,6 @@ class Window : ISense  // ISensAble, IClickAble, IDrawAble
 
         if ( hwnd == NULL )
             throw new WindowsException( "Unable to create window"  );
-
-        // Link HWND -> Window
-        window_manager.register( hwnd, this );
 
         // Show
         if ( cmd_show )
@@ -122,6 +118,28 @@ class Window : ISense  // ISensAble, IClickAble, IDrawAble
         //
     }
 }
+
+
+extern( Windows ) 
+nothrow
+LRESULT window_proc_sense( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
+{   //              RCX,       RDX,            R8,            R9
+    import vf.event          : Event, EVENT_TYPE;
+    import vf.types          : show_throwable;
+    import vf.window_manager : window_manager;
+
+    Event event;
+    event.msg.message = message;
+    event.msg.hwnd    = hwnd;
+    event.msg.wParam  = wParam;
+    event.msg.lParam  = lParam;
+    alias event_type  = message;
+    try {
+        window_manager.sense( &event, event_type );
+    } catch ( Throwable o ) { o.show_throwable; }
+    return DefWindowProc( hwnd, message, wParam, lParam );
+}
+
 
 
 void auto_route_event( alias This, alias event, alias event_type )()

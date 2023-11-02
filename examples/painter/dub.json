@@ -9,6 +9,6 @@
 		"vf" : { "version": "*", "path": "../.." }
 	},
 	"subConfigurations" : {
-		"vf": "XCB"
+		"vf": "WINDOWS"
 	}
 }

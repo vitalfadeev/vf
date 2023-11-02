@@ -30,10 +30,11 @@ module vf.platforms.windows.game;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.platforms.windows.sensors        : Sensors;
-import vf.platforms.windows.queue          : Queue;
-import vf.platforms.windows.window         : Window;
-import vf.platforms.windows.window_manager : window_manager;
+import vf.sensors        : Sensors;
+import vf.queue          : Queue;
+import vf.window         : Window;
+import vf.window_manager : window_manager;
+import vf.interfaces     : IWindow;
 
 
 class Game
@@ -52,9 +53,9 @@ class Game
             sensors.sense( &event, event.type );
     }
 
-    Window new_window()
+    IWindow new_window()
     {
-        return new Window();            
+        return window_manager.new_window!Window();
     }
 
     static

@@ -3,8 +3,8 @@ module vf.platforms.xcb.sensors;
 version(XCB):
 import xcb.xcb;
 public import vf.base.sensors;
+import vf.event      : Event, EVENT_TYPE;
 import vf.interfaces : ISensAble;
-import vf.platforms.xcb.event : Event, EVENT_TYPE;
 
 
 struct Sensors

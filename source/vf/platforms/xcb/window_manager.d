@@ -49,11 +49,3 @@ class WindowManager : vf.base.window_manager.WindowManager!(IWindow,xcb_window_t
         }
     }
 }
-
-WindowManager window_manager;
-
-static
-this()
-{
-    window_manager = new WindowManager();
-}

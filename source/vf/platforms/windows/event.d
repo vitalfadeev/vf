@@ -8,7 +8,7 @@ struct Event
 {
     union {
         MSG         msg;
-        PaintEvent  paint;
+        DrawEvent   draw;
     }
 
     auto type()
@@ -19,7 +19,12 @@ struct Event
 
 alias EVENT_TYPE = typeof(MSG.message);
 
-struct PaintEvent
+enum VF_DRAW = WM_PAINT;
+
+import vf.interfaces : IDrawAble;
+struct DrawEvent
 {
-    //
+    EVENT_TYPE type = VF_DRAW;
+    IDrawAble drawable;
 }
+
