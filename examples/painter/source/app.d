@@ -223,7 +223,7 @@ class MyWindow : Window
     version(WINDOWS)
     void on_WM_DESTROY( Event* event, EVENT_TYPE event_type )
     {
-        Game.quit();
+        MyGame().quit();
     }
 }
 

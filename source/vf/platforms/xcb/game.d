@@ -31,11 +31,11 @@ module vf.platforms.xcb.game;
 version(XCB):
 import xcb.xcb;
 public import vf.base.game;
-import vf.interfaces : IWindow;
-import vf.platforms.xcb.queue;
-import vf.platforms.xcb.sensors;
-import vf.platforms.xcb.window : Window;
-import vf.platforms.xcb.window_manager : window_manager;
+import vf.interfaces     : IWindow;
+import vf.queue          : Queue;
+import vf.sensors        : Sensors;
+import vf.window         : Window;
+import vf.window_manager : window_manager;
 
 
 class Game : vf.base.game.Game

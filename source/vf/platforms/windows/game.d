@@ -30,20 +30,22 @@ module vf.platforms.windows.game;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.sensors        : Sensors;
+public import vf.base.game;
+import vf.interfaces     : IWindow;
 import vf.queue          : Queue;
+import vf.sensors        : Sensors;
 import vf.window         : Window;
 import vf.window_manager : window_manager;
-import vf.interfaces     : IWindow;
 
 
-class Game
+class Game : vf.base.game.Game
 {
     Sensors sensors;
     Queue   queue;
     int     result;
 
     //
+    override
     void go()
     {
         auto window = new_window();
@@ -58,7 +60,7 @@ class Game
         return window_manager.new_window!Window();
     }
 
-    static
+    override
     void quit( int quit_code=0 )
     {   
         PostQuitMessage( quit_code );
