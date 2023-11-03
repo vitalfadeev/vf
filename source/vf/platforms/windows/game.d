@@ -77,12 +77,10 @@ import vf.window_manager : window_manager;
 import vf.event          : Event, EVENT_TYPE;
 import vf.types          : SENSOR;
 
-class Game : vf.base.game.Game
+
+class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
 {
-    World   world = new World();
-    Sensors sensors;
-    Queue   queue;
-    int     result;
+    World world = new World();
 
     //
     override
@@ -93,9 +91,7 @@ class Game : vf.base.game.Game
         sensors ~= window_manager;
         sensors ~= world;
 
-        // event_instance, event_type, event_args...
-        foreach( ref event; queue )
-            sensors.sense( &event, event.type );
+        super.go();
     }
 
     IWindow new_window()
@@ -107,18 +103,5 @@ class Game : vf.base.game.Game
     void quit( int quit_code=0 )
     {   
         PostQuitMessage( quit_code );
-    }
-}
-
-
-struct Sensors
-{
-    ISensAble[] _sensors;
-    alias _sensors this;
-
-    void sense( Event* event, EVENT_TYPE event_type )
-    {
-        foreach( sensor; _sensors )
-            sensor.sense( event, event_type );
     }
 }
