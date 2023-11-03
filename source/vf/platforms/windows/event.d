@@ -19,7 +19,8 @@ struct Event
 
     auto dst()
     {
-        return cast( ISensAble )( msg.hwnd );
+        //return cast( ISensAble )( msg.hwnd );
+        return cast( ISensAble )null;
     }
 }
 
