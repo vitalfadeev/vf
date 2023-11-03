@@ -40,15 +40,17 @@ string _auto_sensable( T, alias event, alias event_type )()
 
 mixin template auto_enterable(T)
 {
-    import std.range;
-    import vf.interfaces : IEnterAble;
+    import vf.interfaces      : IEnterAble;
+    import vf.interfaces      : IEnterRange;
+    import vf.base.enterrange : EnterRange;
 
-    IEnterRange _enter;
+    EnterRange _enter;
     
-    @property
-    IEnterRange enter() 
+    @property EnterRange enter() { return _enter; }
+
+    void opOpAssign( string op : "~" )( ISensAble b )
     {
-        return _enter;
+        _enter.put( b );
     }
 }
 
@@ -70,6 +72,10 @@ mixin template auto_methods(T)
 {
     import vf.interfaces : IEnterAble, IDrawAble, ISensAble;
     import vf.traits : hasInterface;
+    import vf.auto_methods : auto_enterable;
+    import vf.auto_methods : auto_drawable;
+    import vf.auto_methods : auto_sensable;
+
 
     static if ( hasInterface!( T, IEnterAble ) )
         mixin auto_enterable!(typeof(this));

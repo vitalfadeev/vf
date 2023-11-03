@@ -2,18 +2,24 @@ module vf.platforms.windows.event;
 
 version(WINDOWS):
 import core.sys.windows.windows;
+import vf.interfaces : ISensAble;
 
 
 struct Event
 {
     union {
-        MSG         msg;
-        DrawEvent   draw;
+        MSG       msg;
+        DrawEvent draw;
     }
 
     auto type()
     {
         return msg.message;
+    }
+
+    auto dst()
+    {
+        return cast( ISensAble )( msg.hwnd );
     }
 }
 

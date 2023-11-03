@@ -20,40 +20,57 @@ module vf.platforms.windows.game;
 //              M32      M32     M32     M32  // 32
 //              R32      R32     R32     R32
 
-// OS
-// queue
-// sensors
-// go
-//   for d in queue
-//     for s in sensors
-//       s( d )
+// Game
+//   queue
+//   world
+//   go
+//     for e in queue
+//       world.sense(e)
+
+// Sensor
+//   on_key_press
+//     > E.click ( dst=this, type=click )
+//   on_click
+//     > E.app_cmd_play ( dst=app, type=app_cmd_play )
+//     do ...
+
+// World
+//   semse
+//     ? dst is null
+//       sense_all
+//         foreach s in sensors
+//           s.sense()
+//     :
+//       sense_one
+//         s = find dst in sensors
+//           s.sense()
 
 version(WINDOWS):
 import core.sys.windows.windows;
 public import vf.base.game;
 import vf.interfaces     : IWindow;
 import vf.queue          : Queue;
-import vf.sensors        : Sensors;
+import vf.world          : World;
 import vf.window         : Window;
 import vf.window_manager : window_manager;
 
 
 class Game : vf.base.game.Game
 {
-    Sensors sensors;  // is World
-    Queue   queue;
-    int     result;
+    World world = new World();
+    Queue queue;
+    int   result;
 
     //
     override
     void go()
     {
         auto window = new_window();
-        sensors ~= window_manager;
+        world ~= window_manager;
 
         // event_instance, event_type, event_args...
         foreach( ref event; queue )
-            sensors.sense( &event, event.type );
+            world.sense( &event, event.type );
     }
 
     IWindow new_window()
@@ -67,5 +84,3 @@ class Game : vf.base.game.Game
         PostQuitMessage( quit_code );
     }
 }
-
-

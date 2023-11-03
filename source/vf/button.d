@@ -4,6 +4,7 @@ import vf.interfaces;
 import vf.auto_methods;
 import vf : Event, EVENT_TYPE;
 import vf : M16;
+import vf.world : World;
 
 
 class View
@@ -23,11 +24,11 @@ class View
     }
 }
 
-class World : ISensAble, IEnterAble
-{
-    mixin auto_methods!(typeof(this));
-    mixin auto_cap!(typeof(this));
-}
+//class World : ISensAble, IEnterAble
+//{
+//    mixin auto_methods!(typeof(this));
+//    mixin auto_cap!(typeof(this));
+//}
 
 //enum CAP {
 //    _          = 0b0000_0000,
@@ -60,7 +61,7 @@ string _auto_cap_enum(alias M)()
 
 class Button : ISensAble, IEnterAble, IDrawAble
 {
-    mixin auto_methods!(typeof(this));
+    mixin auto_methods!(typeof(this));  // sense()
     mixin auto_cap!(typeof(this));
 
     void draw()

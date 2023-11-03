@@ -1,7 +1,7 @@
 module vf.interfaces;
 
 import std.range : InputRange;
-import vf.event  : Event, EVENT_TYPE;
+//import vf.event  : Event, EVENT_TYPE;
 
 
 //
@@ -10,29 +10,15 @@ interface IEnterAble
     @property IEnterRange enter();
 }
 
-interface IEnterRange
+interface IEnterRange : InputRange!ISensAble
 {
     void put( ISensAble o );
-    void sense( Event* event, EVENT_TYPE event_type );
+    void sense(Event,EVENT_TYPE)( Event* event, EVENT_TYPE event_type );
     //      this       event             event_type         
     //      RDI        RSI               RDX
+    ISensAble[] find( ISensAble sensor );
 }
 
-class EnterRange : IEnterRange
-{
-    ISensAble[] _range;
-
-    void put( ISensAble o )
-    {
-        _range ~= o;
-    }
-
-    void sense( Event* event, EVENT_TYPE event_type )
-    {
-        foreach( o; _range )
-            o.sense( event, event_type );
-    }
-}
 
 //
 interface IDrawAble
@@ -48,7 +34,7 @@ interface IHitAble
 //
 interface ISensAble
 {
-    void sense( Event* event, EVENT_TYPE event_type );
+    void sense(Event,EVENT_TYPE)( Event* event, EVENT_TYPE event_type );
     //      this       event             event_type         
     //      RDI        RSI               RDX
 }
@@ -56,7 +42,7 @@ interface ISensAble
 //
 interface IWindow
 {
-    void sense( Event* event, EVENT_TYPE event_type );
+    void sense(Event,EVENT_TYPE)( Event* event, EVENT_TYPE event_type );
     //      this       event             event_type         
     //      RDI        RSI               RDX
 }
