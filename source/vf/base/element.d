@@ -33,37 +33,31 @@ struct EnterElement(Event,EVENT_TYPE)
     E    moveFront() { return _range.moveFront; }
     void put( E o )  { _range ~= o; }
 
-    int opApply( scope int delegate(E) dg )  {
+    int opApply( scope int delegate(E) dg )  
+    {
         int result = 0;
 
-        foreach ( e; _range ) {
-            result = dg( e );
-
-            if ( result ) {
+        foreach( e; _range )
+            if ( ( result = dg( e ) ) != 0 )
                 break;
-            }
-        }
 
         return result;
     }
 
-    int opApply( scope int delegate(size_t, E) dg )  {
+    int opApply( scope int delegate(size_t, E) dg )  
+    {
         int result = 0;
 
-        foreach ( i, e; _range ) {
-            result = dg( i, e );
-
-            if ( result ) {
+        foreach( i, e; _range )
+            if ( ( result = dg( i, e ) ) != 0 )
                 break;
-            }
-        }
 
         return result;
     }
 
     void sense( Event* event, EVENT_TYPE event_type )
     {
-        foreach( e; _range )
+        foreach( ref e; _range )
             e.sense( event, event_type );
     }
 }

@@ -4,6 +4,7 @@ version(WINDOWS):
 import core.sys.windows.windows;
 import vf.platforms.windows.types;
 
+
 struct Color32
 {
     this( M8 r, M8 g, M8 b, M8 a )
