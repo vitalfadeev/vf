@@ -7,7 +7,6 @@ public import vf.platforms.windows.event;
 //public import vf.platforms.windows.painter;
 public import vf.platforms.windows.platform;
 public import vf.platforms.windows.queue;
-public import vf.platforms.windows.sensor;
 public import vf.platforms.windows.world;
 public import vf.platforms.windows.raster;
 //public import vf.platforms.windows.traits;
