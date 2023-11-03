@@ -6,6 +6,23 @@ import vf : Event, EVENT_TYPE;
 import vf : M16;
 
 
+class View
+{
+    World world;
+    uint  scale;
+    uint  xy;
+    uint  wh;
+
+    //void to_pixmap( IPixmap pixmap )
+    void to_window( IWindow window )
+    {
+        // foreach( el; world )
+        //     draw_tree ~= el;
+        //
+        // draw_tree.render();
+    }
+}
+
 class World : ISensAble, IEnterAble
 {
     mixin auto_methods!(typeof(this));

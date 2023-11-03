@@ -40,7 +40,7 @@ import vf.window_manager : window_manager;
 
 class Game : vf.base.game.Game
 {
-    Sensors sensors;
+    Sensors sensors;  // is World
     Queue   queue;
     int     result;
 
@@ -51,6 +51,7 @@ class Game : vf.base.game.Game
         auto window = new_window();
         sensors ~= window_manager;
 
+        // event_instance, event_type, event_args...
         foreach( ref event; queue )
             sensors.sense( &event, event.type );
     }
