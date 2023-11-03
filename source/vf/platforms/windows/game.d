@@ -75,7 +75,6 @@ import vf.world          : World;
 import vf.window         : Window;
 import vf.window_manager : window_manager;
 import vf.event          : Event, EVENT_TYPE;
-import vf.types          : SENSOR;
 
 
 class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
@@ -88,8 +87,9 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
     {
         auto window = new_window();
 
-        sensors ~= window_manager;
-        sensors ~= world;
+        sensors ~= &delegate_sense;
+        sensors ~= &window_manager.sense;
+        sensors ~= &world.sense;
 
         super.go();
     }
@@ -104,4 +104,13 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
     {   
         PostQuitMessage( quit_code );
     }
+
+
+    //
+    void delegate_sense( Event* event, EVENT_TYPE event_type )
+    {
+        import std.stdio : writeln;
+        writeln( "sense: ", *event, "; ", event_type );
+    }
 }
+

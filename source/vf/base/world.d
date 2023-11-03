@@ -26,16 +26,11 @@ class World(Event,EVENT_TYPE) : Element!(Event,EVENT_TYPE)
 
     void to_one( Event* event, EVENT_TYPE event_type )
     {
-        import std.range : empty, front;
-        auto sensor = gt_sensor( event );
-        if ( !sensor.empty )
-            sensor.front.sense( event, event_type );
-    }
-
-    auto gt_sensor( Event* event )
-    {
         import std.algorithm.searching : find;
         import std.range : takeOne;
-        return enter.find( event.dst ).takeOne;
+        import std.range : empty, front;
+        auto sensor = enter.find( event.dst ).takeOne;
+        if ( !sensor.empty )
+            sensor.front.sense( event, event_type );
     }
 }

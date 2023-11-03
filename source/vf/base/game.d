@@ -1,6 +1,7 @@
 module vf.base.game;
 
 import vf.base.interfaces : ISensAble;
+import vf.base.types      : SENSOR;
 
 
 class Game(Queue,Event,EVENT_TYPE)
@@ -11,7 +12,7 @@ class Game(Queue,Event,EVENT_TYPE)
 
     void go()
     {
-        foreach( event; queue )
+        foreach( ref event; queue )
             sensors.sense( &event, event.type );
     }
 
@@ -24,12 +25,12 @@ class Game(Queue,Event,EVENT_TYPE)
 
 struct Sensors(Event,EVENT_TYPE)
 {
-    ISensAble!(Event,EVENT_TYPE)[] _sensors;
+    SENSOR!(Event,EVENT_TYPE)[] _sensors;
     alias _sensors this;
 
     void sense( Event* event, EVENT_TYPE event_type )
     {
         foreach( sensor; _sensors )
-            sensor.sense( event, event_type );
+            sensor( event, event_type );
     }
 }
