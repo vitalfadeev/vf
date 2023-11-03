@@ -69,6 +69,7 @@ version(WINDOWS):
 import core.sys.windows.windows;
 public import vf.base.game;
 import vf.interfaces     : IWindow;
+import vf.interfaces     : ISensAble;
 import vf.queue          : Queue;
 import vf.world          : World;
 import vf.window         : Window;
@@ -78,9 +79,10 @@ import vf.types          : SENSOR;
 
 class Game : vf.base.game.Game
 {
-    World world = new World();
-    Queue queue;
-    int   result;
+    World   world = new World();
+    Sensors sensors;
+    Queue   queue;
+    int     result;
 
     //
     override
@@ -88,12 +90,12 @@ class Game : vf.base.game.Game
     {
         auto window = new_window();
 
+        sensors ~= window_manager;
+        sensors ~= world;
+
         // event_instance, event_type, event_args...
         foreach( ref event; queue )
-        {
-            window_manager.sense( &event, event.type );
-            world.sense( &event, event.type );
-        }
+            sensors.sense( &event, event.type );
     }
 
     IWindow new_window()
@@ -105,5 +107,18 @@ class Game : vf.base.game.Game
     void quit( int quit_code=0 )
     {   
         PostQuitMessage( quit_code );
+    }
+}
+
+
+struct Sensors
+{
+    ISensAble[] _sensors;
+    alias _sensors this;
+
+    void sense( Event* event, EVENT_TYPE event_type )
+    {
+        foreach( sensor; _sensors )
+            sensor.sense( event, event_type );
     }
 }
