@@ -60,14 +60,16 @@ string _auto_cap_enum(alias M)()
 }
 
 
-class Button : Element, IDrawAble
+class Button : Element
 {
     mixin auto_methods!(typeof(this));  // sense()
     mixin auto_cap!(typeof(this));
 
     void draw()
     {
-        point( 0, 0 );  // drawable
+        drawable.point( -1, -1 ); drawable.point( 0, -1 ); drawable.point( +1, -1 );
+        drawable.point( -1,  0 ); drawable.point( 0,  0 ); drawable.point( +1,  0 );
+        drawable.point( -1, +1 ); drawable.point( 0, +1 ); drawable.point( +1, +1 );
     }
 
     void to_pressed()
@@ -87,7 +89,7 @@ class Button : Element, IDrawAble
 
         void draw()
         {
-            point( 0, 0 );  // drawable
+            drawable.point( 0, 0 );  // drawable
         }
 
         void to_()
@@ -107,7 +109,7 @@ class Button : Element, IDrawAble
 
         void draw()
         {
-            point( 0, 0 );  // drawable
+            drawable.point( 0, 0 );  // drawable
         }
 
         void to_pressed()

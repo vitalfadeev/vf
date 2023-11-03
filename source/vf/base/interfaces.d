@@ -22,7 +22,7 @@ interface IEnterAble
 //
 interface IDrawAble
 {
-    void point( int x, int y );
+    //void point( int x, int y );
 }
 
 interface IHitAble

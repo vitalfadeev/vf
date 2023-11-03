@@ -4,6 +4,7 @@ import std.range          : InputRange;
 import std.range          : front, empty, popFront, moveFront;
 import vf.base.interfaces : IEnterAble;
 import vf.base.interfaces : ISensAble;
+import vf.base.drawable   : DrawAble;
 
 
 class Element(Event,EVENT_TYPE) : ISensAble!(Event,EVENT_TYPE), IEnterAble
@@ -18,6 +19,9 @@ class Element(Event,EVENT_TYPE) : ISensAble!(Event,EVENT_TYPE), IEnterAble
 
     // IEnterAble
     EnterElement!(Event,EVENT_TYPE) enter;
+
+    // IDrawAble
+    DrawAble drawable;
 }
 
 struct EnterElement(Event,EVENT_TYPE)

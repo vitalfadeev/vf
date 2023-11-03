@@ -57,7 +57,7 @@ mixin template auto_drawable(T)
 {
     import vf.drawable;
 
-    mixin DrawAble!T;
+    //mixin DrawAble!T;
 
     void on_VF_DRAW( Event* event, EVENT_TYPE event_type )
     {

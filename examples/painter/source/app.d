@@ -49,11 +49,17 @@ void main()
     catch ( Throwable o ) { o.show_throwable; }
 }
 
+import vf.button : Button;
 
 import vf.interfaces : IWindow;
 class MyGame : Game
 {
 	alias T = typeof(this);
+
+    this()
+    {
+        world.enter.put( new Button() );
+    }
 
 	override
     IWindow new_window()
