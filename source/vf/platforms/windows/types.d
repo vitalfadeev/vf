@@ -9,8 +9,8 @@ import vf.traits;
 public import vf.base.types;
 
 
-alias SENSOR  = void delegate(              Event* m, EVENT_TYPE event_type );
-alias SENSORF = void function( void* _this, Event* m, EVENT_TYPE event_type );
+alias SENSOR  = void delegate(              Event* event, EVENT_TYPE event_type );
+alias SENSORF = void function( void* _this, Event* event, EVENT_TYPE event_type );
 alias X       = short;
 alias Y       = short;
 alias W       = X;

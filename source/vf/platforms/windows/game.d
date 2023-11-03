@@ -73,7 +73,8 @@ import vf.queue          : Queue;
 import vf.world          : World;
 import vf.window         : Window;
 import vf.window_manager : window_manager;
-
+import vf.event          : Event, EVENT_TYPE;
+import vf.types          : SENSOR;
 
 class Game : vf.base.game.Game
 {
@@ -86,11 +87,13 @@ class Game : vf.base.game.Game
     void go()
     {
         auto window = new_window();
-        world ~= window_manager;
 
         // event_instance, event_type, event_args...
         foreach( ref event; queue )
+        {
+            window_manager.sense( &event, event.type );
             world.sense( &event, event.type );
+        }
     }
 
     IWindow new_window()

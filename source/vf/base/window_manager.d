@@ -1,13 +1,16 @@
 module vf.base.window_manager;
 
+import vf.base.interfaces : IWindowManager;
+
+
 // hwnd -> window
 // window -> hwnd
-class WindowManager(T,W)
+class WindowManager(V,O) : IWindowManager!(V,O)
 {
-    W[] _os_windows;
-    T[] _vf_windows;
+    O[] _os_windows;
+    V[] _vf_windows;
 
-    T vf_window( W os_window )
+    V vf_window( O os_window )
     {
         import std.algorithm.searching : countUntil;
         auto i = _os_windows.countUntil( os_window );
@@ -15,13 +18,13 @@ class WindowManager(T,W)
         return _vf_windows[i];
     }
 
-    void register( W os_window, T vf_window )
+    void register( O os_window, V vf_window )
     {
         _os_windows ~= os_window;
         _vf_windows ~= vf_window;
     }
 
-    void unregister( W os_window )
+    void unregister( O os_window )
     {
         import std.algorithm.searching : countUntil;
         import std.algorithm.mutation : remove;

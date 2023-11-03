@@ -1,14 +1,11 @@
 module vf.base.world;
 
-import vf.auto_methods : auto_enterable;
-import vf.interfaces   : ISensAble, IEnterAble;
-import vf.event        : Event, EVENT_TYPE;
+import vf.base.element : Element;
 
 
-class World : ISensAble, IEnterAble
+class World(Event,EVENT_TYPE) : Element!(Event,EVENT_TYPE)
 {
-    mixin auto_enterable!( typeof(this) );
-
+    override
     void sense( Event* event, EVENT_TYPE event_type )
     //      this       event             event_type
     //      RDI        RSI               RDX
@@ -22,12 +19,12 @@ class World : ISensAble, IEnterAble
             to_one( event, event_type );
     }
 
-    void to_all(Event,EVENT_TYPE)( Event* event, EVENT_TYPE event_type )
+    void to_all( Event* event, EVENT_TYPE event_type )
     {
         enter.sense( event, event_type );
     }
 
-    void to_one(Event,EVENT_TYPE)( Event* event, EVENT_TYPE event_type )
+    void to_one( Event* event, EVENT_TYPE event_type )
     {
         import std.range : empty, front;
         auto sensor = gt_sensor( event );
@@ -35,7 +32,7 @@ class World : ISensAble, IEnterAble
             sensor.front.sense( event, event_type );
     }
 
-    auto gt_sensor(Event)( Event* event )
+    auto gt_sensor( Event* event )
     {
         import std.algorithm.searching : find;
         import std.range : takeOne;

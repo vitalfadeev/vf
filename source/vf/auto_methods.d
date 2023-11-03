@@ -3,9 +3,10 @@ module vf.auto_methods;
 
 mixin template auto_sensable(T)
 {
-    import vf : Event, EVENT_TYPE;
-    import vf : VF_DRAW;
+    import vf.event : Event, EVENT_TYPE;
+    import vf       : VF_DRAW;
 
+    override
     void sense( Event* event, EVENT_TYPE event_type )
     {
         mixin( _auto_sensable!( T, event, event_type )() );
@@ -40,17 +41,14 @@ string _auto_sensable( T, alias event, alias event_type )()
 
 mixin template auto_enterable(T)
 {
-    import vf.interfaces      : IEnterAble;
-    import vf.interfaces      : IEnterRange;
-    import vf.base.enterrange : EnterRange;
+    import vf.element    : EnterElement;
+    import vf.interfaces : IEnterAble;
 
-    EnterRange _enter;
+    EnterElement enter;
     
-    @property EnterRange enter() { return _enter; }
-
-    void opOpAssign( string op : "~" )( ISensAble b )
+    void put( Element b )
     {
-        _enter.put( b );
+        enter.put( b );
     }
 }
 

@@ -5,6 +5,7 @@ import vf.auto_methods;
 import vf : Event, EVENT_TYPE;
 import vf : M16;
 import vf.world : World;
+import vf.element : Element;
 
 
 class View
@@ -37,7 +38,7 @@ class View
 //    IDRAWABLE  = 0b0000_0100,
 //    IHITABLE   = 0b0000_1000,
 //}
-mixin( _auto_cap_enum!(vf.interfaces) );
+mixin( _auto_cap_enum!(vf.platforms.windows.interfaces) );
 
 string _auto_cap_enum(alias M)()
 {
@@ -59,7 +60,7 @@ string _auto_cap_enum(alias M)()
 }
 
 
-class Button : ISensAble, IEnterAble, IDrawAble
+class Button : Element, IDrawAble
 {
     mixin auto_methods!(typeof(this));  // sense()
     mixin auto_cap!(typeof(this));
