@@ -45,6 +45,26 @@ module vf.platforms.windows.game;
 //         s = find dst in sensors
 //           s.sense()
 
+// Button
+//   text = "new text"
+//   |
+//   V
+// Render_Tree
+//   button
+//     rect
+//     |
+//     V
+// < DRAW rect
+//   |
+// > DRAW rect
+//   Render_Tree
+//     find rect
+//       find objects
+//         each draw
+//     update Render_Tree
+//     rasterize rect
+
+
 version(WINDOWS):
 import core.sys.windows.windows;
 public import vf.base.game;
