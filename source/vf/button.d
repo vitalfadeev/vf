@@ -15,6 +15,17 @@ class View
     uint  xy;
     uint  wh;
 
+    void render( World world )
+    {
+        import vf.base.drawable : DrawAble;
+        DrawAble drawable;
+
+        foreach( e; world.enter )
+            drawable.ops ~= e.drawable.ops;
+
+        //
+    }
+
     //void to_pixmap( IPixmap pixmap )
     void to_window( IWindow window )
     {
