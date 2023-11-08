@@ -101,10 +101,54 @@ class MyWindow : Window
     }
 
     // Linux
-    version(XCB_)
+    version(XCB)
     override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
+        // world
+        //   get all draws
+        //   raster
+
+        import xcb.xcb;
+        import vf.platform      : platform;
+        import vf.platforms.xcb.types : uint32_t;
+
+        auto expose = event.expose;
+        auto c      = platform.c;
+
+        //
+       /* geometric objects */
+        xcb_point_t[] points = [
+            {10, 10},
+            {10, 20},
+            {20, 10},
+            {20, 20}
+        ];
+
+        xcb_point_t[] polyline = [
+            {50, 10},
+            { 5, 20},     /* rest of points are relative */
+            {25,-20},
+            {10, 10}
+        ];
+
+        /* Create black (foreground) graphic context */
+        xcb_gcontext_t foreground = xcb_generate_id( c );
+        uint32_t       value_mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+        uint32_t[]     value_list = [ platform.screen.white_pixel, 0 ];
+
+        xcb_create_gc( c, foreground, hwnd, value_mask, value_list.ptr );
+
+        //
+        xcb_poly_point( c, XCB_COORD_MODE_ORIGIN,   hwnd, foreground, 4, points.ptr );
+        xcb_poly_line(  c, XCB_COORD_MODE_PREVIOUS, hwnd, foreground, 4, polyline.ptr );
+
+        xcb_flush( c );
+        import std.stdio : writeln;
+        writeln( __FUNCTION__  );
+
+
+
         /*
         HDC         hdc;
         PAINTSTRUCT ps; 
