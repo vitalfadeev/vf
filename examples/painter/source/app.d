@@ -49,6 +49,7 @@ void main()
     catch ( Throwable o ) { o.show_throwable; }
 }
 
+
 import vf.button : Button;
 
 import vf.interfaces : IWindow;
@@ -57,7 +58,7 @@ class MyGame : Game
 	alias T = typeof(this);
 
     this()
-    {
+    {        
         world.enter.put( new Button() );
     }
 
@@ -65,7 +66,7 @@ class MyGame : Game
     IWindow new_window()
     {
         import vf.window_manager : window_manager;
-        return window_manager.new_window!MyWindow();
+        return window_manager.new_window!MyWindow( world );
     }
 
     // for able 
@@ -87,9 +88,12 @@ class MyGame : Game
 
 class MyWindow : Window
 {
-    this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
+    World world;
+
+    this( World world, PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
     {
     	super( size, name, 0 );
+        this.world = world;
         move_to_center();
         show();
     }
@@ -108,9 +112,15 @@ class MyWindow : Window
         // world
         //   get all draws
         //   raster
+        foreach ( o; world.enter )
+        {
+            import std.stdio : writeln;
+            writeln( o );
+        }
+
 
         import xcb.xcb;
-        import vf.platform      : platform;
+        import vf.platform            : platform;
         import vf.platforms.xcb.types : uint32_t;
 
         auto expose = event.expose;
