@@ -15,6 +15,9 @@ alias Y       = short;
 alias W       = X;
 alias H       = Y;
 
+// for XCB types
+alias uint32_t = uint;
+
 //
 struct PX
 {

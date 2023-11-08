@@ -78,9 +78,12 @@ class Button : Element
 
     void draw()
     {
-        drawable.point( -1, -1 ); drawable.point( 0, -1 ); drawable.point( +1, -1 );
-        drawable.point( -1,  0 ); drawable.point( 0,  0 ); drawable.point( +1,  0 );
-        drawable.point( -1, +1 ); drawable.point( 0, +1 ); drawable.point( +1, +1 );
+        with (drawable)
+        {
+            point( -1, -1 ); point( 0, -1 ); point( +1, -1 );
+            point( -1,  0 ); point( 0,  0 ); point( +1,  0 );
+            point( -1, +1 ); point( 0, +1 ); point( +1, +1 );            
+        }
     }
 
     void to_pressed()

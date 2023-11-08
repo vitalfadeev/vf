@@ -101,7 +101,8 @@ class MyWindow : Window
     }
 
     // Linux
-    version(XCB)
+    version(XCB_)
+    override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
         /*

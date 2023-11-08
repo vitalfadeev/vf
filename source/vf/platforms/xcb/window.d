@@ -27,7 +27,11 @@ class Window : IWindow, ISensAble
     //      this       event             event_type
     //      RDI        RSI               RDX
     {
-        //
+        switch (event_type)
+        {
+            case XCB_EXPOSE: on_XCB_EXPOSE( event, event_type ); break;
+            default:
+        }
     }
 
     // private
@@ -44,7 +48,7 @@ class Window : IWindow, ISensAble
             XCB_CW_BACK_PIXEL | 
             XCB_CW_EVENT_MASK;
         immutable(uint[]) value_list = [
-            platform.screen.white_pixel,
+            platform.screen.black_pixel,
             XCB_EVENT_MASK_EXPOSURE |
             XCB_EVENT_MASK_KEY_PRESS |
             XCB_EVENT_MASK_KEY_RELEASE |
@@ -95,6 +99,48 @@ class Window : IWindow, ISensAble
     void _create_renderer()
     {
         //
+    }
+
+    //
+    void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
+    {
+        import vf.platforms.xcb.types : uint32_t;
+
+        auto expose = event.expose;
+        auto c      = platform.c;
+
+        // world
+
+        //
+       /* geometric objects */
+        xcb_point_t[] points = [
+            {10, 10},
+            {10, 20},
+            {20, 10},
+            {20, 20}
+        ];
+
+        xcb_point_t[] polyline = [
+            {50, 10},
+            { 5, 20},     /* rest of points are relative */
+            {25,-20},
+            {10, 10}
+        ];
+
+        /* Create black (foreground) graphic context */
+        xcb_gcontext_t foreground = xcb_generate_id( c );
+        uint32_t       value_mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+        uint32_t[]     value_list = [ platform.screen.white_pixel, 0 ];
+
+        xcb_create_gc( c, foreground, hwnd, value_mask, value_list.ptr );
+
+        //
+        xcb_poly_point( c, XCB_COORD_MODE_ORIGIN,   hwnd, foreground, 4, points.ptr );
+        xcb_poly_line(  c, XCB_COORD_MODE_PREVIOUS, hwnd, foreground, 4, polyline.ptr );
+
+        xcb_flush( c );
+        import std.stdio : writeln;
+        writeln( __FUNCTION__  );
     }
 }
 
