@@ -76,14 +76,6 @@ class Window : IWindow, ISensAble
 
         // Make sure commands are sent before we pause, so window is shown
         xcb_flush( c );
-        
-        //xcb_generic_event_t *event;
-        //while ( ( event = xcb_wait_for_event( c ) ) !is null ) {
-        //    import std.stdio : writeln;
-        //    writeln( __FUNCTION__, ": ", event.response_type );
-        //    import core.stdc.stdlib : free;
-        //    free (event);
-        //}
     }
 
 
