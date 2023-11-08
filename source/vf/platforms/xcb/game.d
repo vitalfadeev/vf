@@ -33,29 +33,27 @@ import xcb.xcb;
 public import vf.base.game;
 import vf.interfaces     : IWindow;
 import vf.queue          : Queue;
-import vf.sensors        : Sensors;
+import vf.world          : World;
 import vf.window         : Window;
 import vf.window_manager : window_manager;
+import vf.event          : Event, EVENT_TYPE;
 
 
-class Game : vf.base.game.Game
+class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
 {
-    Sensors  sensors;
-    Queue    queue;
-    int      result;
-
+    World world = new World();
+    
     //
     override
     void go()
     {
-        //
-        sensors ~= window_manager;
-
         auto window = new_window();
 
-        //
-        foreach( event; queue )
-            sensors.sense( event, event.type );
+        sensors ~= &delegate_sense;
+        sensors ~= &window_manager.sense;
+        sensors ~= &world.sense;
+
+        super.go();
     }
 
     IWindow new_window()
@@ -67,5 +65,13 @@ class Game : vf.base.game.Game
     void quit( int quit_code=0 )
     {   
         //
+    }
+
+
+    //
+    void delegate_sense( Event* event, EVENT_TYPE event_type )
+    {
+        import std.stdio : writeln;
+        writeln( "sense: ", *event, "; ", event_type );
     }
 }

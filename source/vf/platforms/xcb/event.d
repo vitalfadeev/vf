@@ -2,7 +2,8 @@ module vf.platforms.xcb.event;
 
 version(XCB):
 import xcb.xcb;
-public import vf.base.event;
+import vf.base.event;
+import vf.interfaces : ISensAble;
 
 
 struct Event
@@ -45,6 +46,12 @@ struct Event
     auto type()
     {
         return generic.response_type & ~0x80;
+    }
+
+    auto dst()
+    {
+        //return cast( ISensAble )( msg.hwnd );
+        return cast( ISensAble )null;
     }
 }
 

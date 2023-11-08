@@ -1,14 +1,14 @@
 {
 	"name"           : "painter",
 	"description"    : "A minimal D application.",
-	"authors"        : ["vital"],
-	"copyright"      : "Copyright © 2023, vital",
+	"authors"        : ["Vital Fadeev"],
+	"copyright"      : "Copyright © 2023, Vital Fadeev",
 	"license"        : "GPL3",
 	"dflags"         : [ "-mixin=mixins.d" ],
 	"dependencies"   : {
 		"vf" : { "version": "*", "path": "../.." }
 	},
 	"subConfigurations" : {
-		"vf": "WINDOWS"
+		"vf": "XCB"
 	}
 }

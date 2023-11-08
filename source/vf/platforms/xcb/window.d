@@ -40,19 +40,26 @@ class Window : IWindow, ISensAble
         hwnd = xcb_generate_id( c );
 
         //
-        uint    mask   = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
-        uint[2] values = [
+        immutable(uint)   value_mask = 
+            XCB_CW_BACK_PIXEL | 
+            XCB_CW_EVENT_MASK;
+        immutable(uint[]) value_list = [
             platform.screen.white_pixel,
-            XCB_EVENT_MASK_EXPOSURE       | XCB_EVENT_MASK_BUTTON_PRESS   |
-            XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION |
-            XCB_EVENT_MASK_ENTER_WINDOW   | XCB_EVENT_MASK_LEAVE_WINDOW   |
-            XCB_EVENT_MASK_KEY_PRESS      | XCB_EVENT_MASK_KEY_RELEASE 
+            XCB_EVENT_MASK_EXPOSURE |
+            XCB_EVENT_MASK_KEY_PRESS |
+            XCB_EVENT_MASK_KEY_RELEASE |
+            XCB_EVENT_MASK_BUTTON_PRESS |
+            XCB_EVENT_MASK_BUTTON_RELEASE |
+            XCB_EVENT_MASK_POINTER_MOTION |
+            XCB_EVENT_MASK_FOCUS_CHANGE |
+            XCB_EVENT_MASK_STRUCTURE_NOTIFY,
+            0
         ];
 
         // Create the window
         xcb_create_window( 
             c,                             // Connection          
-            0,                             // depth (same as root)
+            XCB_COPY_FROM_PARENT,          // depth (same as root)
             hwnd,                          // window Id           
             platform.screen.root,          // parent window       
             0, 0,                          // x, y                
@@ -60,7 +67,8 @@ class Window : IWindow, ISensAble
             10,                            // border_width        
             XCB_WINDOW_CLASS_INPUT_OUTPUT, // class               
             platform.screen.root_visual,   // visual              
-            0, values.ptr                  // masks, not used yet 
+            value_mask,                    // masks
+            value_list.ptr                 // not used yet 
         );                                 
 
         // Map the window on the screen
@@ -69,13 +77,13 @@ class Window : IWindow, ISensAble
         // Make sure commands are sent before we pause, so window is shown
         xcb_flush( c );
         
-        xcb_generic_event_t *event;
-        while ( ( event = xcb_wait_for_event( c ) ) !is null ) {
-            import std.stdio : writeln;
-            writeln( __FUNCTION__, ": ", event.response_type );
-            import core.stdc.stdlib : free;
-            free (event);
-        }
+        //xcb_generic_event_t *event;
+        //while ( ( event = xcb_wait_for_event( c ) ) !is null ) {
+        //    import std.stdio : writeln;
+        //    writeln( __FUNCTION__, ": ", event.response_type );
+        //    import core.stdc.stdlib : free;
+        //    free (event);
+        //}
     }
 
 

@@ -2,6 +2,7 @@ module vf.platforms.windows.event;
 
 version(WINDOWS):
 import core.sys.windows.windows;
+import vf.base.event;
 import vf.interfaces : ISensAble;
 
 

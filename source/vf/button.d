@@ -8,33 +8,33 @@ import vf.world : World;
 import vf.element : Element;
 
 
-class View
-{
-    World world;
-    uint  scale;
-    uint  xy;
-    uint  wh;
+//class View
+//{
+//    World world;
+//    uint  scale;
+//    uint  xy;
+//    uint  wh;
 
-    void render( World world )
-    {
-        import vf.base.drawable : DrawAble;
-        DrawAble drawable;
+//    void render( World world )
+//    {
+//        import vf.base.drawable : DrawAble;
+//        DrawAble drawable;
 
-        foreach( e; world.enter )
-            drawable.ops ~= e.drawable.ops;
+//        foreach( e; world.enter )
+//            drawable.ops ~= e.drawable.ops;
 
-        //
-    }
+//        //
+//    }
 
-    //void to_pixmap( IPixmap pixmap )
-    void to_window( IWindow window )
-    {
-        // foreach( el; world )
-        //     draw_tree ~= el;
-        //
-        // draw_tree.render();
-    }
-}
+//    //void to_pixmap( IPixmap pixmap )
+//    void to_window( IWindow window )
+//    {
+//        // foreach( el; world )
+//        //     draw_tree ~= el;
+//        //
+//        // draw_tree.render();
+//    }
+//}
 
 //class World : ISensAble, IEnterAble
 //{
@@ -49,32 +49,32 @@ class View
 //    IDRAWABLE  = 0b0000_0100,
 //    IHITABLE   = 0b0000_1000,
 //}
-mixin( _auto_cap_enum!(vf.platforms.windows.interfaces) );
+//mixin( _auto_cap_enum!(vf.platforms.windows.interfaces) );
 
-string _auto_cap_enum(alias M)()
-{
-    import std.format : format;
-    import std.string : toUpper;
-    import vf.traits  : all_interfaces, interface_name;
+//string _auto_cap_enum(alias M)()
+//{
+//    import std.format : format;
+//    import std.string : toUpper;
+//    import vf.traits  : all_interfaces, interface_name;
 
-    string s;
+//    string s;
 
-    s ~= "enum CAP {\n";
-    s ~= "                                 _ = 0,\n";
+//    s ~= "enum CAP {\n";
+//    s ~= "                                 _ = 0,\n";
 
-    static foreach( i, I; all_interfaces!M )
-        s ~= format!"  %32s = 0b%032b,\n"( (interface_name!I).toUpper, (1 << i) );
+//    static foreach( i, I; all_interfaces!M )
+//        s ~= format!"  %32s = 0b%032b,\n"( (interface_name!I).toUpper, (1 << i) );
 
-    s ~= "}";
+//    s ~= "}";
 
-    return s;
-}
+//    return s;
+//}
 
 
 class Button : Element
 {
     mixin auto_methods!(typeof(this));  // sense()
-    mixin auto_cap!(typeof(this));
+    //mixin auto_cap!(typeof(this));
 
     void draw()
     {
@@ -136,17 +136,17 @@ class Button : Element
 } 
 
 
-void init_world()
-{
-    import vf : DrawEvent;
+//void init_world()
+//{
+//    import vf : DrawEvent;
 
-    auto world = new World();
-    world.enter.put( new Button() );
+//    auto world = new World();
+//    world.enter.put( new Button() );
 
-    Event event;
-    event.draw = DrawEvent();
-    world.sense( &event, event.type );
-}
+//    Event event;
+//    event.draw = DrawEvent();
+//    world.sense( &event, event.type );
+//}
 
 // on PAINT
 //   rasterize

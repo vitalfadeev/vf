@@ -8,12 +8,16 @@ import vf.platforms.windows.types : WindowsException;
 
 struct Queue
 {
-    Event front;  // MSG
+    Event _event;  // MSG
+    
+    pragma( inline, true )
+    @property
+    Event* front() { return &_event; };  // MSG*
 
     pragma( inline, true )
     void popFront()
     {
-        if ( GetMessage( &this.front.msg, null, 0, 0 ) == 0 ) 
+        if ( GetMessage( &_event.msg, null, 0, 0 ) == 0 ) 
             if ( GetLastError() )
                 throw new WindowsException( "Queue.popFront: " );
     }
@@ -21,7 +25,7 @@ struct Queue
     pragma( inline, true )
     bool empty()
     {
-        return ( front.msg.message == WM_QUIT );
+        return ( _event.msg.message == WM_QUIT );
     }
 
     pragma( inline, true )
