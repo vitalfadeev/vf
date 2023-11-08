@@ -45,13 +45,20 @@ struct Event
 
     auto type()
     {
-        return generic.response_type & ~0x80;
+        //return generic.response_type & ~0x80;
+        return generic.response_type;
     }
 
     auto dst()
     {
         //return cast( ISensAble )( msg.hwnd );
         return cast( ISensAble )null;
+    }
+
+    string toString()
+    {
+        import std.format : format;
+        return format!"Event( 0x%04X )"(generic.response_type);
     }
 }
 

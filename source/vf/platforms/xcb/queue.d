@@ -5,7 +5,6 @@ import xcb.xcb;
 public import vf.base.queue;
 import vf.platform : platform;
 import vf.platforms.xcb.event;
-import vf.platforms.xcb.window : Window;
 
 
 struct Queue

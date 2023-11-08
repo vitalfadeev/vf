@@ -72,6 +72,6 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
     void delegate_sense( Event* event, EVENT_TYPE event_type )
     {
         import std.stdio : writeln;
-        writeln( "sense: ", *event, "; ", event_type );
+        writeln( "sense: ", *event );
     }
 }
