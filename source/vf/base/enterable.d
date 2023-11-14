@@ -1,7 +1,7 @@
 module vf.base.enterable;
 
 import vf.base.transformable : TransformAble;
-import vf.base.layoutable    : LayoutAble;
+import vf.base.layoutable    : LayoutAble, SIZE_MODE;
 
 
 class EnterAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
@@ -29,9 +29,9 @@ class EnterAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
         final
         switch ( size_mode )
         {
-            case OUTER: wh = outer.wh; break;
-            case FIXED: super.calc_wh(); break;
-            case INTER: wh = outer.wh; break;
+            case SIZE_MODE.OUTER: wh = outer.wh; break;
+            case SIZE_MODE.FIXED: super.calc_wh( outer ); break;
+            case SIZE_MODE.INTER: wh = outer.wh; break;
         }
     }
 
