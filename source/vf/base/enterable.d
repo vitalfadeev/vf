@@ -51,13 +51,13 @@ struct Enter(Event,EVENT_TYPE,WX)
     EnterAble!(Event,EVENT_TYPE,WX)[] arr;
     alias arr this;
 
-    auto wh()
+    auto wh( EnterAble!(Event,EVENT_TYPE,WX) outer )
     {
-        typeof(LayoutAble!(Event,EVENT_TYPE,WX).wh) wh;
+        WX wh;
 
         foreach ( e; arr )
         {
-            e.calc_wh();
+            e.calc_wh( outer );
             wh += e.wh;
         }
 

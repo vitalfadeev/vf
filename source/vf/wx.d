@@ -15,6 +15,12 @@ version(XCB)
         {
             _super = vf.base.wx.WX!( Fixed(x), Fixed(y) );
         }
+
+        void opOpAssign( string op : "+" )( WX b )
+        {
+            x += b.x;
+            y += b.y;
+        }
     }
 }
 

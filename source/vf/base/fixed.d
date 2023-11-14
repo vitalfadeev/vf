@@ -4,6 +4,7 @@ module vf.base.fixed;
 struct Fixed
 {
     int a;
+    alias a this;
 
     int opCmp( Fixed b )
     {
