@@ -10,13 +10,13 @@ class EnterAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
 
     void each( void delegate( typeof(this) e ) dg )
     {
-        foreach ( e; enter )
+        foreach ( ref e; enter )
             dg( e );
     }
 
     void each_recursive( void delegate( typeof(this) e ) dg )
     {
-        foreach ( e; enter )
+        foreach ( ref e; enter )
         {
             dg( e );
             e.each_recursive( dg );
@@ -49,6 +49,7 @@ class EnterAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
 struct Enter(Event,EVENT_TYPE,WX)
 {
     EnterAble!(Event,EVENT_TYPE,WX)[] arr;
+    alias arr this;
 
     auto wh()
     {

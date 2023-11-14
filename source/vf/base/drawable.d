@@ -224,6 +224,56 @@ struct Op(WX)
 
     WX calc_wh();
     void apply( M matrix );
+    auto max_x()
+    {
+        final
+        switch ( type )
+        {
+            case OP._         : break;
+            case OP.GO_CENTER : break;
+            case OP.GO        : break;
+            case OP.POINT     : break;
+            case OP.POINTAT   : break;
+            case OP.POINTS    : break;
+            case OP.LINE      : break;
+            case OP.LINES     : break;
+            case OP.TRIANGLE  : break;
+            case OP.TRIANGLES : break;
+            case OP.QUAD      : break;
+            case OP.QUADS     : break;
+            case OP.CIRCLE    : break;
+            case OP.CIRCLES   : break;
+            case OP.ARC       : break;
+            case OP.ARCS      : break;
+        }
+
+        return typeof(WX.x)();
+    }
+    auto max_y()
+    {
+        final
+        switch ( type )
+        {
+            case OP._         : break;
+            case OP.GO_CENTER : break;
+            case OP.GO        : break;
+            case OP.POINT     : break;
+            case OP.POINTAT   : break;
+            case OP.POINTS    : break;
+            case OP.LINE      : break;
+            case OP.LINES     : break;
+            case OP.TRIANGLE  : break;
+            case OP.TRIANGLES : break;
+            case OP.QUAD      : break;
+            case OP.QUADS     : break;
+            case OP.CIRCLE    : break;
+            case OP.CIRCLES   : break;
+            case OP.ARC       : break;
+            case OP.ARCS      : break;
+        }
+
+        return typeof(WX.x)();
+    }
 }
 
 struct M
