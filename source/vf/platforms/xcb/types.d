@@ -36,18 +36,18 @@ struct PX
 }
 
 //
-struct OX
+struct WX
 {
     X x;
     Y y;
 }
 
 
-PX to_px( OX ox )
+PX to_px( WX wx )
 {
     PX px;
-    px.x = ox.x;
-    px.y = ox.y;
+    px.x = wx.x;
+    px.y = wx.y;
     return px;
 }
 

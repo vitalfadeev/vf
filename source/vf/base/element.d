@@ -22,7 +22,11 @@ class Element(Event,EVENT_TYPE) : ISensAble!(Event,EVENT_TYPE), IEnterAble
 
     // IDrawAble
     DrawAble drawable;
+
+    // ILayoutAble
+    LayoutAble layoutable;
 }
+
 
 struct EnterElement(Event,EVENT_TYPE)
 {

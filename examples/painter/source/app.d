@@ -1,32 +1,5 @@
 import std.stdio;
 
-// screen
-// ---------------------------------------
-// 
-// 
-// 
-// 
-// 
-// 
-// ---------------|     |-----------------  
-//              1 |  2  | 3                 // selector
-// ---------------|     |-----------------
-// ====================================|==  // queue
-
-// G pipeline
-//   goes, points, lines
-//     add operations, points  // go, point, line
-//     zoom
-//     rotate
-//     brush                   // new lines, remove control line
-//     ...detalization         // 1 point -> 2 point, 2 lines smooth -> 3 lines
-//     crop                    // crop = clip
-//   rasterize
-//     ox -> px
-//     color                   // 
-//     mix bg fg               //
-//     pixels                  //
-
 import vf;
 
 //version=READ;
@@ -112,10 +85,14 @@ class MyWindow : Window
         // world
         //   get all draws
         //   raster
+        auto rasterizer = new Rasterizer();
+
         foreach ( o; world.enter )
         {
             import std.stdio : writeln;
             writeln( o );
+
+            rasterizer.rasterize( o.drawable );
         }
 
 
@@ -303,3 +280,18 @@ auto tee(T)( T This )
     }
     return _Tee( This );
 }
+
+
+// screen
+// ---------------------------------------
+// 
+// 
+// 
+// 
+// 
+// 
+// ---------------|     |-----------------  
+//              1 |  2  | 3                 // selector
+// ---------------|     |-----------------
+// ====================================|==  // queue
+

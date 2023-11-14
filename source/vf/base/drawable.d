@@ -1,7 +1,7 @@
 module vf.base.drawable;
 
 import vf.interfaces : IDrawAble;
-import vf.types      : M16, OX, PX;
+import vf.types      : M16, WX, PX;
 
 
 // IDrawAble
@@ -17,7 +17,7 @@ struct DrawAble
 
     //auto ref go( W w, H h )
     //{
-    //    ops ~= Go( OP.GO, OX( w, h ) );
+    //    ops ~= Go( OP.GO, WX( w, h ) );
     //    return this;
     //}
 
@@ -29,14 +29,14 @@ struct DrawAble
 
     //auto ref line( W w, H h )
     //{
-    //    ops ~= Line( OP.LINE, OX( w,h ) );
+    //    ops ~= Line( OP.LINE, WX( w,h ) );
     //    return this;
     //}
 
     //
     void point( int x, int y )
     {
-        ops ~= Op( PointAt( OP.POINTAT, OX( cast(X)x, cast(Y)y ) ) );
+        ops ~= Op( PointAt( OP.POINTAT, WX( cast(X)x, cast(Y)y ) ) );
     }
 }
 
@@ -53,38 +53,6 @@ version(LINUX_X11)
 auto to_painter(WINDOW)( WINDOW window )
 {
     return new Painter();
-}
-version(LINUX_X11)
-auto to_raster(WINDOW:Window)( Painter painter, WINDOW window )
-{
-    // window -> raster
-    auto raster = to_raster( window );
-
-    foreach( op; painter.ops )
-    {
-        final
-        switch ( op.type )
-        {
-            case OP._         : break;
-            case OP.GO_CENTER : raster.go_center(); break;
-            case OP.GO        : raster.go( op.go.ox.to_px ); break;
-            case OP.POINT     : raster.point() ; break;
-            case OP.POINTS    : break;
-            case OP.POINTS    : break;
-            case OP.LINE      : raster.line( op.line.ox.to_px ); break;
-            case OP.LINES     : break;
-            case OP.TRIANGLE  : break;
-            case OP.TRIANGLES : break;
-            case OP.QUAD      : break;
-            case OP.QUADS     : break;
-            case OP.CIRCLE    : break;
-            case OP.CIRCLES   : break;
-            case OP.ARC       : break;
-            case OP.ARCS      : break;
-        }
-    }
-
-    return raster;
 }
 
 
@@ -109,11 +77,11 @@ auto to_raster(WINDOW:Window)( Painter painter, WINDOW window, HDC hdc )
         {
             case OP._         : break;
             case OP.GO_CENTER : raster.go_center(); break;
-            case OP.GO        : raster.go( op.go.ox.to_px ); break;
+            case OP.GO        : raster.go( op.go.wx.to_px ); break;
             case OP.POINT     : raster.point() ; break;
             case OP.POINTS    : break;
             case OP.POINTS    : break;
-            case OP.LINE      : raster.line( op.line.ox.to_px ); break;
+            case OP.LINE      : raster.line( op.line.wx.to_px ); break;
             case OP.LINES     : break;
             case OP.TRIANGLE  : break;
             case OP.TRIANGLES : break;
@@ -252,7 +220,7 @@ struct GoCenter
 struct Go
 {
     OP type = OP.GO;
-    OX ox;
+    WX wx;
 }
 
 struct Point
@@ -263,25 +231,25 @@ struct Point
 struct PointAt
 {
     OP type = OP.POINTAT;
-    OX ox;
+    WX wx;
 }
 
 struct Points
 {
     OP   type = OP.POINTS;
-    OX[] oxs;
+    WX[] wxs;
 }
 
 struct Line
 {
     OP type = OP.LINE;
-    OX ox;
+    WX wx;
 }
 
 struct Lines
 {
     OP   type = OP.LINES;
-    OX[] oxs;
+    WX[] wxs;
 }
 
 
