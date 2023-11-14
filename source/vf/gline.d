@@ -141,7 +141,7 @@ struct Gline(DRAWABLE,LAYOUTABLE,RASTERABLE)
         pragma( inline, true )
         void _line( ref Op op )
         {
-            raster_able.line( op.line.wx.to_px )
+            raster_able.line( op.line.wx.to_px );
         }
     }
 
@@ -155,7 +155,7 @@ struct Gline(DRAWABLE,LAYOUTABLE,RASTERABLE)
     pragma( inline, true )
     void _line( ref Op op )
     {
-        raster_able.line( op.line.wx.to_px )
+        raster_able.line( op.line.wx.to_px );
     }
 }
 

@@ -14,6 +14,8 @@ mixin template auto_sensable(T)
         // recursive
         static if ( hasInterface!( T, IEnterAble ) )
             enter.sense( event, event_type );
+
+        super.sense( e, event_type );
     }
 }
 

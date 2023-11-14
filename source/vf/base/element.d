@@ -1,71 +1,77 @@
 module vf.base.element;
 
-import std.range          : InputRange;
-import std.range          : front, empty, popFront, moveFront;
-import vf.base.interfaces : IEnterAble;
-import vf.base.interfaces : ISensAble;
-import vf.base.drawable   : DrawAble;
+import vf.base.enterable : EnterAble;
 
 
-class Element(Event,EVENT_TYPE) : ISensAble!(Event,EVENT_TYPE), IEnterAble
-{
-    // ISensAble
-    void sense( Event* event, EVENT_TYPE event_type )
-    //      this       event             event_type         
-    //      RDI        RSI               RDX
-    {
-        //
-    }
-
-    // IEnterAble
-    EnterElement!(Event,EVENT_TYPE) enter;
-
-    // IDrawAble
-    DrawAble drawable;
-
-    // ILayoutAble
-    LayoutAble layoutable;
-}
+//import std.range          : InputRange;
+//import std.range          : front, empty, popFront, moveFront;
+//import vf.base.interfaces : IEnterAble;
+//import vf.base.interfaces : ISensAble;
+//import vf.base.drawable   : DrawAble;
 
 
-struct EnterElement(Event,EVENT_TYPE)
-{
-    alias E = Element!(Event,EVENT_TYPE);
-
-    E[] _range;
+alias Element(Event,EVENT_TYPE) = EnterAble!(Event,EVENT_TYPE);
 
 
-    E    front()     { return _range.front; }
-    bool empty()     { return _range.empty; }
-    void popFront()  { _range.popFront(); }
-    E    moveFront() { return _range.moveFront; }
-    void put( E o )  { _range ~= o; }
+//class Element(Event,EVENT_TYPE) : ISensAble!(Event,EVENT_TYPE), IEnterAble
+//{
+//    // ISensAble
+//    void sense( Event* event, EVENT_TYPE event_type )
+//    //      this       event             event_type         
+//    //      RDI        RSI               RDX
+//    {
+//        //
+//    }
 
-    int opApply( scope int delegate(E) dg )  
-    {
-        int result = 0;
+//    // IEnterAble
+//    EnterElement!(Event,EVENT_TYPE) enter;
 
-        foreach( e; _range )
-            if ( ( result = dg( e ) ) != 0 )
-                break;
+//    // IDrawAble
+//    DrawAble drawable;
 
-        return result;
-    }
+//    // ILayoutAble
+//    LayoutAble layoutable;
+//}
 
-    int opApply( scope int delegate(size_t, E) dg )  
-    {
-        int result = 0;
 
-        foreach( i, e; _range )
-            if ( ( result = dg( i, e ) ) != 0 )
-                break;
+//struct EnterElement(Event,EVENT_TYPE)
+//{
+//    alias E = Element!(Event,EVENT_TYPE);
 
-        return result;
-    }
+//    E[] _range;
 
-    void sense( Event* event, EVENT_TYPE event_type )
-    {
-        foreach( ref e; _range )
-            e.sense( event, event_type );
-    }
-}
+
+//    E    front()     { return _range.front; }
+//    bool empty()     { return _range.empty; }
+//    void popFront()  { _range.popFront(); }
+//    E    moveFront() { return _range.moveFront; }
+//    void put( E o )  { _range ~= o; }
+
+//    int opApply( scope int delegate(E) dg )  
+//    {
+//        int result = 0;
+
+//        foreach( e; _range )
+//            if ( ( result = dg( e ) ) != 0 )
+//                break;
+
+//        return result;
+//    }
+
+//    int opApply( scope int delegate(size_t, E) dg )  
+//    {
+//        int result = 0;
+
+//        foreach( i, e; _range )
+//            if ( ( result = dg( i, e ) ) != 0 )
+//                break;
+
+//        return result;
+//    }
+
+//    void sense( Event* event, EVENT_TYPE event_type )
+//    {
+//        foreach( ref e; _range )
+//            e.sense( event, event_type );
+//    }
+//}

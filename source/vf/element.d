@@ -1,7 +1,12 @@
 module vf.element;
 
-version(WINDOWS)
-public import vf.platforms.windows.element;
-else
+import vf.base.enterable;
+
+version(Windows)
+import vf.platforms.windows.event : Event, EVENT_TYPE;
+
 version(XCB)
-public import vf.platforms.xcb.element;
+import vf.platforms.xcb.event : Event, EVENT_TYPE;
+
+
+alias Element = vf.base.enterable.EnterAble!(Event,EVENT_TYPE);

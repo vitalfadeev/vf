@@ -1,13 +1,25 @@
 module vf.base.drawable;
 
-import vf.interfaces : IDrawAble;
-import vf.types      : M16, WX, PX;
+import vf.base.sensable : Sensable;
+import vf.base.types    : M16;
+import vf.base.wx       : WX;
+
+
+class DrawAble(Event,EVENT_TYPE) : Sensable!(Event,EVENT_TYPE)
+{
+    Ops ops;
+
+    void point( int x, int y )
+    {
+        ops ~= Op( PointAt( WX( x, y ) ) );
+    }
+}
 
 
 // IDrawAble
-struct DrawAble
-{
-    Ops ops;
+//struct DrawAble
+//{
+//    Ops ops;
 
     //auto ref go_center()
     //{
@@ -33,12 +45,12 @@ struct DrawAble
     //    return this;
     //}
 
-    //
-    void point( int x, int y )
-    {
-        ops ~= Op( PointAt( OP.POINTAT, WX( cast(X)x, cast(Y)y ) ) );
-    }
-}
+//    //
+//    void point( int x, int y )
+//    {
+//        ops ~= Op( PointAt( OP.POINTAT, WX( cast(X)x, cast(Y)y ) ) );
+//    }
+//}
 
 //
 import vf;
@@ -210,12 +222,16 @@ struct Op
     {
         point_at = b;
     }
+
+    WX calc_wh();
+    void apply( M matrix );
 }
 
 struct GoCenter
 {
     OP type = OP.GO_CENTER;
 }
+
 
 struct Go
 {
@@ -232,6 +248,11 @@ struct PointAt
 {
     OP type = OP.POINTAT;
     WX wx;
+
+    this( WX wx )
+    {
+        this.wx = wx;
+    }
 }
 
 struct Points
@@ -268,6 +289,26 @@ struct Ops
         )
     {
         _super ~= Op(b);
+    }
+
+    void calc_wh()
+    {
+        typeof(WX.x) max_x;
+        typeof(WX.y) max_y;
+
+        foreach ( op; ops )
+        {
+            UPD_MAX( op.max_x, max_x );
+            UPD_MAX( op.max_y, max_y );
+        }
+
+        return tuple!("x","y")( max_x, max_y );
+    }    
+
+    void apply(M)( M matrix )
+    {
+        foreach ( op; ops )
+            op.apply( matrix );
     }
 }
 

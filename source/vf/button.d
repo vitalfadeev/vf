@@ -1,10 +1,6 @@
 module vf.button;
 
-import vf.interfaces;
 import vf.auto_methods;
-import vf : Event, EVENT_TYPE;
-import vf : M16;
-import vf.world : World;
 import vf.element : Element;
 
 
@@ -78,12 +74,9 @@ class Button : Element
 
     void draw()
     {
-        with (drawable)
-        {
-            point( -1, -1 ); point( 0, -1 ); point( +1, -1 );
-            point( -1,  0 ); point( 0,  0 ); point( +1,  0 );
-            point( -1, +1 ); point( 0, +1 ); point( +1, +1 );            
-        }
+        point( -1, -1 ); point( 0, -1 ); point( +1, -1 );
+        point( -1,  0 ); point( 0,  0 ); point( +1,  0 );
+        point( -1, +1 ); point( 0, +1 ); point( +1, +1 );            
     }
 
     void to_pressed()
@@ -96,46 +89,46 @@ class Button : Element
         //
     }
 
-    //
-    class Pressed : ISensAble, IEnterAble, IDrawAble
-    {
-        mixin auto_methods!(typeof(this));
+    ////
+    //class Pressed
+    //{
+    //    mixin auto_methods!(typeof(this));  // sense()
 
-        void draw()
-        {
-            drawable.point( 0, 0 );  // drawable
-        }
+    //    void draw()
+    //    {
+    //        drawable.point( 0, 0 );  // drawable
+    //    }
 
-        void to_()
-        {
-            //
-        }
+    //    void to_()
+    //    {
+    //        //
+    //    }
 
-        void to_disabled()
-        {
-            //
-        }
-    }
+    //    void to_disabled()
+    //    {
+    //        //
+    //    }
+    //}
 
-    class Disabled : ISensAble, IEnterAble, IDrawAble
-    {
-        mixin auto_methods!(typeof(this));
+    //class Disabled : ISensAble, IEnterAble, IDrawAble
+    //{
+    //    mixin auto_methods!(typeof(this));
 
-        void draw()
-        {
-            drawable.point( 0, 0 );  // drawable
-        }
+    //    void draw()
+    //    {
+    //        drawable.point( 0, 0 );  // drawable
+    //    }
 
-        void to_pressed()
-        {
-            //
-        }
+    //    void to_pressed()
+    //    {
+    //        //
+    //    }
 
-        void to_()
-        {
-            //
-        }
-    }
+    //    void to_()
+    //    {
+    //        //
+    //    }
+    //}
 } 
 
 
