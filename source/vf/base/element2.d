@@ -25,25 +25,44 @@ enum SIZE_MODE
     INTER = 3,
 }
 
-class Transformable : DrawAble
+class Layoutable : DrawAble
 {
-    Fixed rotate;
-    Fixed scale;
-
-    void transform()
-    {
-        // ops.apply( matrix );
-    }
-}
-
-class Layoutable : Transformable
-{
-    WX wh;
+    WX _wh;
     SIZE_MODE size_mode;
 
     void calc_wh( Layoutable parent )
     {
-        wh = ops.calc_wh();
+        _wh = ops.calc_wh();
+    }
+
+    auto wh()
+    {
+        return _wh;
+    }
+}
+
+class Transformable : Layoutable
+{
+    Fixed rotate;
+    Fixed scale;
+    Ops   transformed_ops;
+    WX    transformed_wh;
+
+    void transform()
+    {
+        transformed_ops = ops.apply( matrix );
+    }
+
+    override
+    void calc_wh()
+    {
+        transformed_wh = transformed_ops.calc_wh();
+    }
+
+    override
+    auto wh()
+    {
+        return transformed_wh;
     }
 }
 
@@ -122,6 +141,18 @@ struct Ops
 
         return tuple!("x","y")( max_x, max_y );
     }    
+
+    void apply(M)( M matrix )
+    {
+        foreach ( op; ops )
+            op.apply( matrix );
+    }
+}
+
+struct Op
+{
+    WX calc_wh();
+    void apply( M matrix );
 }
 
 struct Enter
