@@ -6,11 +6,11 @@ import vf.base.types    : M16;
 
 class DrawAble(Event,EVENT_TYPE,WX) : Sensable!(Event,EVENT_TYPE)
 {
-    Ops ops;
+    Ops!WX ops;
 
     void point( int x, int y )
     {
-        ops ~= Op( PointAt( WX( x, y ) ) );
+        ops ~= Op!WX( PointAt!WX( WX( x, y ) ) );
     }
 }
 
@@ -198,32 +198,32 @@ enum OP : M16  // 16-bit because AH:GROUP, AL:ACTION
 }
 
 
-struct Op
+struct Op(WX)
 {
     union 
     {
-        OP       type;
-        GoCenter go_center;
-        Go       go;
-        Point    point;
-        PointAt  point_at;
-        Points   points;
-        Line     line;
-        Lines    lines;
+        OP          type;
+        GoCenter    go_center;
+        Go!WX       go;
+        Point!WX    point;
+        PointAt!WX  point_at;
+        Points!WX   points;
+        Line!WX     line;
+        Lines!WX    lines;
     }
 
-    this( Point b )
+    this( Point!WX b )
     {
         point = b;
     }
 
-    this( PointAt b )
+    this( PointAt!WX b )
     {
         point_at = b;
     }
 
     WX calc_wh();
-    //void apply( M matrix );
+    void apply( M matrix );
 }
 
 struct GoCenter
@@ -232,18 +232,18 @@ struct GoCenter
 }
 
 
-struct Go
+struct Go(WX)
 {
     OP type = OP.GO;
     WX wx;
 }
 
-struct Point
+struct Point(WX)
 {
     OP type = OP.POINT;
 }
 
-struct PointAt
+struct PointAt(WX)
 {
     OP type = OP.POINTAT;
     WX wx;
@@ -254,19 +254,19 @@ struct PointAt
     }
 }
 
-struct Points
+struct Points(WX)
 {
     OP   type = OP.POINTS;
     WX[] wxs;
 }
 
-struct Line
+struct Line(WX)
 {
     OP type = OP.LINE;
     WX wx;
 }
 
-struct Lines
+struct Lines(WX)
 {
     OP   type = OP.LINES;
     WX[] wxs;
@@ -274,9 +274,9 @@ struct Lines
 
 
 //
-struct Ops
+struct Ops(WX)
 {
-    Op[] arr;
+    Op!WX[] arr;
     alias arr this;
 
     void opOpAssign(string op:"~", T)( T b )

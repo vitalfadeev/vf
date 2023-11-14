@@ -8,10 +8,10 @@ import vf.base.fixed      : Fixed;
 
 class TransformAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 {
-    Fixed rotate;
-    Fixed scale;
-    Ops   transformed_ops;
-    WX    transformed_wh;
+    Fixed  rotate;
+    Fixed  scale;
+    Ops!WX transformed_ops;
+    WX     transformed_wh;
 
     void transform()
     {

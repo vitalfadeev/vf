@@ -52,7 +52,7 @@ struct Enter(Event,EVENT_TYPE,WX)
 
     auto wh()
     {
-        typeof(LayoutAble!(Event,EVENT_TYPE).wh) wh;
+        typeof(LayoutAble!(Event,EVENT_TYPE,WX).wh) wh;
 
         foreach ( e; arr )
         {
