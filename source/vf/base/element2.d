@@ -58,7 +58,7 @@ class Transformable : Layoutable
     {
         transformed_wh = transformed_ops.calc_wh();
     }
-
+    
     override
     auto wh()
     {
@@ -95,6 +95,15 @@ class Enterable : Layoutable
             case FIXED: super.calc_wh(); break;
             case INTER: wh = enter.wh; break;
         }
+    }
+
+    override
+    void sense( Event* event, EVENT_TYPE event_type )
+    {
+        super.sense( event, event_type );
+
+        foreach ( e; enter )
+            e.sense( event, event_type );
     }
 }
 
