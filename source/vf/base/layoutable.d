@@ -1,7 +1,6 @@
 module vf.base.layoutable;
 
 import vf.base.drawable : DrawAble;
-import vf.base.wx       : WX;
 
 
 enum SIZE_MODE
@@ -11,18 +10,25 @@ enum SIZE_MODE
     INTER = 3,
 }
 
-class LayoutAble(Event,EVENT_TYPE) : DrawAble!(Event,EVENT_TYPE)
+class LayoutAble(Event,EVENT_TYPE,WX) : DrawAble!(Event,EVENT_TYPE,WX)
 {
     WX _wh;
     SIZE_MODE size_mode;
 
-    void calc_wh( LayoutAble parent )
+    void calc_wh( LayoutAble!(Event,EVENT_TYPE,WX) outer )
     {
         _wh = ops.calc_wh();
     }
 
-    auto wh()
+    ref WX wh()
     {
         return _wh;
     }
 }
+
+//
+void update_sizes(Event,EVENT_TYPE,WX)( LayoutAble!(Event,EVENT_TYPE,WX) e )
+{
+    e.each_recursive( &e.calc_wh );
+}
+

@@ -3,11 +3,10 @@ module vf.base.transformable;
 import vf.base.drawable   : Ops;
 import vf.base.layoutable : LayoutAble;
 import vf.base.types      : M16;
-import vf.base.wx         : WX;
 import vf.base.fixed      : Fixed;
 
 
-class TransformAble(Event,EVENT_TYPE) : LayoutAble!(Event,EVENT_TYPE)
+class TransformAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 {
     Fixed rotate;
     Fixed scale;
@@ -20,13 +19,13 @@ class TransformAble(Event,EVENT_TYPE) : LayoutAble!(Event,EVENT_TYPE)
     }
 
     override
-    void calc_wh()
+    void calc_wh( LayoutAble!(Event,EVENT_TYPE,WX) outer )
     {
         transformed_wh = transformed_ops.calc_wh();
     }
     
     override
-    auto wh()
+    ref WX wh()
     {
         return transformed_wh;
     }

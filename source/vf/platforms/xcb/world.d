@@ -6,9 +6,10 @@ public import vf.base.world;
 import vf.interfaces   : ISensAble, IEnterAble;
 import vf.auto_methods : auto_methods;
 import vf.event        : Event, EVENT_TYPE;
+import vf.wx           : WX;
 
 
-class World : vf.base.world.World!(Event,EVENT_TYPE)
+class World : vf.base.world.World!(Event,EVENT_TYPE,WX)
 {
     override
     void sense( Event* event, EVENT_TYPE event_type )

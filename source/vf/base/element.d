@@ -10,7 +10,7 @@ import vf.base.enterable : EnterAble;
 //import vf.base.drawable   : DrawAble;
 
 
-alias Element(Event,EVENT_TYPE) = EnterAble!(Event,EVENT_TYPE);
+alias Element(Event,EVENT_TYPE,WX) = EnterAble!(Event,EVENT_TYPE,WX);
 
 
 //class Element(Event,EVENT_TYPE) : ISensAble!(Event,EVENT_TYPE), IEnterAble

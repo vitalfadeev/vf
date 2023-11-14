@@ -4,9 +4,9 @@ import vf.base.transformable : TransformAble;
 import vf.base.layoutable    : LayoutAble;
 
 
-class EnterAble(Event,EVENT_TYPE) : TransformAble!(Event,EVENT_TYPE)
+class EnterAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
 {
-    Enter!(Event,EVENT_TYPE) enter;
+    Enter!(Event,EVENT_TYPE,WX) enter;
 
     void each( void delegate( typeof(this) e ) dg )
     {
@@ -24,14 +24,14 @@ class EnterAble(Event,EVENT_TYPE) : TransformAble!(Event,EVENT_TYPE)
     }
 
     override
-    void calc_wh( typeof(this) outer_ )
+    void calc_wh( LayoutAble!(Event,EVENT_TYPE,WX) outer )
     {
         final
         switch ( size_mode )
         {
-            case OUTER: wh = outer_.wh; break;
+            case OUTER: wh = outer.wh; break;
             case FIXED: super.calc_wh(); break;
-            case INTER: wh = enter.wh; break;
+            case INTER: wh = outer.wh; break;
         }
     }
 
@@ -46,9 +46,9 @@ class EnterAble(Event,EVENT_TYPE) : TransformAble!(Event,EVENT_TYPE)
 }
 
 
-struct Enter(Event,EVENT_TYPE)
+struct Enter(Event,EVENT_TYPE,WX)
 {
-    EnterAble[] arr;
+    EnterAble!(Event,EVENT_TYPE,WX)[] arr;
 
     auto wh()
     {

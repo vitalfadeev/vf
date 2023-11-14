@@ -27,6 +27,9 @@ module vf.gline;
 
 version = DEFAULT;
 
+import vf.wx : WX;
+import vf.px : PX;
+
 struct Drawable
 {
     Op[] ops;
@@ -188,46 +191,7 @@ union Op
     Line  line;
 }
 
-struct WX
-{
-    version(DEFAULT)
-    {           // fixed 16.16
-        int x;  // total: 64 biy 
-        int y;  // 
-    }
 
-    version(VECTOR)
-    {
-        long xy;
-        int  x() @property { return xy & 0xFFFFFFFF00000000 >> 32; }
-        int  y() @property { return xy & 0xFFFFFFFF; }
-    }
-}
-
-struct PX
-{
-    version(DEFAULT)
-    {
-        short x;  // total: 32 bit
-        short y;  //        
-    }
-
-    version(VECTOR)
-    {
-        int   xy;
-        short x() @property { return xy & 0xFFFF0000 >> 16; }
-        short y() @property { return xy & 0xFFFF; }
-    }
-
-    version(XCB)
-    {
-        xcb_point_t _xcb_point;
-        alias _xcb_point this;
-        // xcb_point_t
-        //   int16_t x;
-        //   int16_t y;
-    }
-}
 
 PX to_px( WX wx )
 {

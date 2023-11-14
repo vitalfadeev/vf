@@ -3,7 +3,7 @@ module vf.base.world;
 import vf.base.element : Element;
 
 
-class World(Event,EVENT_TYPE) : Element!(Event,EVENT_TYPE)
+class World(Event,EVENT_TYPE,WX) : Element!(Event,EVENT_TYPE,WX)
 {
     override
     void sense( Event* event, EVENT_TYPE event_type )

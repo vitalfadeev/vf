@@ -2,10 +2,9 @@ module vf.base.drawable;
 
 import vf.base.sensable : Sensable;
 import vf.base.types    : M16;
-import vf.base.wx       : WX;
 
 
-class DrawAble(Event,EVENT_TYPE) : Sensable!(Event,EVENT_TYPE)
+class DrawAble(Event,EVENT_TYPE,WX) : Sensable!(Event,EVENT_TYPE)
 {
     Ops ops;
 
@@ -224,7 +223,7 @@ struct Op
     }
 
     WX calc_wh();
-    void apply( M matrix );
+    //void apply( M matrix );
 }
 
 struct GoCenter
@@ -277,8 +276,8 @@ struct Lines
 //
 struct Ops
 {
-    Op[] _super;
-    alias _super this;
+    Op[] arr;
+    alias arr this;
 
     void opOpAssign(string op:"~", T)( T b )
         if ( 
@@ -288,15 +287,17 @@ struct Ops
             is( T == Line )
         )
     {
-        _super ~= Op(b);
+        arr ~= Op(b);
     }
 
-    void calc_wh()
+    auto calc_wh()
     {
+        import std.typecons : tuple;
+
         typeof(WX.x) max_x;
         typeof(WX.y) max_y;
 
-        foreach ( op; ops )
+        foreach ( ref op; arr )
         {
             UPD_MAX( op.max_x, max_x );
             UPD_MAX( op.max_y, max_y );
@@ -307,9 +308,16 @@ struct Ops
 
     void apply(M)( M matrix )
     {
-        foreach ( op; ops )
+        foreach ( ref op; arr )
             op.apply( matrix );
     }
+}
+
+
+void UPD_MAX(T)( T a, ref T b )
+{
+    if ( a > b )
+        b = a;
 }
 
 
@@ -338,3 +346,4 @@ struct Ops
 // 
 // enum Events
 //   click
+

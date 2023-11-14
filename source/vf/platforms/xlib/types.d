@@ -38,13 +38,6 @@ struct PX
 }
 
 //
-struct WX
-{
-    X x;
-    Y y;
-}
-
-
 PX to_px( WX wx )
 {
     PX px;

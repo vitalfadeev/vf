@@ -36,13 +36,7 @@ struct PX
 }
 
 //
-struct WX
-{
-    X x;
-    Y y;
-}
-
-
+import vf.wx : WX;
 PX to_px( WX wx )
 {
     PX px;
