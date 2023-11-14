@@ -1,7 +1,15 @@
 module vf.window;
 
+import vf.base.window_manager : ManagedWindow;
+
 version(XCB)
-public import vf.platforms.xcb.window;
+{
+    import vf.platforms.xcb.window;
+    alias Window = ManagedWindow!(vf.platforms.xcb.window.Window,typeof(vf.platforms.xcb.window.Window.hwnd));
+}
 else
 version(WINDOWS)
-public import vf.platforms.windows.window;
+{
+    import vf.platforms.windows.window;
+    alias Window = ManagedWindow!(vf.platforms.windows.window.Window,typeof(vf.platforms.xcb.window.Window.hwnd));
+}

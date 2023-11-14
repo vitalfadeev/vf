@@ -35,9 +35,36 @@ import vf.interfaces     : IWindow;
 import vf.queue          : Queue;
 import vf.world          : World;
 import vf.window         : Window;
-import vf.window_manager : window_manager;
+import vf.window_manager : WindowManager, ManagedWindow;
 import vf.event          : Event, EVENT_TYPE;
 
+
+class WindowedGame(Window) : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
+{
+    Window window;
+
+    override
+    void go()
+    {
+        window = WindowManager.instance.new_window!Window();
+
+        sensors ~= &window_manager.sense;
+
+        super.go();
+    }
+}
+
+class WorldGame(World) : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
+{
+    World world = new World();
+
+    override
+    void go()
+    {
+        sensors ~= &world.sense;
+        super.go();
+    }
+}
 
 class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
 {
@@ -58,7 +85,8 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
 
     IWindow new_window()
     {
-        return window_manager.new_window!Window();
+        return new ManagedWindow!Window();
+        //return window_manager.new_window!Window();
     }
 
     override 

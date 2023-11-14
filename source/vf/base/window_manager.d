@@ -39,5 +39,25 @@ class WindowManager(V,O) : IWindowManager!(V,O)
         auto window = new TW( args );
         register( window.hwnd, window );
         return window;
-    }    
+    }
+
+    typeof(this) instance()
+    {
+        static typeof(this) _instance;
+        
+        if ( _instance is null )
+            _instance = new typeof(this);
+
+        return _instance;
+    }
+}
+
+
+class ManagedWindow(WINDOW,OSWINDOW) : WINDOW
+{
+    this(ARGS...)( ARGS args )
+    {
+        super( args );
+        WindowManager(WINDOW,OSWINDOW).instance.register( this.hwnd, this );
+    }
 }
