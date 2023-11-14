@@ -226,6 +226,11 @@ struct Op(WX)
     void apply( M matrix );
 }
 
+struct M
+{
+
+}
+
 struct GoCenter
 {
     OP type = OP.GO_CENTER;
@@ -282,9 +287,9 @@ struct Ops(WX)
     void opOpAssign(string op:"~", T)( T b )
         if ( 
             is( T == GoCenter ) || 
-            is( T == Go ) || 
-            is( T == Point ) || 
-            is( T == Line )
+            is( T == Go!WX ) || 
+            is( T == Point!WX ) || 
+            is( T == Line!WX )
         )
     {
         arr ~= Op(b);

@@ -6,7 +6,16 @@ import vf.base.wx;
 version(XCB)
 {
     import vf.base.fixed : Fixed;
-    alias WX = vf.base.wx.WX!( Fixed, Fixed );
+    struct WX
+    {
+        vf.base.wx.WX!( Fixed, Fixed ) _super;
+        alias _super this;
+
+        this( int x, int y )
+        {
+            _super = vf.base.wx.WX!( Fixed(x), Fixed(y) );
+        }
+    }
 }
 
 
