@@ -126,7 +126,7 @@ LRESULT window_proc_sense( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam
 {   //              RCX,       RDX,            R8,            R9
     import vf.event          : Event, EVENT_TYPE;
     import vf.types          : show_throwable;
-    import vf.window_manager : window_manager;
+    import vf.window_manager : WindowManager;
 
     Event event;
     event.msg.message = message;
@@ -135,7 +135,7 @@ LRESULT window_proc_sense( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam
     event.msg.lParam  = lParam;
     alias event_type  = message;
     try {
-        window_manager.sense( &event, event_type );
+        WindowManager.instance.sense( &event, event_type );
     } catch ( Throwable o ) { o.show_throwable; }
     return DefWindowProc( hwnd, message, wParam, lParam );
 }

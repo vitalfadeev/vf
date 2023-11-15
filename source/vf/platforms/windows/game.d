@@ -73,7 +73,7 @@ import vf.interfaces     : ISensAble;
 import vf.queue          : Queue;
 import vf.world          : World;
 import vf.window         : Window;
-import vf.window_manager : window_manager;
+import vf.window_manager : WindowManager;
 import vf.event          : Event, EVENT_TYPE;
 
 
@@ -88,7 +88,7 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
         auto window = new_window();
 
         sensors ~= &delegate_sense;
-        sensors ~= &window_manager.sense;
+        sensors ~= &WindowManager.instance.sense;
         sensors ~= &world.sense;
 
         super.go();
@@ -96,7 +96,7 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
 
     IWindow new_window()
     {
-        return window_manager.new_window!Window();
+        return WindowManager.instance.new_window!Window();
     }
 
     override

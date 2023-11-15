@@ -3,12 +3,12 @@ module vf.platforms.xcb.window_manager;
 version(XCB):
 import xcb.xcb;
 public import vf.base.window_manager;
-import vf.interfaces          : ISensAble, IWindow;
 import vf.platforms.xcb.event : Event, EVENT_TYPE;
+import vf.base.oswindow       : OSWindow;
 
 // hwnd -> window
 // window -> hwnd
-class WindowManager : vf.base.window_manager.WindowManager!(IWindow,xcb_window_t), ISensAble
+class WindowManager : vf.base.window_manager.WindowManager!(ManagedWindow,xcb_window_t)
 {
     // ISense
     void sense( Event* event, EVENT_TYPE event_type )
@@ -49,3 +49,6 @@ class WindowManager : vf.base.window_manager.WindowManager!(IWindow,xcb_window_t
         }
     }
 }
+
+alias ManagedWindow = vf.base.window_manager.ManagedWindow!(Window,xcb_window_t);
+

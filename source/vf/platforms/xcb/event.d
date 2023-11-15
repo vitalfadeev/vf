@@ -55,6 +55,16 @@ struct Event
         return cast( ISensAble )null;
     }
 
+    bool is_game_over()
+    {
+        return ( generic.response_type == XCB_GAME_OVER );
+    }
+
+    bool is_draw()
+    {
+        return ( generic.response_type == XCB_DRAW );
+    }
+
     string toString()
     {
         import std.format : format;
@@ -64,12 +74,15 @@ struct Event
 
 alias EVENT_TYPE = uint;
 
-enum VF_DRAW = 0x80_01;
+enum : EVENT_TYPE {
+    XCB_DRAW      = 0x80_01,
+    XCB_GAME_OVER = 0x80_02,
+}
 
 import vf.interfaces : IDrawAble;
 struct DrawEvent
 {
-    EVENT_TYPE type = VF_DRAW;
+    EVENT_TYPE type = XCB_DRAW;
     IDrawAble drawable;
 }
 

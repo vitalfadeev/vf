@@ -38,8 +38,8 @@ class MyGame : Game
 	override
     IWindow new_window()
     {
-        import vf.window_manager : window_manager;
-        return window_manager.new_window!MyWindow( world );
+        import vf.window_manager : WindowManager;
+        return WindowManager.instance.new_window!MyWindow( world );
     }
 
     // for able 
@@ -59,7 +59,7 @@ class MyGame : Game
 }
 
 
-class MyWindow : Window
+class MyWindow : ManagedWindow
 {
     World world;
 

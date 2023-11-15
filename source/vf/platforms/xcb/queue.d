@@ -29,7 +29,7 @@ struct Queue
             front = cast(Event*)xcb_wait_for_event( platform.c );
         }
 
-        return ( front is null );  // XCB_DESTROY_NOTIFY
+        return ( front is null || front.is_game_over );  // XCB_DESTROY_NOTIFY
     }
 
     //alias put(T) = opOpAssign!("~", T)(T t);

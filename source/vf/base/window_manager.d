@@ -1,14 +1,22 @@
 module vf.base.window_manager;
 
 import vf.base.interfaces : IWindowManager;
+import vf.base.oswindow   : OSWindow;
 
 
 // hwnd -> window
 // window -> hwnd
-class WindowManager(V,O) : IWindowManager!(V,O)
+class WindowManager(V,O,Event,EVENT_TYPE)
 {
     O[] _os_windows;
     V[] _vf_windows;
+
+    void sense( Event* event, EVENT_TYPE event_type )
+    //    this         event             event_type
+    //    RDI          RSI               RDX
+    {
+        //
+    }
 
     V vf_window( O os_window )
     {
@@ -16,12 +24,6 @@ class WindowManager(V,O) : IWindowManager!(V,O)
         auto i = _os_windows.countUntil( os_window );
 
         return _vf_windows[i];
-    }
-
-    void register( O os_window, V vf_window )
-    {
-        _os_windows ~= os_window;
-        _vf_windows ~= vf_window;
     }
 
     void unregister( O os_window )
@@ -53,11 +55,22 @@ class WindowManager(V,O) : IWindowManager!(V,O)
 }
 
 
-class ManagedWindow(WINDOW,OSWINDOW) : WINDOW
+class ManagedWindow(HWND,Event,EVENT_TYPE) : OSWindow!(HWND,Event,EVENT_TYPE)
 {
     this(ARGS...)( ARGS args )
     {
         super( args );
-        WindowManager(WINDOW,OSWINDOW).instance.register( this.hwnd, this );
+        WindowManager(typeof(this)).instance.register( this );
+    }
+}
+
+
+//
+class ManagedWindow(V,O,Event,EVENT_TYPE) : V
+{
+    this(ARGS...)( ARGS args )
+    {
+        super( args );
+        WindowManager(V,O,Event,EVENT_TYPE).instance.register( this.hwnd, this );
     }
 }

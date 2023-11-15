@@ -7,12 +7,11 @@ import vf.platform      : platform;
 import vf.event         : Event, EVENT_TYPE;
 import vf.interfaces    : IWindow, ISensAble;
 import vf.types         : PX;
+import vf.base.oswindow : OSWindow;
 
 
-class Window : IWindow, ISensAble
+class Window : OSWindow!(xcb_window_t,Event,EVENT_TYPE), IWindow, ISensAble
 {
-    xcb_window_t hwnd;
-
     alias T = typeof(this);
 
 
@@ -22,7 +21,8 @@ class Window : IWindow, ISensAble
         _create_renderer();
     }
 
-    // ISense
+    //
+    override
     void sense( Event* event, EVENT_TYPE event_type ) 
     //      this       event             event_type
     //      RDI        RSI               RDX
@@ -32,6 +32,7 @@ class Window : IWindow, ISensAble
             case XCB_EXPOSE: on_XCB_EXPOSE( event, event_type ); break;
             default:
         }
+        super.sense( event, event_type );
     }
 
     // private

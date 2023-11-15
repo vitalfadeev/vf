@@ -46,9 +46,9 @@ class WindowedGame(Window) : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
     override
     void go()
     {
-        window = WindowManager.instance.new_window!Window();
+        window = new ManagedWindow!Window();
 
-        sensors ~= &window_manager.sense;
+        sensors ~= &WindowManager.instance.sense;
 
         super.go();
     }
@@ -77,7 +77,7 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
         auto window = new_window();
 
         sensors ~= &delegate_sense;
-        sensors ~= &window_manager.sense;
+        sensors ~= &WindowManager.instance.sense;
         sensors ~= &world.sense;
 
         super.go();
@@ -86,7 +86,6 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
     IWindow new_window()
     {
         return new ManagedWindow!Window();
-        //return window_manager.new_window!Window();
     }
 
     override 
