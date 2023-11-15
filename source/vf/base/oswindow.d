@@ -1,14 +1,9 @@
 module vf.base.oswindow;
 
+import vf.base.window;
 
-class OSWindow(HWND,Event,EVENT_TYPE)
+
+class OSWindow(HWND,Event,EVENT_TYPE) : vf.base.window.Window!(Event,EVENT_TYPE)
 {
     HWND hwnd;
-
-    void sense( Event* event, EVENT_TYPE event_type )
-    //    this         event             event_type
-    //    RDI          RSI               RDX
-    {
-        //
-    }
 }

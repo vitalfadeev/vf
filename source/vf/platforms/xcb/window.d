@@ -2,7 +2,7 @@ module vf.platforms.xcb.window;
 
 version(XCB):
 import xcb.xcb;
-public import vf.base.window;
+import vf.base.window;
 import vf.platform      : platform;
 import vf.event         : Event, EVENT_TYPE;
 import vf.interfaces    : IWindow, ISensAble;
@@ -17,7 +17,7 @@ class Window : XCBWindow, IWindow, ISensAble
 
     this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
     {
-        _create_window( cmd_show, size, name );
+        _create_window( size, name, cmd_show );
         _create_renderer();
     }
 
@@ -37,7 +37,7 @@ class Window : XCBWindow, IWindow, ISensAble
 
     // private
     private
-    void _create_window( int cmd_show, PX size, string name )
+    void _create_window( PX size, string name, int cmd_show )
     {
         auto c = platform.c;
 

@@ -16,7 +16,7 @@ class Window
 
     this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
     {
-        _create_window( cmd_show, size, name );
+        _create_window( size, name,cmd_show );
         _create_renderer();
     }
 
@@ -28,7 +28,7 @@ class Window
 
     // private
     private
-    void _create_window( int cmd_show, PX size, string name )
+    void _create_window( PX size, string name, int cmd_show )
     {
         char*                displayname = null;
         XSetWindowAttributes attribs;
