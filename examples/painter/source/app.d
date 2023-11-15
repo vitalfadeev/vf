@@ -78,7 +78,7 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
     override
     void sense( Event* event, EVENT_TYPE event_type ) 
     {
-        import xcb.xcb;
+        import xcb.xcb : XCB_EXPOSE;
         if ( event_type == XCB_EXPOSE )
             on_XCB_EXPOSE( event, event_type );
     }
