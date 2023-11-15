@@ -60,46 +60,45 @@ class MyGame : Game
 }
 
 
-class WorldWindow(WORLD) : ManagedWindow
+class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
 {
-    import vf.base.rasterable : Rasterizer;
-    import vf.base.rasterable : XCBRasterizer;
-    import vf.wx              : WX;
+    WORLD      world;
+    RASTERIZER rasterizer;
 
-    Rasterizer!WX rasterizer = new XCBRasterizer!WX();
-    WORLD world;
-
-    this( WORLD world, PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
+    this(ARGS...)( WORLD world, ARGS args )
     {
-        super( size, name, 0 );
-        this.world = world;
+        super( args );
+        this.world      = world;
+        this.rasterizer = new RASTERIZER();
         move_to_center();
         show();
     }
 
+    version(XCB)
     override
     void sense( Event* event, EVENT_TYPE event_type ) 
     {
-        auto_route_event!( this, event, event_type );
+        import xcb.xcb;
+        if ( event_type == XCB_EXPOSE )
+            on_XCB_EXPOSE( event, event_type );
     }
 
     version(XCB)
     override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
-        // world
-        //   get all draws
-        //   raster
         world.to_raster( rasterizer );
     }
 }
 
 
-class MyWindow : WorldWindow!World
+import vf.base.rasterable : Rasterizer;
+import vf.wx : WX;
+class MyWindow : WorldWindow!(World,Rasterizer!WX,Event,EVENT_TYPE)
 {
-    this( World world, PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
+    this(ARGS...)( World world, ARGS args )
     {
-    	super( world, size, name, 0 );
+    	super( world, args );
     }
 
     //override
