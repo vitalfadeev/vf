@@ -76,15 +76,6 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
 
     version(XCB)
     override
-    void sense( Event* event, EVENT_TYPE event_type ) 
-    {
-        import xcb.xcb : XCB_EXPOSE;
-        if ( event_type == XCB_EXPOSE )
-            on_XCB_EXPOSE( event, event_type );
-    }
-
-    version(XCB)
-    override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
         world.to_raster( rasterizer );
