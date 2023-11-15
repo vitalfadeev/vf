@@ -87,8 +87,8 @@ class MyWindow : ManagedWindow
         // world
         //   get all draws
         //   raster
-        Gline!(DRAWABLE,LAYOUTABLE,RASTERABLE) gline;
-        gline.go();
+        //Gline!(DRAWABLE,LAYOUTABLE,RASTERABLE) gline;
+        //gline.go();
 
 
 
