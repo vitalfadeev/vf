@@ -35,8 +35,23 @@ class Window : XCBWindow, IWindow, ISensAble
         super.sense( event, event_type );
     }
 
+
+
+    override
+    void move_to_center()
+    {
+        //
+    }
+
+
+    override
+    void show()
+    {
+        //
+    }
+
+
     // private
-    private
     void _create_window( PX size, string name, int cmd_show )
     {
         auto c = platform.c;
@@ -83,22 +98,6 @@ class Window : XCBWindow, IWindow, ISensAble
         xcb_flush( c );
     }
 
-
-    override
-    void move_to_center()
-    {
-        //
-    }
-
-
-    override
-    void show()
-    {
-        //
-    }
-
-
-    private
     void _create_renderer()
     {
         //XCBRasterAble!WX os_rasterable = new XCBRasterAble!WX();
