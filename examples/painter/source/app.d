@@ -91,7 +91,7 @@ class MyWindow : ManagedWindow
         // world
         //   get all draws
         //   raster
-        auto os_rasterable = new XCBRasterAble!WX();
+        OSRasterAble!WX os_rasterable = new XCBRasterAble!WX();
         world.to_raster( os_rasterable );
 
 
