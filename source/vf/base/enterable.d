@@ -47,10 +47,12 @@ class EnterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 
 struct Enter(Event,EVENT_TYPE,WX)
 {
-    EnterAble!(Event,EVENT_TYPE,WX)[] arr;
+    alias TEnterAble = EnterAble!(Event,EVENT_TYPE,WX);
+
+    TEnterAble[] arr;
     alias arr this;
 
-    auto size( EnterAble!(Event,EVENT_TYPE,WX) outer )
+    auto size( TEnterAble outer )
     {
         Size!WX _size;
 
@@ -68,5 +70,11 @@ struct Enter(Event,EVENT_TYPE,WX)
     {
         foreach ( ref o; arr )
             o.sense( event, event_type );
+    }
+
+
+    void put( TEnterAble o )
+    {
+        arr ~= o;
     }
 }

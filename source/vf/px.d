@@ -31,5 +31,10 @@ struct PX
         {
             _xcb_point = xcb_point_t( x, y );
         }
+
+        this( int x, int y )
+        {
+            _xcb_point = xcb_point_t( cast(short)x, cast(short)y );
+        }
     }
 }
