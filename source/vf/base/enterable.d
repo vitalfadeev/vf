@@ -47,7 +47,7 @@ class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
     }
 
     override
-    void to_raster( ref OSRasterAble rasterable )
+    void to_raster( ref OSRasterAble!WX rasterable )
     {
         super.to_raster( rasterable );
 

@@ -84,10 +84,14 @@ class MyWindow : ManagedWindow
     override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
+        import vf.base.rasterable : OSRasterAble;
+        import vf.base.rasterable : XCBRasterAble;
+        import vf.wx              : WX;
+
         // world
         //   get all draws
         //   raster
-        auto os_rasterable = new OSRasterAble();
+        auto os_rasterable = new XCBRasterAble!WX();
         world.to_raster( os_rasterable );
 
 
