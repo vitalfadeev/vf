@@ -2,6 +2,8 @@ Element
   |
 EnterAble
   enter  each  each_recursive
+RasterAble
+  to_raster
 LayoutAble
   pos
 TransformAble

@@ -1,7 +1,7 @@
 module vf.gline;
 
 // G graphics line
-//  drawable
+// drawable
 //  wx
 //   go, point, line
 //     add operation, points   // go, point, line
@@ -9,10 +9,12 @@ module vf.gline;
 //     rotate
 //     brush                   // new lines, remove control line
 //     ...detalization         // 1 point -> 2 point, 2 lines smooth -> 3 lines. curve -> multi lines
+// sizeable
+//  wx
+//   -x,-y,+x,+y = calc_size
 // layoutable
 //  wx
-//   get_size for each
-//     w,h = size
+//   calc_pos
 //     x,y = pos
 //   in_rect
 //     select o where o in rect
@@ -29,6 +31,8 @@ version = DEFAULT;
 
 import vf.wx : WX;
 import vf.px : PX;
+
+
 
 struct Drawable
 {

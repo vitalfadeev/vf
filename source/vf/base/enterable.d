@@ -1,12 +1,14 @@
 module vf.base.enterable;
 
-import vf.base.layoutable : LayoutAble;
+import vf.base.rasterable : RasterAble;
 import vf.base.sizeable   : SizeAble, SIZE_MODE, Size;
 
 
-class EnterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
+class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
 {
-    Enter!(Event,EVENT_TYPE,WX) enter;
+    alias TEnterAble = typeof(this);
+
+    Enter!(TEnterAble,Event,EVENT_TYPE,WX) enter;
 
     void each( void delegate( typeof(this) e ) dg )
     {
@@ -23,7 +25,7 @@ class EnterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
         }
     }
 
-    void calc_size( EnterAble!(Event,EVENT_TYPE,WX) outer )
+    void calc_size( TEnterAble outer )
     {
         final
         switch ( size_mode )
@@ -45,14 +47,12 @@ class EnterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 }
 
 
-struct Enter(Event,EVENT_TYPE,WX)
+struct Enter(T,Event,EVENT_TYPE,WX)
 {
-    alias TEnterAble = EnterAble!(Event,EVENT_TYPE,WX);
-
-    TEnterAble[] arr;
+    T[] arr;
     alias arr this;
 
-    auto size( TEnterAble outer )
+    auto size( T outer )
     {
         Size!WX _size;
 
@@ -73,7 +73,7 @@ struct Enter(Event,EVENT_TYPE,WX)
     }
 
 
-    void put( TEnterAble o )
+    void put( T o )
     {
         arr ~= o;
     }

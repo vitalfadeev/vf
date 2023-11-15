@@ -1,25 +1,24 @@
 module vf.base.rasterable;
 
-import vf.base.drawable;
-alias PX = int;
+import vf.base.layoutable : LayoutAble;
+import vf.base.drawable   : OP;
 
 
-struct Rasterable
+class RasterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 {
-    auto to_raster(D)( D drawable )
+    // drawable -> rasterable
+    void to_raster( ref OSRasterAble rasterable )
     {
-        foreach( ref op; drawable.ops )
-        {
-            final
-            switch ( op.type )
+        foreach ( ref op; ops )
+            final switch ( op.type )
             {
                 case OP._         : break;
-                case OP.GO_CENTER : go_center(); break;
-                case OP.GO        : go( op.go.ox.to_px ); break;
-                case OP.POINT     : point() ; break;
+                case OP.GO_CENTER : rasterable.go_center(); break;
+                case OP.GO        : break;
+                case OP.POINT     : break;
+                case OP.POINTAT   : break;
                 case OP.POINTS    : break;
-                case OP.POINTS    : break;
-                case OP.LINE      : line( op.line.ox.to_px ); break;
+                case OP.LINE      : break;
                 case OP.LINES     : break;
                 case OP.TRIANGLE  : break;
                 case OP.TRIANGLES : break;
@@ -30,29 +29,13 @@ struct Rasterable
                 case OP.ARC       : break;
                 case OP.ARCS      : break;
             }
-        }
     }
+}
 
-    pragma( inline, true )
+
+class OSRasterAble
+{
     void go_center()
-    {
-        //
-    }
-
-    pragma( inline, true )
-    void go( PX px )
-    {
-        //
-    }
-
-    pragma( inline, true )
-    void point()
-    {
-        //
-    }
-
-    pragma( inline, true )
-    void line( PX px )
     {
         //
     }
