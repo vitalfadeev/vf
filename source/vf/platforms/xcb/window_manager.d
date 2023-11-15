@@ -8,9 +8,10 @@ import vf.base.oswindow       : OSWindow;
 
 // hwnd -> window
 // window -> hwnd
-class WindowManager : vf.base.window_manager.WindowManager!(ManagedWindow,xcb_window_t)
+class WindowManager : vf.base.window_manager.WindowManager!(ManagedWindow,xcb_window_t,Event,EVENT_TYPE)
 {
-    // ISense
+    //
+    override
     void sense( Event* event, EVENT_TYPE event_type )
     //    this         event             event_type
     //    RDI          RSI               RDX
@@ -50,5 +51,5 @@ class WindowManager : vf.base.window_manager.WindowManager!(ManagedWindow,xcb_wi
     }
 }
 
-alias ManagedWindow = vf.base.window_manager.ManagedWindow!(Window,xcb_window_t);
+alias ManagedWindow = vf.base.window_manager.ManagedWindow!(OSWindow!(xcb_window_t,Event,EVENT_TYPE),xcb_window_t,Event,EVENT_TYPE);
 

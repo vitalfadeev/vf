@@ -55,16 +55,6 @@ class WindowManager(V,O,Event,EVENT_TYPE)
 }
 
 
-class ManagedWindow(HWND,Event,EVENT_TYPE) : OSWindow!(HWND,Event,EVENT_TYPE)
-{
-    this(ARGS...)( ARGS args )
-    {
-        super( args );
-        WindowManager(typeof(this)).instance.register( this );
-    }
-}
-
-
 //
 class ManagedWindow(V,O,Event,EVENT_TYPE) : V
 {
