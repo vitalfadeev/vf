@@ -60,18 +60,18 @@ class MyGame : Game
 }
 
 
-class MyWindow : ManagedWindow
+class WorldWindow(WORLD) : ManagedWindow
 {
     import vf.base.rasterable : Rasterizer;
     import vf.base.rasterable : XCBRasterizer;
     import vf.wx              : WX;
 
     Rasterizer!WX rasterizer = new XCBRasterizer!WX();
-    World world;
+    WORLD world;
 
-    this( World world, PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
+    this( WORLD world, PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
     {
-    	super( size, name, 0 );
+        super( size, name, 0 );
         this.world = world;
         move_to_center();
         show();
@@ -83,7 +83,6 @@ class MyWindow : ManagedWindow
         auto_route_event!( this, event, event_type );
     }
 
-    // Linux
     version(XCB)
     override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
@@ -92,6 +91,32 @@ class MyWindow : ManagedWindow
         //   get all draws
         //   raster
         world.to_raster( rasterizer );
+    }
+}
+
+
+class MyWindow : WorldWindow!World
+{
+    this( World world, PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
+    {
+    	super( world, size, name, 0 );
+    }
+
+    //override
+    //void sense( Event* event, EVENT_TYPE event_type ) 
+    //{
+    //    auto_route_event!( this, event, event_type );
+    //}
+
+    // Linux
+    //version(XCB)
+    //override
+    //void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
+    //{
+        // world
+        //   get all draws
+        //   raster
+        //world.to_raster( rasterizer );
 
 
 
@@ -166,7 +191,7 @@ class MyWindow : ManagedWindow
 
         return ERESULT.init;
         */
-    }
+    //}
 
 
     // Windows
@@ -260,7 +285,7 @@ class MyWindow : ManagedWindow
     version(WINDOWS)
     void on_WM_DESTROY( Event* event, EVENT_TYPE event_type )
     {
-        MyGame().quit();
+        MyGame.instance.quit();
     }
 }
 
