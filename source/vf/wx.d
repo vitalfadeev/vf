@@ -15,12 +15,12 @@ version(XCB)
 
         this( int x, int y )
         {
-            _super = vf.base.wx.WX!( Fixed(x), Fixed(y) );
+            _super = vf.base.wx.WX!(Fixed,Fixed)( Fixed(x), Fixed(y) );
         }
 
         this( Tuple!(Fixed, "x", Fixed, "y") t )
         {
-            _super = vf.base.wx.WX!( t.x, t.y );
+            _super = vf.base.wx.WX!(Fixed,Fixed)( t.x, t.y );
         }
 
         void opOpAssign( string op : "+" )( WX b )

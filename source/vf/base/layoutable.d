@@ -1,34 +1,15 @@
 module vf.base.layoutable;
 
-import vf.base.drawable : DrawAble;
+import vf.base.transformable : TransformAble;
 
 
-enum SIZE_MODE
+class LayoutAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
 {
-    OUTER = 1,
-    FIXED = 2,
-    INTER = 3,
+    Pos!WX pos;
 }
 
-class LayoutAble(Event,EVENT_TYPE,WX) : DrawAble!(Event,EVENT_TYPE,WX)
+
+struct Pos(WX)
 {
-    WX _wh;
-    SIZE_MODE size_mode;
-
-    void calc_wh( LayoutAble!(Event,EVENT_TYPE,WX) outer )
-    {
-        _wh = WX( ops.calc_wh() );
-    }
-
-    ref WX wh()
-    {
-        return _wh;
-    }
+    WX wx;
 }
-
-//
-void update_sizes(Event,EVENT_TYPE,WX)( LayoutAble!(Event,EVENT_TYPE,WX) e )
-{
-    e.each_recursive( &e.calc_wh );
-}
-

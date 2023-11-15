@@ -40,8 +40,8 @@ import vf.wx : WX;
 PX to_px( WX wx )
 {
     PX px;
-    px.x = wx.x;
-    px.y = wx.y;
+    px.x = wx.x.a >> 16;  // Fixed -> short
+    px.y = wx.y.a >> 16;
     return px;
 }
 

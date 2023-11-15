@@ -45,8 +45,8 @@ struct Layoutable
 
     void go()
     {
-        get_sizes();
-        in_rect( xy, wh );
+        //get_sizes();
+        //in_rect( xy, wh );
     }
 
     void get_sizes(R)( R range )

@@ -25,5 +25,11 @@ struct PX
         // xcb_point_t
         //   int16_t x;
         //   int16_t y;
+        alias int16_t = short;
+
+        this( int16_t x, int16_t y )
+        {
+            _xcb_point = xcb_point_t( x, y );
+        }
     }
 }

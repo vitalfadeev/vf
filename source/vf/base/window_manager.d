@@ -25,6 +25,12 @@ class WindowManager(V,O,Event,EVENT_TYPE)
         return _vf_windows[i];
     }
 
+    void register( V vf_window, O os_window )
+    {
+        _vf_windows ~= vf_window;
+        _os_windows ~= os_window;
+    }
+
     void unregister( O os_window )
     {
         import std.algorithm.searching : countUntil;
@@ -42,6 +48,7 @@ class WindowManager(V,O,Event,EVENT_TYPE)
         return window;
     }
 
+    static
     typeof(this) instance()
     {
         static typeof(this) _instance;
@@ -60,6 +67,6 @@ class ManagedWindow(V,O,Event,EVENT_TYPE) : V
     this(ARGS...)( ARGS args )
     {
         super( args );
-        WindowManager(V,O,Event,EVENT_TYPE).instance.register( this.hwnd, this );
+        WindowManager!(V,O,Event,EVENT_TYPE).instance.register( this, this.hwnd );
     }
 }

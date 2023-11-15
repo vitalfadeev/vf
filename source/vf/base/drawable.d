@@ -1,5 +1,6 @@
 module vf.base.drawable;
 
+import std.typecons     : Tuple;
 import vf.base.sensable : Sensable;
 import vf.base.types    : M16;
 
@@ -222,10 +223,7 @@ struct Op(WX)
         point_at = b;
     }
 
-    WX calc_wh();
-    void apply( M matrix );
-    auto max_x()
-    {
+    Tuple!(WX, "a", WX, "b") calc_size() { 
         final
         switch ( type )
         {
@@ -247,33 +245,10 @@ struct Op(WX)
             case OP.ARCS      : break;
         }
 
-        return typeof(WX.x)();
-    }
-    auto max_y()
-    {
-        final
-        switch ( type )
-        {
-            case OP._         : break;
-            case OP.GO_CENTER : break;
-            case OP.GO        : break;
-            case OP.POINT     : break;
-            case OP.POINTAT   : break;
-            case OP.POINTS    : break;
-            case OP.LINE      : break;
-            case OP.LINES     : break;
-            case OP.TRIANGLE  : break;
-            case OP.TRIANGLES : break;
-            case OP.QUAD      : break;
-            case OP.QUADS     : break;
-            case OP.CIRCLE    : break;
-            case OP.CIRCLES   : break;
-            case OP.ARC       : break;
-            case OP.ARCS      : break;
-        }
+        return Tuple!(WX, "a", WX, "b")( WX(), WX() ); 
+    };
 
-        return typeof(WX.x)();
-    }
+    void apply( M matrix ) {}
 }
 
 struct M
@@ -345,20 +320,17 @@ struct Ops(WX)
         arr ~= Op(b);
     }
 
-    auto calc_wh()
+    auto calc_size()
     {
         import std.typecons : tuple;
 
-        typeof(WX.x) max_x;
-        typeof(WX.y) max_y;
+        WX a;  // min
+        WX b;  // max
 
         foreach ( ref op; arr )
-        {
-            UPD_MAX( op.max_x, max_x );
-            UPD_MAX( op.max_y, max_y );
-        }
+            UPD_MIN_MAX( op.calc_size, a, b );
 
-        return tuple!("x","y")( max_x, max_y );
+        return tuple!("a","b")( a, b );
     }    
 
     void apply(M)( M matrix )
@@ -369,10 +341,21 @@ struct Ops(WX)
 }
 
 
-void UPD_MAX(T)( T a, ref T b )
+void UPD_MIN_MAX(T,WX)( T size, ref WX a, ref WX b )
 {
-    if ( a > b )
-        b = a;
+    // min
+    if ( size.a.x < a.x )
+        a.x = size.a.x;
+
+    if ( size.a.y < a.y )
+        a.y = size.a.y;
+
+    // max
+    if ( size.b.x > b.x )
+        b.x = size.b.x;
+
+    if ( size.b.y > b.y )
+        b.y = size.b.y;
 }
 
 

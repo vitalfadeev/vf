@@ -83,9 +83,9 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
         super.go();
     }
 
-    IWindow new_window()
+    ManagedWindow new_window()
     {
-        return new ManagedWindow!Window();
+        return new ManagedWindow();
     }
 
     override 

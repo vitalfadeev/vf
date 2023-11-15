@@ -1,10 +1,10 @@
 module vf.base.enterable;
 
-import vf.base.transformable : TransformAble;
-import vf.base.layoutable    : LayoutAble, SIZE_MODE;
+import vf.base.layoutable : LayoutAble;
+import vf.base.sizeable   : SizeAble, SIZE_MODE, Size;
 
 
-class EnterAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
+class EnterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 {
     Enter!(Event,EVENT_TYPE,WX) enter;
 
@@ -23,15 +23,14 @@ class EnterAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
         }
     }
 
-    override
-    void calc_wh( LayoutAble!(Event,EVENT_TYPE,WX) outer )
+    void calc_size( EnterAble!(Event,EVENT_TYPE,WX) outer )
     {
         final
         switch ( size_mode )
         {
-            case SIZE_MODE.OUTER: wh = outer.wh; break;
-            case SIZE_MODE.FIXED: super.calc_wh( outer ); break;
-            case SIZE_MODE.INTER: wh = outer.wh; break;
+            case SIZE_MODE.OUTER: size = outer.size; break;
+            case SIZE_MODE.FIXED: super.calc_size(); break;
+            case SIZE_MODE.INTER: size = outer.size; break;
         }
     }
 
@@ -51,17 +50,17 @@ struct Enter(Event,EVENT_TYPE,WX)
     EnterAble!(Event,EVENT_TYPE,WX)[] arr;
     alias arr this;
 
-    auto wh( EnterAble!(Event,EVENT_TYPE,WX) outer )
+    auto size( EnterAble!(Event,EVENT_TYPE,WX) outer )
     {
-        WX wh;
+        Size!WX _size;
 
         foreach ( e; arr )
         {
-            e.calc_wh( outer );
-            wh += e.wh;
+            e.calc_size( outer );
+            _size.grow( e.size );
         }
 
-        return wh;
+        return _size;
     }
 
 
