@@ -5,7 +5,9 @@ import vf.base.wx;
 
 version(XCB)
 {
+    import std.typecons  : Tuple;
     import vf.base.fixed : Fixed;
+
     struct WX
     {
         vf.base.wx.WX!( Fixed, Fixed ) _super;
@@ -14,6 +16,11 @@ version(XCB)
         this( int x, int y )
         {
             _super = vf.base.wx.WX!( Fixed(x), Fixed(y) );
+        }
+
+        this( Tuple!(Fixed, "x", Fixed, "y") t )
+        {
+            _super = vf.base.wx.WX!( t.x, t.y );
         }
 
         void opOpAssign( string op : "+" )( WX b )

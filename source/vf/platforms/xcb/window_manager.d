@@ -3,12 +3,12 @@ module vf.platforms.xcb.window_manager;
 version(XCB):
 import xcb.xcb;
 public import vf.base.window_manager;
-import vf.platforms.xcb.event : Event, EVENT_TYPE;
-import vf.base.oswindow       : OSWindow;
+import vf.platforms.xcb.event  : Event, EVENT_TYPE;
+import vf.platforms.xcb.window : Window;
 
 // hwnd -> window
 // window -> hwnd
-class WindowManager : vf.base.window_manager.WindowManager!(ManagedWindow,xcb_window_t,Event,EVENT_TYPE)
+class WindowManager : vf.base.window_manager.WindowManager!(Window,xcb_window_t,Event,EVENT_TYPE)
 {
     //
     override
@@ -51,5 +51,5 @@ class WindowManager : vf.base.window_manager.WindowManager!(ManagedWindow,xcb_wi
     }
 }
 
-alias ManagedWindow = vf.base.window_manager.ManagedWindow!(OSWindow!(xcb_window_t,Event,EVENT_TYPE),xcb_window_t,Event,EVENT_TYPE);
+alias ManagedWindow = vf.base.window_manager.ManagedWindow!(Window,xcb_window_t,Event,EVENT_TYPE);
 

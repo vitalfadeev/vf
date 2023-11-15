@@ -34,8 +34,8 @@ struct Drawable
 {
     Op[] ops;
 
-    void point( WX wx ) { ops ~= Point( wx ); }
-    void line ( WX wx ) { ops ~= Line ( wx ); }
+    void point( WX wx ) { ops ~= Op( Point( wx ) ); }
+    void line ( WX wx ) { ops ~= Op( Line ( wx ) ); }
 }
 
 struct Layoutable
@@ -189,6 +189,16 @@ union Op
     int   type;
     Point point;
     Line  line;
+
+    this( Point b )
+    {
+        point = b;
+    }
+
+    this( Line b )
+    {
+        line = b;
+    }
 }
 
 

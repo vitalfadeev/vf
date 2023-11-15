@@ -17,7 +17,7 @@ class LayoutAble(Event,EVENT_TYPE,WX) : DrawAble!(Event,EVENT_TYPE,WX)
 
     void calc_wh( LayoutAble!(Event,EVENT_TYPE,WX) outer )
     {
-        _wh = ops.calc_wh();
+        _wh = WX( ops.calc_wh() );
     }
 
     ref WX wh()

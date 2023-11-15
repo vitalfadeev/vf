@@ -15,13 +15,14 @@ class TransformAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 
     void transform()
     {
-        transformed_ops = ops.apply( matrix );
+        //M matrix;
+        //transformed_ops = ops.apply( matrix );
     }
 
     override
     void calc_wh( LayoutAble!(Event,EVENT_TYPE,WX) outer )
     {
-        transformed_wh = transformed_ops.calc_wh();
+        transformed_wh = WX( transformed_ops.calc_wh() );
     }
     
     override

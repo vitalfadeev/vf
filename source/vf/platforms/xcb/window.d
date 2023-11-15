@@ -9,8 +9,9 @@ import vf.interfaces    : IWindow, ISensAble;
 import vf.types         : PX;
 import vf.base.oswindow : OSWindow;
 
+alias XCBWindow = OSWindow!(xcb_window_t,Event,EVENT_TYPE);
 
-class Window : OSWindow!(xcb_window_t,Event,EVENT_TYPE), IWindow, ISensAble
+class Window : XCBWindow, IWindow, ISensAble
 {
     alias T = typeof(this);
 

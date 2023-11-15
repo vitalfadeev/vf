@@ -1,7 +1,6 @@
 module vf.base.window_manager;
 
 import vf.base.interfaces : IWindowManager;
-import vf.base.oswindow   : OSWindow;
 
 
 // hwnd -> window

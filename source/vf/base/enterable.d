@@ -63,4 +63,11 @@ struct Enter(Event,EVENT_TYPE,WX)
 
         return wh;
     }
+
+
+    void sense( Event* event, EVENT_TYPE event_type )
+    {
+        foreach ( ref o; arr )
+            o.sense( event, event_type );
+    }
 }
