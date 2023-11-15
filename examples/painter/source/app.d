@@ -62,6 +62,11 @@ class MyGame : Game
 
 class MyWindow : ManagedWindow
 {
+    import vf.base.rasterable : Rasterizer;
+    import vf.base.rasterable : XCBRasterizer;
+    import vf.wx              : WX;
+
+    Rasterizer!WX rasterizer = new XCBRasterizer!WX();
     World world;
 
     this( World world, PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
@@ -83,19 +88,10 @@ class MyWindow : ManagedWindow
     override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
-        import vf.base.rasterable : Rasterizer;
-        import vf.base.rasterable : XCBRasterizer;
-        import vf.wx              : WX;
-
         // world
         //   get all draws
         //   raster
-        Rasterizer!WX rasterizer = new XCBRasterizer!WX();
         world.to_raster( rasterizer );
-
-
-        //Gline!(DRAWABLE,LAYOUTABLE,RASTERABLE) gline;
-        //gline.go();
 
 
 
