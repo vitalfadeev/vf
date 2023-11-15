@@ -8,14 +8,23 @@ import vf.base.drawable   : Go;
 class RasterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 {
     // drawable -> rasterable
-    void to_raster( ref OSRasterAble!WX rasterable )
+    void to_raster( ref Rasterizer!WX rasterizer )
+    {
+        rasterizer.rasterize( ops );
+    }
+}
+
+
+class Rasterizer(WX)
+{
+    void rasterize(OPS)( ref OPS ops )
     {
         foreach ( ref op; ops )
             final switch ( op.type )
             {
                 case OP._         : break;
-                case OP.GO_CENTER : rasterable.go_center(); break;
-                case OP.GO        : rasterable.go( op.go ); break;
+                case OP.GO_CENTER : go_center(); break;
+                case OP.GO        : go( op.go ); break;
                 case OP.POINT     : break;
                 case OP.POINTAT   : break;
                 case OP.POINTS    : break;
@@ -31,11 +40,7 @@ class RasterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
                 case OP.ARCS      : break;
             }
     }
-}
 
-
-class OSRasterAble(WX)
-{
     void go_center()
     {
         //
@@ -48,7 +53,7 @@ class OSRasterAble(WX)
 }
 
 version(XCB)
-class XCBRasterAble(WX) : OSRasterAble!(WX)
+class XCBRasterizer(WX) : Rasterizer!(WX)
 {
     override
     void go_center()

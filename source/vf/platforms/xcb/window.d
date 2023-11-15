@@ -15,7 +15,6 @@ class Window : XCBWindow, IWindow, ISensAble
 {
     alias T = typeof(this);
 
-
     this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
     {
         _create_window( cmd_show, size, name );
@@ -100,7 +99,7 @@ class Window : XCBWindow, IWindow, ISensAble
     private
     void _create_renderer()
     {
-        //
+        //XCBRasterAble!WX os_rasterable = new XCBRasterAble!WX();
     }
 
     //
@@ -110,6 +109,9 @@ class Window : XCBWindow, IWindow, ISensAble
 
         auto expose = event.expose;
         auto c      = platform.c;
+
+        //OSRasterAble!WX os_rasterable = new XCBRasterAble!WX();
+        //world.to_raster( os_rasterable );
 
         ////
         //xcb_point_t[] points = [

@@ -1,7 +1,7 @@
 module vf.base.enterable;
 
 import vf.base.rasterable : RasterAble;
-import vf.base.rasterable : OSRasterAble;
+import vf.base.rasterable : Rasterizer;
 import vf.base.sizeable   : SizeAble, SIZE_MODE, Size;
 
 
@@ -47,12 +47,12 @@ class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
     }
 
     override
-    void to_raster( ref OSRasterAble!WX rasterable )
+    void to_raster( ref Rasterizer!WX rasterizer )
     {
-        super.to_raster( rasterable );
+        super.to_raster( rasterizer );
 
         foreach ( ref e; enter )
-            e.to_raster( rasterable );
+            e.to_raster( rasterizer );
     }
 }
 

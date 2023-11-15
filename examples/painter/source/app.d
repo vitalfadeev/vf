@@ -83,15 +83,15 @@ class MyWindow : ManagedWindow
     override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
-        import vf.base.rasterable : OSRasterAble;
-        import vf.base.rasterable : XCBRasterAble;
+        import vf.base.rasterable : Rasterizer;
+        import vf.base.rasterable : XCBRasterizer;
         import vf.wx              : WX;
 
         // world
         //   get all draws
         //   raster
-        OSRasterAble!WX os_rasterable = new XCBRasterAble!WX();
-        world.to_raster( os_rasterable );
+        Rasterizer!WX rasterizer = new XCBRasterizer!WX();
+        world.to_raster( rasterizer );
 
 
         //Gline!(DRAWABLE,LAYOUTABLE,RASTERABLE) gline;
