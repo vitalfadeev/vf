@@ -87,6 +87,10 @@ class MyWindow : ManagedWindow
         // world
         //   get all draws
         //   raster
+        auto os_rasterable = new OSRasterAble();
+        world.to_raster( os_rasterable );
+
+
         //Gline!(DRAWABLE,LAYOUTABLE,RASTERABLE) gline;
         //gline.go();
 
