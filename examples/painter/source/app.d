@@ -15,7 +15,7 @@ void main()
     {
         Runtime.initialize();
 
-    	MyGame().go();
+    	MyGame.instance.go();
 
         Runtime.terminate();
     }
@@ -48,13 +48,12 @@ class MyGame : Game
     //   MyGame().go() 
     //   MyGame().quit()
     static
-    T opCall()
+    typeof(this) instance()
     {
-        static 
-        T _instance;
-
+        static typeof(this) _instance;
+        
         if ( _instance is null )
-            _instance = new T();
+            _instance = new typeof(this);
 
         return _instance;
     }
