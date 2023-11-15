@@ -84,15 +84,17 @@ class Window : XCBWindow, IWindow, ISensAble
     }
 
 
-    auto ref move_to_center()
+    override
+    void move_to_center()
     {
-        return this;
+        //
     }
 
 
-    auto ref show()
+    override
+    void show()
     {
-        return this;
+        //
     }
 
 
