@@ -21,14 +21,13 @@ void main()
 }
 
 
-import vf.button : Button;
-import vf.gline  : Gline;
 class MyGame : Game
 {
 	alias T = typeof(this);
 
     this()
     {        
+        import vf.button : Button;
         world.enter.put( new Button() );
     }
 
