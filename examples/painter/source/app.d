@@ -82,14 +82,15 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
         if ( event_type == XCB_EXPOSE )
             on_XCB_EXPOSE( event, event_type );
         //auto_route_event!( this, event, event_type );
-        import std.stdio : writeln;
-        writeln( "cur: ", this );
+        //import std.stdio : writeln;
+        //writeln( "cur: ", this );
     }
 
     version(XCB)
     override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
-    {        
+    {
+        world.draw();
         world.to_raster( cast(Rasterizer!WX)rasterizer );
     }
 }

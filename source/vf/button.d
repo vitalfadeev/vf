@@ -72,11 +72,12 @@ class Button : Element
     mixin auto_methods!(typeof(this));  // sense()
     //mixin auto_cap!(typeof(this));
 
+    override
     void draw()
     {
-        point( -1, -1 ); point( 0, -1 ); point( +1, -1 );
-        point( -1,  0 ); point( 0,  0 ); point( +1,  0 );
-        point( -1, +1 ); point( 0, +1 ); point( +1, +1 );            
+        point_at( -1, -1 ); point_at( 0, -1 ); point_at( +1, -1 );
+        point_at( -1,  0 ); point_at( 0,  0 ); point_at( +1,  0 );
+        point_at( -1, +1 ); point_at( 0, +1 ); point_at( +1, +1 );            
     }
 
     void to_pressed()

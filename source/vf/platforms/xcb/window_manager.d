@@ -17,8 +17,6 @@ class WindowManager : vf.base.window_manager.WindowManager!(Window,xcb_window_t,
     //    RDI          RSI               RDX
     {
         import std.algorithm.searching : countUntil;
-        import std.stdio : writeln;
-        writeln( __FUNCTION__ );
 
         switch ( event_type )
         {

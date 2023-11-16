@@ -7,8 +7,8 @@ import vf.base.interfaces : IWindowManager;
 // window -> hwnd
 class WindowManager(V,O,Event,EVENT_TYPE)
 {
-    O[] _os_windows;
-    V[] _vf_windows;
+    static O[] _os_windows;
+    static V[] _vf_windows;
 
     void sense( Event* event, EVENT_TYPE event_type )
     //    this         event             event_type
@@ -17,6 +17,7 @@ class WindowManager(V,O,Event,EVENT_TYPE)
         //
     }
 
+    static 
     V vf_window( O os_window )
     {
         import std.algorithm.searching : countUntil;
@@ -25,12 +26,14 @@ class WindowManager(V,O,Event,EVENT_TYPE)
         return _vf_windows[i];
     }
 
+    static 
     void register( V vf_window, O os_window )
     {
         _vf_windows ~= vf_window;
         _os_windows ~= os_window;
     }
 
+    static 
     void unregister( O os_window )
     {
         import std.algorithm.searching : countUntil;
@@ -56,6 +59,6 @@ class ManagedWindow(V,O,Event,EVENT_TYPE) : V
     this(ARGS...)( ARGS args )
     {
         super( args );
-        WindowManager!(V,O,Event,EVENT_TYPE).instance.register( this, this.hwnd );
+        WindowManager!(V,O,Event,EVENT_TYPE).register( this, this.hwnd );
     }
 }

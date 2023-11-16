@@ -54,6 +54,15 @@ class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
         foreach ( ref e; enter )
             e.to_raster( rasterizer );
     }
+
+    override
+    void draw()
+    {
+        super.draw();
+
+        foreach ( ref e; enter )
+            e.draw();
+    }
 }
 
 
