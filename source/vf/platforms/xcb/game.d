@@ -38,7 +38,6 @@ import vf.platforms.xcb.window_manager : WindowManager;
 import vf.platforms.xcb.event          : Event, EVENT_TYPE;
 
 
-
 class WindowedGame(Window) : BaseGame!(Queue,Event,EVENT_TYPE)
 {
     Window window;
