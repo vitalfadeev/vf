@@ -8,6 +8,7 @@ import vf.event         : Event, EVENT_TYPE;
 import vf.interfaces    : IWindow, ISensAble;
 import vf.types         : PX;
 import vf.base.oswindow;
+import vf.platforms.xcb.types : uint16_t;
 
 alias OSWindow = vf.base.oswindow.OSWindow!(xcb_window_t,Event,EVENT_TYPE);
 alias Window   = XCBWindow;
@@ -41,7 +42,9 @@ class XCBWindow : OSWindow, IWindow, ISensAble
     override
     void move_to_center()
     {
-        //
+        // screen.size() / 2
+        // size() / 2
+        // move
     }
 
 
@@ -50,6 +53,41 @@ class XCBWindow : OSWindow, IWindow, ISensAble
     {
         //
     }
+
+
+    PX size()
+    {
+        uint16_t w;
+        uint16_t h;
+        xcb_get_geometry_cookie_t cookie;
+        xcb_get_geometry_reply_t* reply;
+
+        cookie = xcb_get_geometry( platform.c, hwnd );
+
+       //struct xcb_get_geometry_reply_t {
+       //    uint8_t      response_type;
+       //    uint8_t      depth;
+       //    uint16_t     sequence;
+       //    uint32_t     length;
+       //    xcb_window_t root;
+       //    int16_t      x;
+       //    int16_t      y;
+       //    uint16_t     width;
+       //    uint16_t     height;
+       //    uint16_t     border_width;
+       //    uint8_t      pad0[2];
+       //}
+
+        if ( ( reply = xcb_get_geometry_reply( platform.c, cookie, null ) ) !is null ) {
+            w = reply.width;
+            h = reply.height;
+        }
+
+        import core.stdc.stdlib : free;
+        free( reply );
+
+        return PX( w, h );
+   }
 
 
     // private

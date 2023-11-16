@@ -17,6 +17,7 @@ alias H       = Y;
 
 // for XCB types
 alias uint32_t = uint;
+alias uint16_t = ushort;
 
 //
 struct PX
@@ -32,6 +33,11 @@ struct PX
                 (x - b.x).to!X, 
                 (y - b.y).to!Y
             );
+    }
+
+    PX opBinary(string op:"/")( int b )
+    {
+        return PX( x/b, y/b );
     }
 }
 

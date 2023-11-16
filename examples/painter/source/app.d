@@ -63,7 +63,7 @@ class MyGame : Game
 class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
 {
     WORLD      world;
-    RASTERIZER rasterizer;
+    RASTERIZER rasterizer;  // builtin
 
     this(ARGS...)( WORLD world, ARGS args )
     {
@@ -76,8 +76,20 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
 
     version(XCB)
     override
-    void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
+    void sense( Event* event, EVENT_TYPE event_type ) 
     {
+        import xcb.xproto : XCB_EXPOSE;
+        if ( event_type == XCB_EXPOSE )
+            on_XCB_EXPOSE( event, event_type );
+        //auto_route_event!( this, event, event_type );
+        import std.stdio : writeln;
+        writeln( "cur: ", this );
+    }
+
+    version(XCB)
+    override
+    void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
+    {        
         world.to_raster( cast(Rasterizer!WX)rasterizer );
     }
 }

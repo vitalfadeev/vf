@@ -82,11 +82,13 @@ class XCBRasterizer(WX,PX) : Rasterizer!(WX)
     xcb_drawable_t    drawable;
     xcb_gcontext_t    gc;
     PX                cur;
+    PX                window_size;
 
-    this(Window)( Window window )
+    this(WINDOW)( WINDOW window )
     {
-        this.c        = platform.c;
-        this.drawable = window.hwnd;
+        this.c           = platform.c;
+        this.drawable    = window.hwnd;
+        this.window_size = window.size;
 
         xcb_screen_t*   screen      = platform.screen;
         xcb_gcontext_t  foreground  = xcb_generate_id( c );
@@ -103,7 +105,9 @@ class XCBRasterizer(WX,PX) : Rasterizer!(WX)
     override
     void go_center()
     {
-        // cur = windows.size / 2
+        cur = window_size / 2;
+        import std.stdio : writeln;
+        writeln( "cur: ", cur );
     }
 
     override
