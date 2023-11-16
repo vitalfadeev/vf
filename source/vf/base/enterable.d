@@ -47,7 +47,7 @@ class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
     }
 
     override
-    void to_raster( ref Rasterizer!WX rasterizer )
+    void to_raster( Rasterizer!WX rasterizer )
     {
         super.to_raster( rasterizer );
 

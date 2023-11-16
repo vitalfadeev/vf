@@ -78,14 +78,15 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
     override
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
-        world.to_raster( rasterizer );
+        world.to_raster( cast(Rasterizer!WX)rasterizer );
     }
 }
 
 
-import vf.base.rasterable : Rasterizer;
+import vf.base.rasterable : Rasterizer,XCBRasterizer;
 import vf.wx : WX;
-class MyWindow : WorldWindow!(World,Rasterizer!WX,Event,EVENT_TYPE)
+import vf.platforms.xcb.types : PX;
+class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
 {
     this(ARGS...)( World world, ARGS args )
     {

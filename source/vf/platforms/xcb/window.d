@@ -7,11 +7,12 @@ import vf.platform      : platform;
 import vf.event         : Event, EVENT_TYPE;
 import vf.interfaces    : IWindow, ISensAble;
 import vf.types         : PX;
-import vf.base.oswindow : OSWindow;
+import vf.base.oswindow;
 
-alias XCBWindow = OSWindow!(xcb_window_t,Event,EVENT_TYPE);
+alias OSWindow = vf.base.oswindow.OSWindow!(xcb_window_t,Event,EVENT_TYPE);
+alias Window   = XCBWindow;
 
-class Window : XCBWindow, IWindow, ISensAble
+class XCBWindow : OSWindow, IWindow, ISensAble
 {
     alias T = typeof(this);
 

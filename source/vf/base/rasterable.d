@@ -8,7 +8,7 @@ import vf.base.drawable   : Go, PointAt;
 class RasterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 {
     // drawable -> rasterable
-    void to_raster( ref Rasterizer!WX rasterizer )
+    void to_raster( Rasterizer!WX rasterizer )
     {
         rasterizer.rasterize( ops );
     }
@@ -74,25 +74,30 @@ class Rasterizer(WX)
 version(XCB):
 import xcb.xcb;
 import vf.platforms.xcb.types : to_px;
-class XCBRasterizer(WX) : Rasterizer!(WX)
+import vf.platform : platform;
+import vf.platforms.xcb.types : uint32_t;
+class XCBRasterizer(WX,PX) : Rasterizer!(WX)
 {
     xcb_connection_t* c;
     xcb_drawable_t    drawable;
     xcb_gcontext_t    gc;
     PX                cur;
 
-    this( Window window )
+    this(Window)( Window window )
     {
         this.c        = platform.c;
         this.drawable = window.hwnd;
 
+        xcb_screen_t*   screen      = platform.screen;
         xcb_gcontext_t  foreground  = xcb_generate_id( c );
         uint32_t        values_mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-        uint32_t[2]     values      = [ screen.black_pixel, 0 ];
+        uint32_t[2]     values      = [ screen.white_pixel, 0 ];
 
-        xcb_create_gc( c, foreground, drawable, values_mask, values );
+        xcb_create_gc( c, foreground, drawable, values_mask, values.ptr );
 
         this.gc       = foreground;
+
+        super( window );
     }
 
     override
