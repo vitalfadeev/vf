@@ -1,7 +1,7 @@
 module vf.base.enterable;
 
 import vf.base.rasterable : RasterAble;
-import vf.base.rasterable : BaseRasterizer;
+import vf.base.rasterizer : BaseRasterizer;
 import vf.base.sizeable   : SizeAble, SIZE_MODE, Size;
 
 

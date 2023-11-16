@@ -92,7 +92,7 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : Window
 }
 
 
-import vf.base.rasterable          : BaseRasterizer;
+import vf.base.rasterizer          : BaseRasterizer;
 import vf.platforms.xcb.rasterizer : XCBRasterizer;
 import vf.wx                       : WX;
 import vf.platforms.xcb.types      : PX;
