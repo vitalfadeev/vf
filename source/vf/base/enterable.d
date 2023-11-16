@@ -1,7 +1,7 @@
 module vf.base.enterable;
 
 import vf.base.rasterable : RasterAble;
-import vf.base.rasterable : Rasterizer;
+import vf.base.rasterable : BaseRasterizer;
 import vf.base.sizeable   : SizeAble, SIZE_MODE, Size;
 
 
@@ -47,7 +47,7 @@ class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
     }
 
     override
-    void to_raster( Rasterizer!WX rasterizer )
+    void to_raster( BaseRasterizer!WX rasterizer )
     {
         super.to_raster( rasterizer );
 

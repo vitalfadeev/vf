@@ -8,10 +8,12 @@ import vf.platforms.xcb.event  : Event, EVENT_TYPE;
 import vf.platforms.xcb.window : XCBWindow;
 
 alias TBaseWindow = BaseWindow!(Event,EVENT_TYPE);
+alias TBaseWindowManager = 
+    BaseWindowManager!(TBaseWindow,xcb_window_t,Event,EVENT_TYPE);
 
 // hwnd -> window
 // window -> hwnd
-class WindowManager : BaseWindowManager!(TBaseWindow,xcb_window_t,Event,EVENT_TYPE)
+class WindowManager : TBaseWindowManager
 {
     //
     override
@@ -64,6 +66,3 @@ class WindowManager : BaseWindowManager!(TBaseWindow,xcb_window_t,Event,EVENT_TY
         return _instance;
     }
 }
-
-//alias ManagedWindow = vf.base.window_manager.ManagedWindow!(Window,xcb_window_t,Event,EVENT_TYPE);
-

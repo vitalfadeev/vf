@@ -2,18 +2,16 @@ module vf.platforms.xcb.window;
 
 version(XCB):
 import xcb.xcb;
-//import vf.base.window   : BaseWindow;
-import vf.platform      : platform;
-import vf.event         : Event, EVENT_TYPE;
-import vf.interfaces    : IWindow, ISensAble;
-import vf.types         : PX;
-import vf.base.oswindow;
+import vf.platform            : platform;
+import vf.base.oswindow       : BaseOSWindow;
+import vf.platforms.xcb.event : Event, EVENT_TYPE;
+import vf.platforms.xcb.types : PX;
 import vf.platforms.xcb.types : uint16_t;
 
-alias OSWindow = vf.base.oswindow.OSWindow!(xcb_window_t,Event,EVENT_TYPE);
-//alias Window   = XCBWindow;
+alias TBaseOSWindow = BaseOSWindow!(xcb_window_t,Event,EVENT_TYPE);
 
-class XCBWindow : OSWindow, IWindow, ISensAble
+
+class XCBWindow : TBaseOSWindow
 {
     alias T = typeof(this);
 

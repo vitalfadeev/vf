@@ -87,13 +87,13 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : Window
     void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
     {
         world.draw();
-        world.to_raster( cast(Rasterizer!WX)rasterizer );
+        world.to_raster( cast(BaseRasterizer!WX)rasterizer );
     }
 }
 
 
-import vf.base.rasterable : Rasterizer,XCBRasterizer;
-import vf.wx : WX;
+import vf.base.rasterable     : BaseRasterizer,XCBRasterizer;
+import vf.wx                  : WX;
 import vf.platforms.xcb.types : PX;
 class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
 {

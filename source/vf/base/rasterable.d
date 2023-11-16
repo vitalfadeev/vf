@@ -8,14 +8,14 @@ import vf.base.drawable   : Go, PointAt;
 class RasterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 {
     // drawable -> rasterable
-    void to_raster( Rasterizer!WX rasterizer )
+    void to_raster( BaseRasterizer!WX rasterizer )
     {
         rasterizer.rasterize( ops );
     }
 }
 
 
-class Rasterizer(WX)
+class BaseRasterizer(WX)
 {
     this(WINDOW)( WINDOW window )
     {
@@ -74,9 +74,9 @@ class Rasterizer(WX)
 version(XCB):
 import xcb.xcb;
 import vf.platforms.xcb.types : to_px;
-import vf.platform : platform;
+import vf.platform            : platform;
 import vf.platforms.xcb.types : uint32_t;
-class XCBRasterizer(WX,PX) : Rasterizer!(WX)
+class XCBRasterizer(WX,PX)    : BaseRasterizer!(WX)
 {
     xcb_connection_t* c;
     xcb_drawable_t    drawable;

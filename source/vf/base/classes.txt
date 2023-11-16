@@ -19,7 +19,7 @@ Window
   |
 XCBWindow
   _create_window  _create_renderer  size  on_XCB_EXPOSE
-OSWindow
+BaseOSWindow
   hwnd
 BaseWindow
   sense  move_to_center  show

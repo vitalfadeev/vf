@@ -3,7 +3,7 @@ module vf.base.oswindow;
 import vf.base.window         : BaseWindow;
 import vf.base.window_manager : BaseWindowManager;
 
-class OSWindow(HWND,Event,EVENT_TYPE) : BaseWindow!(Event,EVENT_TYPE)
+class BaseOSWindow(HWND,Event,EVENT_TYPE) : BaseWindow!(Event,EVENT_TYPE)
 {
     HWND hwnd;
 
