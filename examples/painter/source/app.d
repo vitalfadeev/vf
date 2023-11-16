@@ -56,16 +56,16 @@ class MyGame : Game
 }
 
 
-class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : Window
+class WorldWindow(World,Rasterizer,Event,EVENT_TYPE) : Window
 {
-    WORLD      world;
-    RASTERIZER rasterizer;  // builtin
+    World      world;
+    Rasterizer rasterizer;  // builtin
 
-    this(ARGS...)( WORLD world, ARGS args )
+    this(ARGS...)( World world, ARGS args )
     {
         super( args );
         this.world      = world;
-        this.rasterizer = new RASTERIZER( this );
+        this.rasterizer = new Rasterizer( this );
         move_to_center();
         show();
     }

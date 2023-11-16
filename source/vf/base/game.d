@@ -1,7 +1,6 @@
 module vf.base.game;
 
-import vf.base.interfaces : ISensAble;
-import vf.base.sensors    : Sensors;
+import vf.base.sensors : Sensors;
 
 
 class BaseGame(Queue,Event,EVENT_TYPE)

@@ -54,7 +54,7 @@ class WindowedGame(Window) : BaseGame!(Queue,Event,EVENT_TYPE)
     }
 }
 
-class WorldGame(World) : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
+class WorldGame(World) : BaseGame!(Queue,Event,EVENT_TYPE)
 {
     World world = new World();
 
