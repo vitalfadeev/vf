@@ -31,12 +31,12 @@ module vf.platforms.xcb.game;
 version(XCB):
 import xcb.xcb;
 public import vf.base.game;
-import vf.interfaces     : IWindow;
-import vf.queue          : Queue;
-import vf.world          : World;
-import vf.window         : Window;
-import vf.window_manager : WindowManager;
-import vf.event          : Event, EVENT_TYPE;
+import vf.world                        : World;
+import vf.platforms.xcb.queue          : Queue;
+import vf.platforms.xcb.window         : Window;
+import vf.platforms.xcb.window_manager : WindowManager;
+import vf.platforms.xcb.event          : Event, EVENT_TYPE;
+
 
 
 class WindowedGame(Window) : vf.base.game.Game!(Queue,Event,EVENT_TYPE)

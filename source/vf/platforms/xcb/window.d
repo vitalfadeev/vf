@@ -9,6 +9,7 @@ import vf.platforms.xcb.types : PX;
 import vf.platforms.xcb.types : uint16_t;
 
 alias TBaseOSWindow = BaseOSWindow!(xcb_window_t,Event,EVENT_TYPE);
+alias Window = XCBWindow;
 
 
 class XCBWindow : TBaseOSWindow
