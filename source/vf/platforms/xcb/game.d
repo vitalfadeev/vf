@@ -31,7 +31,7 @@ module vf.platforms.xcb.game;
 version(XCB):
 import xcb.xcb;
 import vf.base.game                    : BaseGame;
-import vf.world                        : World;
+import vf.platforms.xcb.world          : World;
 import vf.platforms.xcb.queue          : Queue;
 import vf.platforms.xcb.window         : Window;
 import vf.platforms.xcb.window_manager : WindowManager;
@@ -46,7 +46,7 @@ class WindowedGame(Window) : BaseGame!(Queue,Event,EVENT_TYPE)
     override
     void go()
     {
-        window = new ManagedWindow!Window();
+        window = new Window();
 
         sensors ~= &WindowManager.instance.sense;
 
