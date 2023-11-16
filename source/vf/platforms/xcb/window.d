@@ -19,7 +19,7 @@ class XCBWindow : TBaseOSWindow
     {
         _create_window( size, name, cmd_show );
         _create_renderer();
-        super();
+        super();  // WindowManager.register( this, hwnd )
     }
 
     //
