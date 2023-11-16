@@ -71,12 +71,3 @@ class Game
         PostQuitMessage( quit_code );
     }
 }
-
-
-struct Sensors
-{
-    void sense( EVENT_TYPE event_type, Event* e )
-    {
-        //
-    }
-}
