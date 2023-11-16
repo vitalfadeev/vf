@@ -92,9 +92,10 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : Window
 }
 
 
-import vf.base.rasterable     : BaseRasterizer,XCBRasterizer;
-import vf.wx                  : WX;
-import vf.platforms.xcb.types : PX;
+import vf.base.rasterable          : BaseRasterizer;
+import vf.platforms.xcb.rasterizer : XCBRasterizer;
+import vf.wx                       : WX;
+import vf.platforms.xcb.types      : PX;
 class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
 {
     this(ARGS...)( World world, ARGS args )
