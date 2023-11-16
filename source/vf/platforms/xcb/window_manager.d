@@ -5,7 +5,7 @@ import xcb.xcb;
 import vf.base.window_manager  : BaseWindowManager;
 import vf.base.window          : BaseWindow;
 import vf.platforms.xcb.event  : Event, EVENT_TYPE;
-import vf.platforms.xcb.window : Window;
+import vf.platforms.xcb.window : XCBWindow;
 
 alias TBaseWindow = BaseWindow!(Event,EVENT_TYPE);
 

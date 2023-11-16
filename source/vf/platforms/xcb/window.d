@@ -11,7 +11,7 @@ import vf.base.oswindow;
 import vf.platforms.xcb.types : uint16_t;
 
 alias OSWindow = vf.base.oswindow.OSWindow!(xcb_window_t,Event,EVENT_TYPE);
-alias Window   = XCBWindow;
+//alias Window   = XCBWindow;
 
 class XCBWindow : OSWindow, IWindow, ISensAble
 {

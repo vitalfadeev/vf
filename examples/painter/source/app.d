@@ -21,12 +21,10 @@ void main()
 }
 
 
-import vf.button : Button;
-
-import vf.interfaces : IWindow;
-import vf.platforms.xcb.window : Window;
+import vf.platforms.xcb.window : XCBWindow;
 import vf.platforms.xcb.window : auto_route_event;
-import vf.gline : Gline;
+import vf.button               : Button;
+import vf.gline                : Gline;
 class MyGame : Game
 {
 	alias T = typeof(this);

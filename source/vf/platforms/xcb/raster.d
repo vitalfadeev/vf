@@ -39,7 +39,7 @@ class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
 
 
 import vf.platforms.xcb.window;
-WINDOW to_window(WINDOW:Window)( Raster This, WINDOW window, HDC hdc )
+WINDOW to_window(WINDOW:XCBWindow)( Raster This, WINDOW window, HDC hdc )
     // if ( WINDOW inherited from Window )
 {
     auto pixels = This.pixels.ptr;
@@ -101,7 +101,7 @@ WINDOW to_window(WINDOW:Window)( Raster This, WINDOW window, HDC hdc )
 //       .line( +5,0 )     
 //     .to_raster( this )  // painter -> raster
 //     .to_window( this ); // raster  -> window
-Raster to_raster( Window This, xcb_connection_t *c )
+Raster to_raster( XCBWindow This, xcb_connection_t *c )
 {
     static int[] pixels;
     // GetImage

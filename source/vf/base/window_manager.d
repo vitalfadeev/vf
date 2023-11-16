@@ -40,23 +40,4 @@ class BaseWindowManager(V,O,Event,EVENT_TYPE)
         _os_windows = _os_windows.remove( i );
         _vf_windows = _vf_windows.remove( i );
     }
-
-    // 
-    //auto new_window(TW,ARGS...)( ARGS args )
-    //{
-    //    auto window = new TW( args );
-    //    register( window.hwnd, window );
-    //    return window;
-    //}
 }
-
-
-//
-//class ManagedWindow(V,O,Event,EVENT_TYPE) : V
-//{
-//    this(ARGS...)( ARGS args )
-//    {
-//        super( args );
-//        WindowManager!(V,O,Event,EVENT_TYPE).register( this, this.hwnd );
-//    }
-//}
