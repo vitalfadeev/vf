@@ -120,9 +120,17 @@ class XCBRasterizer(WX,PX) : Rasterizer!(WX)
     void point_at( ref PointAt!WX op )
     {
         auto px = cur + op.wx.to_px;
-        xcb_point_t[1] points = xcb_point_t( px.x, px.y );
 
-        xcb_poly_point( c, XCB_COORD_MODE_PREVIOUS, drawable, gc, /*points_len*/ 1, points.ptr );
+        // px -> xcb_point_t
+        static
+        if ( is( typeof( xcb_point_t.x ) == typeof( px.x ) ) &&
+             is( typeof( xcb_point_t.y ) == typeof( px.y ) ) )
+            xcb_poly_point( c, XCB_COORD_MODE_ORIGIN, drawable, gc, /*points_len*/ 1, cast(xcb_point_t*)&px );
+        else
+        {
+            xcb_point_t[1] points = xcb_point_t( px.x, px.y );
+            xcb_poly_point( c, XCB_COORD_MODE_ORIGIN, drawable, gc, /*points_len*/ 1, points.ptr );
+        }
     }
 
     override

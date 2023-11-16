@@ -4,6 +4,7 @@ version(XCB):
 import std.traits;
 import xcb.xcb;
 public import vf.base.types;
+import vf.base.px;
 import vf.traits;
 import vf.platforms.xcb.event : Event, EVENT_TYPE;
 
@@ -15,41 +16,12 @@ alias Y       = short;
 alias W       = X;
 alias H       = Y;
 
-// for XCB types
+// for XCB functions
 alias uint32_t = uint;
 alias uint16_t = ushort;
 
 //
-struct PX
-{
-    X x;
-    Y y;
-
-    PX opBinary(string op:"-")( PX b )
-    {
-        import std.conv : to;
-        return 
-            PX( 
-                (x - b.x).to!X, 
-                (y - b.y).to!Y
-            );
-    }
-
-    PX opBinary(string op:"+")( PX b )
-    {
-        import std.conv : to;
-        return 
-            PX( 
-                (x + b.x).to!X, 
-                (y + b.y).to!Y
-            );
-    }
-
-    PX opBinary(string op:"/")( int b )
-    {
-        return PX( x/b, y/b );
-    }
-}
+alias PX = vf.base.px.PX!(X,Y);
 
 //
 import vf.wx : WX;

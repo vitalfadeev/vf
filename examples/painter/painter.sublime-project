@@ -10,6 +10,14 @@
 		{
 			"path": "~/.dub/packages/xcb-d/2.1.1+1.11.1/xcb-d/source/xcb",
 			"file_include_patterns": ["*.d"]
+		},
+		{
+			"path": "/usr/include/dmd/druntime",
+			"file_include_patterns": ["*.d"]
+		},
+		{
+			"path": "/usr/include/dmd/phobos",
+			"file_include_patterns": ["*.d"]
 		}
 	]
 }

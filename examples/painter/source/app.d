@@ -1,5 +1,4 @@
 import std.stdio;
-
 import vf;
 
 //version=READ;
@@ -99,6 +98,7 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
 import vf.base.rasterable : Rasterizer,XCBRasterizer;
 import vf.wx : WX;
 import vf.platforms.xcb.types : PX;
+import usr.include.dmd.phobos.std.meta : AliasSeq;
 class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
 {
     this(ARGS...)( World world, ARGS args )
