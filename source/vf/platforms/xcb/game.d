@@ -35,7 +35,7 @@ import vf.interfaces     : IWindow;
 import vf.queue          : Queue;
 import vf.world          : World;
 import vf.window         : Window;
-import vf.window_manager : WindowManager, ManagedWindow;
+import vf.window_manager : WindowManager;
 import vf.event          : Event, EVENT_TYPE;
 
 
@@ -83,9 +83,9 @@ class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
         super.go();
     }
 
-    ManagedWindow new_window()
+    Window new_window()
     {
-        return new ManagedWindow();
+        return new Window();
     }
 
     override 

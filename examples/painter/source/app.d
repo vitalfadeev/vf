@@ -2,8 +2,7 @@ import std.stdio;
 import vf;
 
 //version=READ;
-version=WRITE;
-
+//version=WRITE;
 
 void main()
 {
@@ -25,7 +24,7 @@ void main()
 import vf.button : Button;
 
 import vf.interfaces : IWindow;
-import vf.platforms.xcb.window_manager : ManagedWindow;
+import vf.platforms.xcb.window : Window;
 import vf.platforms.xcb.window : auto_route_event;
 import vf.gline : Gline;
 class MyGame : Game
@@ -38,7 +37,7 @@ class MyGame : Game
     }
 
 	override
-    ManagedWindow new_window()
+    Window new_window()
     {
         return new MyWindow( world );
     }
@@ -59,7 +58,7 @@ class MyGame : Game
 }
 
 
-class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
+class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : Window
 {
     WORLD      world;
     RASTERIZER rasterizer;  // builtin
@@ -98,7 +97,6 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
 import vf.base.rasterable : Rasterizer,XCBRasterizer;
 import vf.wx : WX;
 import vf.platforms.xcb.types : PX;
-import usr.include.dmd.phobos.std.meta : AliasSeq;
 class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
 {
     this(ARGS...)( World world, ARGS args )

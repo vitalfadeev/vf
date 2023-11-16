@@ -21,6 +21,7 @@ class XCBWindow : OSWindow, IWindow, ISensAble
     {
         _create_window( size, name, cmd_show );
         _create_renderer();
+        super();
     }
 
     //

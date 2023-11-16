@@ -1,7 +1,5 @@
 module vf.base.window_manager;
 
-import vf.base.interfaces : IWindowManager;
-
 
 // hwnd -> window
 // window -> hwnd
@@ -44,21 +42,21 @@ class WindowManager(V,O,Event,EVENT_TYPE)
     }
 
     // 
-    auto new_window(TW,ARGS...)( ARGS args )
-    {
-        auto window = new TW( args );
-        register( window.hwnd, window );
-        return window;
-    }
+    //auto new_window(TW,ARGS...)( ARGS args )
+    //{
+    //    auto window = new TW( args );
+    //    register( window.hwnd, window );
+    //    return window;
+    //}
 }
 
 
 //
-class ManagedWindow(V,O,Event,EVENT_TYPE) : V
-{
-    this(ARGS...)( ARGS args )
-    {
-        super( args );
-        WindowManager!(V,O,Event,EVENT_TYPE).register( this, this.hwnd );
-    }
-}
+//class ManagedWindow(V,O,Event,EVENT_TYPE) : V
+//{
+//    this(ARGS...)( ARGS args )
+//    {
+//        super( args );
+//        WindowManager!(V,O,Event,EVENT_TYPE).register( this, this.hwnd );
+//    }
+//}
