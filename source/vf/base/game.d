@@ -4,7 +4,7 @@ import vf.base.interfaces : ISensAble;
 import vf.base.sensors    : Sensors;
 
 
-class Game(Queue,Event,EVENT_TYPE)
+class BaseGame(Queue,Event,EVENT_TYPE)
 {
     Sensors!(Event,EVENT_TYPE) sensors;
     Queue   queue;

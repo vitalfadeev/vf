@@ -30,7 +30,7 @@ module vf.platforms.xcb.game;
 
 version(XCB):
 import xcb.xcb;
-public import vf.base.game;
+import vf.base.game                    : BaseGame;
 import vf.world                        : World;
 import vf.platforms.xcb.queue          : Queue;
 import vf.platforms.xcb.window         : Window;
@@ -39,7 +39,7 @@ import vf.platforms.xcb.event          : Event, EVENT_TYPE;
 
 
 
-class WindowedGame(Window) : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
+class WindowedGame(Window) : BaseGame!(Queue,Event,EVENT_TYPE)
 {
     Window window;
 
@@ -66,7 +66,7 @@ class WorldGame(World) : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
     }
 }
 
-class Game : vf.base.game.Game!(Queue,Event,EVENT_TYPE)
+class Game : BaseGame!(Queue,Event,EVENT_TYPE)
 {
     World world = new World();
     
