@@ -51,6 +51,17 @@ class WindowManager : vf.base.window_manager.WindowManager!(Window,xcb_window_t,
             }
         }
     }
+
+    static
+    typeof(this) instance()
+    {
+        static typeof(this) _instance;
+        
+        if ( _instance is null )
+            _instance = new typeof(this);
+
+        return _instance;
+    }
 }
 
 alias ManagedWindow = vf.base.window_manager.ManagedWindow!(Window,xcb_window_t,Event,EVENT_TYPE);

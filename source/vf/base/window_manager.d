@@ -47,17 +47,6 @@ class WindowManager(V,O,Event,EVENT_TYPE)
         register( window.hwnd, window );
         return window;
     }
-
-    static
-    typeof(this) instance()
-    {
-        static typeof(this) _instance;
-        
-        if ( _instance is null )
-            _instance = new typeof(this);
-
-        return _instance;
-    }
 }
 
 
