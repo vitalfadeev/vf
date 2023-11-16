@@ -309,3 +309,33 @@ auto tee(T)( T This )
 // ---------------|     |-----------------
 // ====================================|==  // queue
 
+// World
+//  e class state     // add element
+//  e 0x01 0b00000001 // add element 0x01 0b00000001
+//
+//  e class state     // add element
+//   a text "OK"      // set attribute "text" == "OK"
+//
+//  e class state     // add element
+//  enter             //
+//   e class state    // add child element
+//  ret               //
+//
+//  s                 // select 
+//   c class Button   //   condition class == Button
+//
+//  s                  // select 
+//   c and             //   condition and
+//   c   class Button  //   condition class == Button
+//   c   state hover   //   condition state == hover
+//
+// selection           // selection
+//  a text "OK"        //  set each atte text == "OK"
+
+// World
+//  e class state     // add element
+// 
+// World
+//  sense
+//   case event_type == e
+//    enter ~= new class_state()

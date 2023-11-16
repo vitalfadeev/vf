@@ -2,7 +2,7 @@ module vf.base.rasterable;
 
 import vf.base.layoutable : LayoutAble;
 import vf.base.drawable   : OP;
-import vf.base.drawable   : Go;
+import vf.base.drawable   : Go, PointAt;
 
 
 class RasterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
@@ -26,7 +26,7 @@ class Rasterizer(WX)
                 case OP.GO_CENTER : go_center(); break;
                 case OP.GO        : go( op.go ); break;
                 case OP.POINT     : break;
-                case OP.POINTAT   : break;
+                case OP.POINTAT   : point_at( op.point_at); break;
                 case OP.POINTS    : break;
                 case OP.LINE      : break;
                 case OP.LINES     : break;
@@ -50,11 +50,21 @@ class Rasterizer(WX)
     {
         //
     }
+
+    void point_at( ref PointAt!WX op )
+    {
+        //
+    }
 }
 
-version(XCB)
+version(XCB):
+import xcb.xcb;
 class XCBRasterizer(WX) : Rasterizer!(WX)
 {
+    xcb_connection_t* c;
+    xcb_drawable_t    drawable;
+    xcb_gcontext_t    gc;
+
     override
     void go_center()
     {
@@ -65,5 +75,13 @@ class XCBRasterizer(WX) : Rasterizer!(WX)
     void go( ref Go!WX op )
     {
         //
+    }
+
+    override
+    void point_at( ref PointAt!WX op )
+    {
+        xcb_point_t[1] points = xcb_point_t( wx.x >> 16, wx.y >> 16 );
+
+        xcb_poly_point( c, XCB_COORD_MODE_PREVIOUS, drawable, gc, /*points_len*/ 1, points.ptr );
     }
 }
