@@ -1,7 +1,7 @@
 module vf.base.window;
 
 
-class Window(Event,EVENT_TYPE)
+class BaseWindow(Event,EVENT_TYPE)
 {
     //this(ARGS...)( ARGS args )
     //{

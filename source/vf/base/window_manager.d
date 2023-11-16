@@ -3,7 +3,7 @@ module vf.base.window_manager;
 
 // hwnd -> window
 // window -> hwnd
-class WindowManager(V,O,Event,EVENT_TYPE)
+class BaseWindowManager(V,O,Event,EVENT_TYPE)
 {
     static O[] _os_windows;
     static V[] _vf_windows;

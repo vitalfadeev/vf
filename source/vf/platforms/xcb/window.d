@@ -2,7 +2,7 @@ module vf.platforms.xcb.window;
 
 version(XCB):
 import xcb.xcb;
-import vf.base.window;
+//import vf.base.window   : BaseWindow;
 import vf.platform      : platform;
 import vf.event         : Event, EVENT_TYPE;
 import vf.interfaces    : IWindow, ISensAble;
