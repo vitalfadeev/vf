@@ -17,6 +17,11 @@ class RasterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
 
 class Rasterizer(WX)
 {
+    this(WINDOW)( WINDOW window )
+    {
+        //
+    }
+
     void rasterize(OPS)( ref OPS ops )
     {
         go_center();
@@ -76,10 +81,17 @@ class XCBRasterizer(WX) : Rasterizer!(WX)
     xcb_gcontext_t    gc;
     PX                cur;
 
-    this( Window window, Foreground foreground )
+    this( Window window )
     {
         this.c        = platform.c;
-        this.drawable = window;
+        this.drawable = window.hwnd;
+
+        xcb_gcontext_t  foreground  = xcb_generate_id( c );
+        uint32_t        values_mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+        uint32_t[2]     values      = [ screen.black_pixel, 0 ];
+
+        xcb_create_gc( c, foreground, drawable, values_mask, values );
+
         this.gc       = foreground;
     }
 

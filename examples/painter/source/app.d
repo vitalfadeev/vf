@@ -69,7 +69,7 @@ class WorldWindow(WORLD,RASTERIZER,Event,EVENT_TYPE) : ManagedWindow
     {
         super( args );
         this.world      = world;
-        this.rasterizer = new RASTERIZER();
+        this.rasterizer = new RASTERIZER( this );
         move_to_center();
         show();
     }
