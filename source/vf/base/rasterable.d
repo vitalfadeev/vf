@@ -19,6 +19,8 @@ class Rasterizer(WX)
 {
     void rasterize(OPS)( ref OPS ops )
     {
+        go_center();
+
         foreach ( ref op; ops )
             final switch ( op.type )
             {
@@ -39,6 +41,8 @@ class Rasterizer(WX)
                 case OP.ARC       : break;
                 case OP.ARCS      : break;
             }
+
+        flush();
     }
 
     void go_center()
@@ -52,6 +56,11 @@ class Rasterizer(WX)
     }
 
     void point_at( ref PointAt!WX op )
+    {
+        //
+    }
+
+    void flush()
     {
         //
     }
@@ -59,29 +68,45 @@ class Rasterizer(WX)
 
 version(XCB):
 import xcb.xcb;
+import vf.platforms.xcb.types : to_px;
 class XCBRasterizer(WX) : Rasterizer!(WX)
 {
     xcb_connection_t* c;
     xcb_drawable_t    drawable;
     xcb_gcontext_t    gc;
+    PX                cur;
+
+    this( Window window, Foreground foreground )
+    {
+        this.c        = platform.c;
+        this.drawable = window;
+        this.gc       = foreground;
+    }
 
     override
     void go_center()
     {
-        //
+        // cur = windows.size / 2
     }
 
     override
     void go( ref Go!WX op )
     {
-        //
+        cur = op.wx.to_px;
     }
 
     override
     void point_at( ref PointAt!WX op )
     {
-        xcb_point_t[1] points = xcb_point_t( wx.x >> 16, wx.y >> 16 );
+        auto px = op.wx.to_px;
+        xcb_point_t[1] points = xcb_point_t( px.x, px.y );
 
         xcb_poly_point( c, XCB_COORD_MODE_PREVIOUS, drawable, gc, /*points_len*/ 1, points.ptr );
+    }
+
+    override
+    void flush()
+    {
+        xcb_flush( c );
     }
 }
