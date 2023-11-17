@@ -6,6 +6,7 @@ import xcb.xcb;
 import vf.base.rasterizer      : BaseRasterizer;
 import vf.platform             : Platform;
 import vf.platforms.xcb.types  : uint32_t;
+import vf.base.drawable        : DrawAble;
 
 //alias PX = Device.PX;
 //alias PX = Window.PX;
@@ -15,7 +16,6 @@ import vf.platforms.xcb.types  : uint32_t;
 
 class XCBRasterizer(Window,Event,EventType,WX) : BaseRasterizer!(Event,EventType,WX)
 {
-    import vf.base.drawable : DrawAble;
     alias TDrawAble = DrawAble!(Event,EventType,WX);
     alias PX        = Window.PX;
 

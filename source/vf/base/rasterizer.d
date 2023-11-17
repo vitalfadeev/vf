@@ -1,11 +1,11 @@
 module vf.base.rasterizer;
 
 import vf.base.drawable : OP;
+import vf.base.drawable : DrawAble;
 
 
 class BaseRasterizer(Event,EventType,WX)
 {
-    import vf.base.drawable : DrawAble;
     alias TDrawAble = DrawAble!(Event,EventType,WX);
 
     void rasterize(OPS)( ref OPS ops )
