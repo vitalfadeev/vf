@@ -24,7 +24,7 @@ alias uint16_t = ushort;
 alias PX = vf.base.px.PX!(X,Y);
 
 //
-import vf.wx : WX;
+import vf.platforms.xcb.wx : WX;
 PX to_px( WX wx )
 {
     // Fixed -> short
