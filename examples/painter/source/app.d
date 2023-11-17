@@ -68,21 +68,8 @@ class WorldWindow(World,Rasterizer,Event,EVENT_TYPE) : Window
         show();
     }
 
-    version(XCB)
     override
-    void sense( Event* event, EVENT_TYPE event_type ) 
-    {
-        import xcb.xproto : XCB_EXPOSE;
-        if ( event_type == XCB_EXPOSE )
-            on_XCB_EXPOSE( event, event_type );
-        //auto_route_event!( this, event, event_type );
-        //import std.stdio : writeln;
-        //writeln( "cur: ", this );
-    }
-
-    version(XCB)
-    override
-    void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
+    void draw( Event* event, EVENT_TYPE event_type ) 
     {
         world.draw();
         world.to_raster( cast(BaseRasterizer!WX)rasterizer );

@@ -28,6 +28,12 @@ class BaseWindow(Event,EVENT_TYPE)
     }
 
 
+    void draw( Event* event, EVENT_TYPE event_type ) 
+    {
+        //
+    }
+
+
     //// private
     //void _create_window(ARGS...)( ARGS args )
     //{

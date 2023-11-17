@@ -87,7 +87,13 @@ class XCBWindow : TBaseOSWindow
         free( reply );
 
         return PX( w, h );
-   }
+    }
+
+    override
+    void draw( Event* event, EVENT_TYPE event_type ) 
+    {
+        //
+    }
 
 
     // private
@@ -149,6 +155,8 @@ class XCBWindow : TBaseOSWindow
 
         auto expose = event.expose;
         auto c      = Platform.instance.c;
+
+        draw( event, event_type );
 
         //OSRasterAble!WX os_rasterable = new XCBRasterAble!WX();
         //world.to_raster( os_rasterable );
