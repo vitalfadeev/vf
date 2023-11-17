@@ -6,7 +6,7 @@ import xcb.xcb;
 import vf.base.drawable       : OP;
 import vf.base.drawable       : Go, PointAt;
 import vf.base.rasterizer     : BaseRasterizer;
-import vf.platforms.xcb.types : to_px;
+import vf.platforms.xcb.wx_px : to_px;
 import vf.platform            : platform;
 import vf.platforms.xcb.types : uint32_t;
 

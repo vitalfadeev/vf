@@ -5,7 +5,7 @@ import xcb.xcb;
 import vf.platform            : platform;
 import vf.base.oswindow       : BaseOSWindow;
 import vf.platforms.xcb.event : Event, EVENT_TYPE;
-import vf.platforms.xcb.types : PX;
+import vf.platforms.xcb.px    : PX;
 import vf.platforms.xcb.types : uint16_t;
 
 alias TBaseOSWindow = BaseOSWindow!(xcb_window_t,Event,EVENT_TYPE);

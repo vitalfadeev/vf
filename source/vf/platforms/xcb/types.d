@@ -4,7 +4,7 @@ version(XCB):
 import std.traits;
 import xcb.xcb;
 public import vf.base.types;
-import vf.base.px : BasePX;
+import vf.platforms.xcb.px : PX;
 import vf.traits;
 import vf.platforms.xcb.event : Event, EVENT_TYPE;
 
@@ -19,18 +19,6 @@ alias H       = Y;
 // for XCB functions
 alias uint32_t = uint;
 alias uint16_t = ushort;
-
-//
-alias PX = BasePX!(X,Y);
-
-//
-import vf.platforms.xcb.wx : WX;
-PX to_px( WX wx )
-{
-    // Fixed -> short
-    return PX( wx.x.a >> 16, wx.y.a >> 16 );
-}
-
 
 //
 class XCBException : Exception
