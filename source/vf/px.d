@@ -1,7 +1,7 @@
 module vf.px;
 
 version(XCB)
-public import vf.platforms.xcb.px : PX;
+public import vf.platforms.xcb.px;
 
 struct PX__
 {
