@@ -32,16 +32,6 @@ struct PX
 }
 
 //
-PX to_px( WX wx )
-{
-    PX px;
-    px.x = wx.x;
-    px.y = wx.y;
-    return px;
-}
-
-
-//
 class WindowsException : std.windows.syserror.WindowsException
 {
     this( string msg )

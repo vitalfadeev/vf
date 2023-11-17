@@ -69,8 +69,8 @@ class WorldWindow(World,Event,EventType) : Window
     override
     void draw( Event* event, EventType event_type ) 
     {
-        import vf.base.rasterizer  : BaseRasterizer;
-        import vf.platforms.xcb.wx : WX;
+        import vf.base.rasterizer : BaseRasterizer;
+        import vf.wx              : WX;
         world.draw();  // ops ~= Line()
         world.to_raster( cast(BaseRasterizer!WX)rasterizer );  // ops -> window
     }
