@@ -67,14 +67,20 @@ import vf.element : Element;
 //}
 
 
-import xcb.xcb                : XCB_EVENT_MASK_BUTTON_PRESS;
-import vf.platforms.xcb.event : Event, EventType;
-import vf.platforms.xcb.wx    : WX;
-import vf.platforms.xcb.px    : PX;
+import xcb.xcb                 : XCB_EVENT_MASK_BUTTON_PRESS;
+import vf.platforms.xcb.event  : Event, EventType;
+import vf.platforms.xcb.wx     : WX;
+import vf.platforms.xcb.window : Window;
 
-WX to_wx( PX px )
+class MouseDevice
 {
-    return WX( px.x, px.y );
+    alias SX = Window.PX;
+}
+alias SX = MouseDevice.SX;
+
+WX to_wx( SX sx )
+{
+    return WX( sx.x, sx.y );
 }
 
 class Button : Element
@@ -110,12 +116,6 @@ class Button : Element
         //}
 
         //alias SX = Device.SX;
-        class MouseDevice
-        {
-            alias SX = PX;
-        }
-        alias SX = MouseDevice.SX;
-
         SX sx = SX( event.button_press.event_x, event.button_press.event_y );
         WX wx = sx.to_wx;
         
