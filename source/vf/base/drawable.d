@@ -233,31 +233,6 @@ struct Op(WX)
         point_at = b;
     }
 
-    Tuple!(WX,"a",WX,"b") calc_size() { 
-        final
-        switch ( type )
-        {
-            case OP._         : break;
-            case OP.GO_CENTER : break;
-            case OP.GO        : break;
-            case OP.POINT     : break;
-            case OP.POINTAT   : point_at.calc_size(); break;
-            case OP.POINTS    : break;
-            case OP.LINE      : break;
-            case OP.LINES     : break;
-            case OP.TRIANGLE  : break;
-            case OP.TRIANGLES : break;
-            case OP.QUAD      : break;
-            case OP.QUADS     : break;
-            case OP.CIRCLE    : break;
-            case OP.CIRCLES   : break;
-            case OP.ARC       : break;
-            case OP.ARCS      : break;
-        }
-
-        return Tuple!(WX,"a",WX,"b")( WX(), WX() ); 
-    };
-
     void apply( M matrix ) {}
 }
 
@@ -291,12 +266,6 @@ struct PointAt(WX)
     this( WX wx )
     {
         this.wx = wx;
-    }
-
-    Tuple!(WX,"a",WX,"b") calc_size()
-    {
-        import std.typecons : tuple;
-        return tuple!("a","b")(WX(),wx);
     }
 }
 
@@ -351,17 +320,36 @@ struct Ops(WX)
 
 struct CalcSize(WX)
 {
-    WX cur;
-
     auto go(Ops)( ref Ops ops )
     {
         import std.typecons : tuple;
 
+        WX cur;
         WX a;  // min
         WX b;  // max
 
         foreach ( ref op; ops )
-            UPD_MIN_MAX( op.calc_size, a, b );
+            final switch ( op.type )
+            {
+                case OP._         : break;
+                case OP.GO_CENTER : cur = WX(); break;
+                case OP.GO        : break;
+                case OP.POINT     : break;
+                case OP.POINTAT   : UPD_MIN_MAX( cur + op.point_at.wx, a, b ); break;
+                case OP.POINTS    : break;
+                case OP.LINE      : break;
+                case OP.LINES     : break;
+                case OP.TRIANGLE  : break;
+                case OP.TRIANGLES : break;
+                case OP.QUAD      : break;
+                case OP.QUADS     : break;
+                case OP.CIRCLE    : break;
+                case OP.CIRCLES   : break;
+                case OP.ARC       : break;
+                case OP.ARCS      : break;
+            }
+
+            //UPD_MIN_MAX( op.calc_size, a, b );
 
         return tuple!("a","b")( a, b );
     }
@@ -369,6 +357,7 @@ struct CalcSize(WX)
 
 
 void UPD_MIN_MAX(T,WX)( T size, ref WX a, ref WX b )
+    if ( !is( T == WX ) )
 {
     // min
     if ( size.a.x < a.x )
@@ -383,6 +372,23 @@ void UPD_MIN_MAX(T,WX)( T size, ref WX a, ref WX b )
 
     if ( size.b.y > b.y )
         b.y = size.b.y;
+}
+
+void UPD_MIN_MAX(WX)( WX wx, ref WX a, ref WX b )
+{
+    // min
+    if ( wx.x < a.x )
+        a.x = wx.x;
+
+    if ( wx.y < a.y )
+        a.y = wx.y;
+
+    // max
+    if ( wx.x > b.x )
+        b.x = wx.x;
+
+    if ( wx.y > b.y )
+        b.y = wx.y;
 }
 
 

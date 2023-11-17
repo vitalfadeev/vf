@@ -14,6 +14,11 @@ struct WX
     TBaseWX _super;
     alias _super this;
 
+    this( Fixed x, Fixed y )
+    {
+        _super = TBaseWX( x, y );
+    }
+
     this( int x, int y )
     {
         _super = TBaseWX( Fixed(x,0), Fixed(y,0) );
@@ -33,6 +38,11 @@ struct WX
     {
         x += b.x;
         y += b.y;
+    }
+
+    WX opBinary( string op : "+" )( WX b )
+    {
+        return WX( x + b.x, y + b.y );
     }
 }
 
