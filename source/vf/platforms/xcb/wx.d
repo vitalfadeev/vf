@@ -8,17 +8,19 @@ struct WX
     import std.typecons  : Tuple;
     import vf.base.fixed : Fixed;
 
-    BaseWX!( Fixed, Fixed ) _super;
+    alias TBaseWX = BaseWX!( Fixed, Fixed );
+
+    TBaseWX _super;
     alias _super this;
 
     this( int x, int y )
     {
-        _super = BaseWX!(Fixed,Fixed)( Fixed(x,0), Fixed(y,0) );
+        _super = TBaseWX( Fixed(x,0), Fixed(y,0) );
     }
 
     this( Tuple!(Fixed, "x", Fixed, "y") t )
     {
-        _super = BaseWX!(Fixed,Fixed)( t.x, t.y );
+        _super = TBaseWX( t.x, t.y );
     }
 
     void opOpAssign( string op : "+" )( WX b )
