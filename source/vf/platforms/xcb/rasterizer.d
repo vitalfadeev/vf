@@ -27,7 +27,7 @@ class XCBRasterizer(Window,WX) : BaseRasterizer!(WX)
     PX                cur;
     PX                window_size;
 
-    this(Window)( Window window )
+    this( Window window )
     {
         this.c           = Platform.instance.c;
         this.drawable    = window.hwnd;
