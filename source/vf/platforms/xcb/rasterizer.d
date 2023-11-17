@@ -7,7 +7,6 @@ import vf.base.drawable        : OP;
 import vf.base.drawable        : Go, PointAt;
 import vf.base.rasterizer      : BaseRasterizer;
 import vf.platform             : Platform;
-//import vf.platforms.xcb.window : Window;
 import vf.platforms.xcb.types  : uint32_t;
 
 //alias PX = Device.PX;
@@ -55,13 +54,13 @@ class XCBRasterizer(Window,WX) : BaseRasterizer!(WX)
     override
     void go( ref Go!WX op )
     {
-        cur = to_px( op.wx );
+        cur = op.wx.to_px!(PX,WX);
     }
 
     override
     void point_at( ref PointAt!WX op )
     {
-        auto px = cur + to_px( op.wx );
+        auto px = cur + op.wx.to_px!(PX,WX);
         import std.stdio : writeln;
         writeln(px);
 
@@ -82,13 +81,11 @@ class XCBRasterizer(Window,WX) : BaseRasterizer!(WX)
     {
         xcb_flush( c );
     }
-
-
-    static
-    PX to_px( WX wx )
-    {
-        // Fixed -> short
-        return PX( wx.x.a >> 16, wx.y.a >> 16 );
-    }
 }
 
+
+PX to_px(PX,WX)( WX wx )
+{
+    // Fixed -> short
+    return PX( wx.x.a >> 16, wx.y.a >> 16 );
+}
