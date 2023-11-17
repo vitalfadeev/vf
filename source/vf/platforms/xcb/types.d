@@ -4,7 +4,7 @@ version(XCB):
 import std.traits;
 import xcb.xcb;
 public import vf.base.types;
-import vf.base.px;
+import vf.base.px : BasePX;
 import vf.traits;
 import vf.platforms.xcb.event : Event, EVENT_TYPE;
 
@@ -21,7 +21,7 @@ alias uint32_t = uint;
 alias uint16_t = ushort;
 
 //
-alias PX = vf.base.px.PX!(X,Y);
+alias PX = BasePX!(X,Y);
 
 //
 import vf.platforms.xcb.wx : WX;

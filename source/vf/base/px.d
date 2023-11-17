@@ -2,33 +2,35 @@ module vf.base.px;
 
 
 // Coordinates in Raster
-struct PX(X,Y)
+struct BasePX(X,Y)
 {
+    alias TBasePX = BasePX!(X,Y);
+
     X x;  // or vector!(xy)
     Y y;  //
 
-    PX opBinary(string op:"-")( PX b )
+    TBasePX opBinary(string op:"-")( PX b )
     {
         import std.conv : to;
         return 
-            PX( 
+            TBasePX( 
                 (x - b.x).to!X, 
                 (y - b.y).to!Y
             );
     }
 
-    PX opBinary(string op:"+")( PX b )
+    TBasePX opBinary(string op:"+")( TBasePX b )
     {
         import std.conv : to;
         return 
-            PX( 
+            TBasePX( 
                 (x + b.x).to!X, 
                 (y + b.y).to!Y
             );
     }
 
-    PX opBinary(string op:"/")( int b )
+    TBasePX opBinary(string op:"/")( int b )
     {
-        return PX( x/b, y/b );
+        return TBasePX( x/b, y/b );
     }
 }
