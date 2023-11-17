@@ -3,8 +3,6 @@ module vf.platforms.xcb.rasterizer;
 
 version(XCB):
 import xcb.xcb;
-import vf.base.drawable        : OP;
-//import vf.base.drawable        : Go, PointAt;
 import vf.base.rasterizer      : BaseRasterizer;
 import vf.platform             : Platform;
 import vf.platforms.xcb.types  : uint32_t;
@@ -17,7 +15,9 @@ import vf.platforms.xcb.types  : uint32_t;
 
 class XCBRasterizer(Window,Event,EventType,WX) : BaseRasterizer!(Event,EventType,WX)
 {
-    alias PX = Window.PX;
+    import vf.base.drawable : DrawAble;
+    alias TDrawAble = DrawAble!(Event,EventType,WX);
+    alias PX        = Window.PX;
 
     xcb_connection_t* c;
     xcb_drawable_t    drawable;
@@ -51,8 +51,6 @@ class XCBRasterizer(Window,Event,EventType,WX) : BaseRasterizer!(Event,EventType
         writeln( "cur: ", cur );
     }
 
-    import vf.base.drawable : DrawAble;
-    alias TDrawAble = DrawAble!(Event,EventType,WX);
     override
     void go( ref TDrawAble.Op.Go op )
     {

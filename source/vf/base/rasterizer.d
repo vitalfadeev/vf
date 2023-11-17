@@ -5,6 +5,9 @@ import vf.base.drawable : OP;
 
 class BaseRasterizer(Event,EventType,WX)
 {
+    import vf.base.drawable : DrawAble;
+    alias TDrawAble = DrawAble!(Event,EventType,WX);
+
     void rasterize(OPS)( ref OPS ops )
     {
         go_center();
@@ -38,8 +41,6 @@ class BaseRasterizer(Event,EventType,WX)
         //
     }
 
-    import vf.base.drawable : DrawAble;
-    alias TDrawAble = DrawAble!(Event,EventType,WX);
     void go( ref TDrawAble.Op.Go op )
     {
         //
