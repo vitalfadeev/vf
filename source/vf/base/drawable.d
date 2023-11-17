@@ -241,7 +241,7 @@ struct Op(WX)
             case OP.GO_CENTER : break;
             case OP.GO        : break;
             case OP.POINT     : break;
-            case OP.POINTAT   : break;
+            case OP.POINTAT   : point_at.calc_size(); break;
             case OP.POINTS    : break;
             case OP.LINE      : break;
             case OP.LINES     : break;
@@ -292,6 +292,12 @@ struct PointAt(WX)
     {
         this.wx = wx;
     }
+
+    Tuple!(WX,"a",WX,"b") calc_size()
+    {
+        import std.typecons : tuple;
+        return tuple!("a","b")(WX(),wx);
+    }
 }
 
 struct Points(WX)
@@ -332,21 +338,32 @@ struct Ops(WX)
 
     auto calc_size()
     {
-        import std.typecons : tuple;
-
-        WX a;  // min
-        WX b;  // max
-
-        foreach ( ref op; arr )
-            UPD_MIN_MAX( op.calc_size, a, b );
-
-        return tuple!("a","b")( a, b );
+        return CalcSize!(WX)().go( arr );
     }    
 
     void apply(M)( M matrix )
     {
         foreach ( ref op; arr )
             op.apply( matrix );
+    }
+}
+
+
+struct CalcSize(WX)
+{
+    WX cur;
+
+    auto go(Ops)( ref Ops ops )
+    {
+        import std.typecons : tuple;
+
+        WX a;  // min
+        WX b;  // max
+
+        foreach ( ref op; ops )
+            UPD_MIN_MAX( op.calc_size, a, b );
+
+        return tuple!("a","b")( a, b );
     }
 }
 
