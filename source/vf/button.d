@@ -115,11 +115,13 @@ class Button : Element
         //    uint8_t         same_screen;
         //}
 
-        //alias SX = Device.SX;
-        SX sx = SX( event.button_press.event_x, event.button_press.event_y );
-        WX wx = sx.to_wx;
-        
-        auto element = select_at( wx );
+        auto element = 
+            select_at( 
+                SX( 
+                    event.button_press.event_x, 
+                    event.button_press.event_y 
+                ).to_wx 
+            );
         
         import std.stdio : writeln;
         writeln( element );
