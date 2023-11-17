@@ -20,6 +20,8 @@ class XCBWindow : TBaseOSWindow
     alias PX         = XCBPX;
     alias Rasterizer = XCBRasterizer!(T,WX);
 
+    Rasterizer rasterizer;
+
     this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
     {
         _create_window( size, name, cmd_show );
@@ -149,7 +151,7 @@ class XCBWindow : TBaseOSWindow
 
     void _create_renderer()
     {
-        //XCBRasterAble!WX os_rasterable = new XCBRasterAble!WX();
+        rasterizer = new Rasterizer( this );
     }
 
     //
