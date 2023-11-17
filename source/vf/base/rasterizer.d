@@ -1,16 +1,11 @@
 module vf.base.rasterizer;
 
-import vf.base.drawable   : OP;
-import vf.base.drawable   : Go, PointAt;
+import vf.base.drawable : OP;
+import vf.base.drawable : Go, PointAt;
 
 
 class BaseRasterizer(WX)
 {
-    this(WINDOW)( WINDOW window )
-    {
-        //
-    }
-
     void rasterize(OPS)( ref OPS ops )
     {
         go_center();

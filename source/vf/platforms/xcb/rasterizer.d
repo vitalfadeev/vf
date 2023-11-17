@@ -26,9 +26,11 @@ class XCBRasterizer(Window,WX) : BaseRasterizer!(WX)
     xcb_gcontext_t    gc;
     PX                cur;
     PX                window_size;
+    Window            window;
 
     this( Window window )
     {
+        this.window      = window;
         this.c           = Platform.instance.c;
         this.drawable    = window.hwnd;
         this.window_size = window.size;
@@ -40,10 +42,8 @@ class XCBRasterizer(Window,WX) : BaseRasterizer!(WX)
 
         xcb_create_gc( c, foreground, drawable, values_mask, values.ptr );
 
-        this.gc       = foreground;
-
-        super( window );
-    }
+        this.gc = foreground;
+   }
 
     override
     void go_center()
