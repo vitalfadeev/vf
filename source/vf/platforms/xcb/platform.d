@@ -15,8 +15,8 @@ struct Platform
 
     void do_init()
     {
-        import vf.platforms.xcb.types : XCBException;
-        import core.stdc.stdlib       : getenv;
+        import vf.platforms.xcb.exception : XCBException;
+        import core.stdc.stdlib           : getenv;
 
         // Open the connection to the X server 
         c = xcb_connect( getenv( "DISPLAY" ), null );

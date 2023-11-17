@@ -7,7 +7,7 @@ import vf;
 void main()
 {
     import core.runtime : Runtime;
-    import vf : show_throwable;
+    import vf.exception : show_throwable;
 
     try
     {
