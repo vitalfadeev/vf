@@ -2,14 +2,14 @@ module vf.base.enterable;
 
 import vf.base.rasterable : RasterAble;
 import vf.base.rasterizer : BaseRasterizer;
-import vf.base.sizeable   : SizeAble, SIZE_MODE, Size;
+import vf.base.sizeable   : SizeAble, SIZE_MODE;
 
 
 class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
 {
     alias TEnterAble = typeof(this);
 
-    Enter!(TEnterAble,Event,EventType,WX) enter;
+    Enter enter;
 
     void each( void delegate( typeof(this) e ) dg )
     {
@@ -24,6 +24,15 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
             dg( e );
             e.each_recursive( dg );
         }
+    }
+
+    override
+    void calc_size()
+    {
+        super.calc_size();
+
+        foreach ( ref e; enter )
+            e.calc_size( this );
     }
 
     void calc_size( TEnterAble outer )
@@ -47,7 +56,7 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
     }
 
     override
-    void to_raster( BaseRasterizer!WX rasterizer )
+    void to_raster( BaseRasterizer!(Event,EventType,WX) rasterizer )
     {
         super.to_raster( rasterizer );
 
@@ -63,37 +72,37 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
         foreach ( ref e; enter )
             e.draw();
     }
-}
 
 
-struct Enter(T,Event,EventType,WX)
-{
-    T[] arr;
-    alias arr this;
-
-    auto size( T outer )
+    struct Enter
     {
-        Size!WX _size;
+        TEnterAble[] arr;
+        alias arr this;
 
-        foreach ( e; arr )
+        auto size( TEnterAble outer )
         {
-            e.calc_size( outer );
-            _size.grow( e.size );
+            Size _size;
+
+            foreach ( e; arr )
+            {
+                e.calc_size( outer );
+                _size.grow( e.size );
+            }
+
+            return _size;
         }
 
-        return _size;
-    }
+
+        void sense( Event* event, EventType event_type )
+        {
+            foreach ( ref o; arr )
+                o.sense( event, event_type );
+        }
 
 
-    void sense( Event* event, EventType event_type )
-    {
-        foreach ( ref o; arr )
-            o.sense( event, event_type );
-    }
-
-
-    void put( T o )
-    {
-        arr ~= o;
+        void put( TEnterAble o )
+        {
+            arr ~= o;
+        }
     }
 }

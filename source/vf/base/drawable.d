@@ -7,21 +7,130 @@ import vf.base.types    : M16;
 
 class DrawAble(Event,EventType,WX) : Sensable!(Event,EventType)
 {
-    Ops!WX ops;
+    Ops ops;
 
     void point( int x, int y )
     {
-        ops ~= Op!WX( Point!WX() );
+        ops ~= Op( Op.Point() );
     }
 
     void point_at( int x, int y )
     {
-        ops ~= Op!WX( PointAt!WX( WX( x, y ) ) );
+        ops ~= Op( Op.PointAt( WX( x, y ) ) );
     }
 
     void draw()
     {
         ops.length = 0;
+    }
+
+    //
+    struct Ops
+    {
+        Op[] arr;
+        alias arr this;
+
+        void opOpAssign(string op:"~", T)( T b )
+            if ( 
+                is( T == Op.GoCenter ) || 
+                is( T == Op.Go ) || 
+                is( T == Op.Point ) || 
+                is( T == Op.Line )
+            )
+        {
+            arr ~= Op(b);
+        }
+
+        auto calc_size()
+        {
+            return CalcSize!(WX)().go( arr );
+        }    
+
+        void apply(M)( M matrix )
+        {
+            foreach ( ref op; arr )
+                op.apply( matrix );
+        }
+    }
+
+    struct Op
+    {
+        union 
+        {
+            OP          type;
+            GoCenter    go_center;
+            Go          go;
+            Point       point;
+            PointAt     point_at;
+            Points      points;
+            Line        line;
+            Lines       lines;
+        }
+
+        this( Point b )
+        {
+            point = b;
+        }
+
+        this( PointAt b )
+        {
+            point_at = b;
+        }
+
+
+        struct GoCenter
+        {
+            OP type = OP.GO_CENTER;
+        }
+
+
+        struct Go
+        {
+            OP type = OP.GO;
+            WX wx;
+        }
+
+        struct Point
+        {
+            OP type = OP.POINT;
+        }
+
+        struct PointAt
+        {
+            OP type = OP.POINTAT;
+            WX wx;
+
+            this( WX wx )
+            {
+                this.wx = wx;
+            }
+        }
+
+        struct Points
+        {
+            OP   type = OP.POINTS;
+            WX[] wxs;
+        }
+
+        struct Line
+        {
+            OP type = OP.LINE;
+            WX wx;
+        }
+
+        struct Lines
+        {
+            OP   type = OP.LINES;
+            WX[] wxs;
+        }
+
+        void apply( M matrix ) {}
+
+    }
+
+    struct M
+    {
+
     }
 }
 
@@ -209,113 +318,8 @@ enum OP : M16  // 16-bit because AH:GROUP, AL:ACTION
 }
 
 
-struct Op(WX)
-{
-    union 
-    {
-        OP          type;
-        GoCenter    go_center;
-        Go!WX       go;
-        Point!WX    point;
-        PointAt!WX  point_at;
-        Points!WX   points;
-        Line!WX     line;
-        Lines!WX    lines;
-    }
-
-    this( Point!WX b )
-    {
-        point = b;
-    }
-
-    this( PointAt!WX b )
-    {
-        point_at = b;
-    }
-
-    void apply( M matrix ) {}
-}
-
-struct M
-{
-
-}
-
-struct GoCenter
-{
-    OP type = OP.GO_CENTER;
-}
 
 
-struct Go(WX)
-{
-    OP type = OP.GO;
-    WX wx;
-}
-
-struct Point(WX)
-{
-    OP type = OP.POINT;
-}
-
-struct PointAt(WX)
-{
-    OP type = OP.POINTAT;
-    WX wx;
-
-    this( WX wx )
-    {
-        this.wx = wx;
-    }
-}
-
-struct Points(WX)
-{
-    OP   type = OP.POINTS;
-    WX[] wxs;
-}
-
-struct Line(WX)
-{
-    OP type = OP.LINE;
-    WX wx;
-}
-
-struct Lines(WX)
-{
-    OP   type = OP.LINES;
-    WX[] wxs;
-}
-
-
-//
-struct Ops(WX)
-{
-    Op!WX[] arr;
-    alias arr this;
-
-    void opOpAssign(string op:"~", T)( T b )
-        if ( 
-            is( T == GoCenter ) || 
-            is( T == Go!WX ) || 
-            is( T == Point!WX ) || 
-            is( T == Line!WX )
-        )
-    {
-        arr ~= Op(b);
-    }
-
-    auto calc_size()
-    {
-        return CalcSize!(WX)().go( arr );
-    }    
-
-    void apply(M)( M matrix )
-    {
-        foreach ( ref op; arr )
-            op.apply( matrix );
-    }
-}
 
 
 struct CalcSize(WX)

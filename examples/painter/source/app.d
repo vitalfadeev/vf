@@ -72,7 +72,9 @@ class WorldWindow(World,Event,EventType) : Window
         import vf.base.rasterizer : BaseRasterizer;
         import vf.wx              : WX;
         world.draw();  // ops ~= Line()
-        world.to_raster( cast(BaseRasterizer!WX)rasterizer );  // ops -> window
+        world.calc_size();
+        world.layout();
+        world.to_raster( cast(BaseRasterizer!(Event,EventType,WX))rasterizer );  // ops -> window
     }
 }
 

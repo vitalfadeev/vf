@@ -18,7 +18,7 @@ class XCBWindow : TBaseOSWindow
 {
     alias T          = typeof(this);
     alias PX         = XCBPX;
-    alias Rasterizer = XCBRasterizer!(T,WX);
+    alias Rasterizer = XCBRasterizer!(T,Event,EventType,WX);
 
     Rasterizer rasterizer;
 

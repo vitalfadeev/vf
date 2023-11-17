@@ -1,18 +1,16 @@
 module vf.base.transformable;
 
-import vf.base.drawable   : Ops;
 import vf.base.sizeable   : SizeAble;
 import vf.base.types      : M16;
 import vf.base.fixed      : Fixed;
-import vf.base.sizeable   : Size;
 
 
 class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
 {
     Fixed   rotate;
     Fixed   scale;
-    Ops!WX  transformed_ops;
-    Size!WX transformed_size;
+    Ops     transformed_ops;
+    Size    transformed_size;
 
     void transform()
     {
@@ -23,11 +21,11 @@ class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
     override
     void calc_size()
     {
-        transformed_size = Size!WX( transformed_ops.calc_size() );
+        transformed_size = Size( transformed_ops.calc_size() );
     }
     
     override
-    ref Size!WX size()
+    ref Size size()
     {
         return transformed_size;
     }

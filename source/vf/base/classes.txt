@@ -5,7 +5,7 @@ EnterAble
 RasterAble
   to_raster
 LayoutAble
-  pos
+  pos  layout
 TransformAble
   transform  rotate  scale
 SizeAble

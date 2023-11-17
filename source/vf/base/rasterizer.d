@@ -1,10 +1,9 @@
 module vf.base.rasterizer;
 
 import vf.base.drawable : OP;
-import vf.base.drawable : Go, PointAt;
 
 
-class BaseRasterizer(WX)
+class BaseRasterizer(Event,EventType,WX)
 {
     void rasterize(OPS)( ref OPS ops )
     {
@@ -39,12 +38,14 @@ class BaseRasterizer(WX)
         //
     }
 
-    void go( ref Go!WX op )
+    import vf.base.drawable : DrawAble;
+    alias TDrawAble = DrawAble!(Event,EventType,WX);
+    void go( ref TDrawAble.Op.Go op )
     {
         //
     }
 
-    void point_at( ref PointAt!WX op )
+    void point_at( ref TDrawAble.Op.PointAt op )
     {
         //
     }
