@@ -54,6 +54,8 @@ class XCBRasterizer(WX,PX) : BaseRasterizer!(WX)
     void point_at( ref PointAt!WX op )
     {
         auto px = cur + op.wx.to_px;
+        import std.stdio : writeln;
+        writeln(px);
 
         // px -> xcb_point_t
         static

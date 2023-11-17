@@ -75,9 +75,10 @@ class Button : Element
     override
     void draw()
     {
-        point_at( -1, -1 ); point_at( 0, -1 ); point_at( +1, -1 );
-        point_at( -1,  0 ); point_at( 0,  0 ); point_at( +1,  0 );
-        point_at( -1, +1 ); point_at( 0, +1 ); point_at( +1, +1 );            
+        ops.length = 0;
+        point_at( -10, -10 ); point_at( 0, -10 ); point_at( +10, -10 );
+        point_at( -10,   0 ); point_at( 0,   0 ); point_at( +10,   0 );
+        point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );
     }
 
     void to_pressed()

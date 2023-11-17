@@ -16,14 +16,12 @@ class DrawAble(Event,EVENT_TYPE,WX) : Sensable!(Event,EVENT_TYPE)
 
     void point_at( int x, int y )
     {
-        import std.stdio : writeln;
-        writeln( __FUNCTION__ );
         ops ~= Op!WX( PointAt!WX( WX( x, y ) ) );
     }
 
     void draw()
     {
-        //
+        ops.length = 0;
     }
 }
 

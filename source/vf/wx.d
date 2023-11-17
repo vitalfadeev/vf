@@ -4,30 +4,28 @@ import vf.base.wx;
 
 
 version(XCB)
+struct WX
 {
     import std.typecons  : Tuple;
     import vf.base.fixed : Fixed;
 
-    struct WX
+    vf.base.wx.WX!( Fixed, Fixed ) _super;
+    alias _super this;
+
+    this( int x, int y )
     {
-        vf.base.wx.WX!( Fixed, Fixed ) _super;
-        alias _super this;
+        _super = vf.base.wx.WX!(Fixed,Fixed)( Fixed(x,0), Fixed(y,0) );
+    }
 
-        this( int x, int y )
-        {
-            _super = vf.base.wx.WX!(Fixed,Fixed)( Fixed(x), Fixed(y) );
-        }
+    this( Tuple!(Fixed, "x", Fixed, "y") t )
+    {
+        _super = vf.base.wx.WX!(Fixed,Fixed)( t.x, t.y );
+    }
 
-        this( Tuple!(Fixed, "x", Fixed, "y") t )
-        {
-            _super = vf.base.wx.WX!(Fixed,Fixed)( t.x, t.y );
-        }
-
-        void opOpAssign( string op : "+" )( WX b )
-        {
-            x += b.x;
-            y += b.y;
-        }
+    void opOpAssign( string op : "+" )( WX b )
+    {
+        x += b.x;
+        y += b.y;
     }
 }
 

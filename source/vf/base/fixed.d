@@ -6,6 +6,11 @@ struct Fixed
     int a;
     alias a this;
 
+    this( int _int, int _fraq )
+    {
+        a = _int << 16  + _fraq;
+    }
+
     int opCmp( Fixed b )
     {
         if ( a == b.a )

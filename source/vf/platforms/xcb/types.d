@@ -27,10 +27,8 @@ alias PX = vf.base.px.PX!(X,Y);
 import vf.wx : WX;
 PX to_px( WX wx )
 {
-    PX px;
-    px.x = wx.x.a >> 16;  // Fixed -> short
-    px.y = wx.y.a >> 16;
-    return px;
+    // Fixed -> short
+    return PX( wx.x.a >> 16, wx.y.a >> 16 );
 }
 
 

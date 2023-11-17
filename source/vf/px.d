@@ -1,7 +1,9 @@
 module vf.px;
 
+version(XCB)
+public import vf.platforms.xcb.types : PX;
 
-struct PX
+struct PX__
 {
     version(DEFAULT)
     {

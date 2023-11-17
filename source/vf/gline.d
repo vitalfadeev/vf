@@ -207,11 +207,11 @@ union Op
 
 
 
-PX to_px( WX wx )
-{
-    version(DEFAULT)
-        return PX( wx.x & 0xFFFF0000 >> 16, wx.y & 0xFFFF0000 >> 16 );
-    version(VECTOR)
-        return PX( wx.x & 0xFFFF0000      | wx.y & 0xFFFF0000 >> 16 );
-}
+//PX to_px__( WX wx )
+//{
+//    version(DEFAULT)
+//        return PX( wx.x & 0xFFFF0000 >> 16, wx.y & 0xFFFF0000 >> 16 );
+//    version(VECTOR)
+//        return PX( wx.x & 0xFFFF0000      | wx.y & 0xFFFF0000 >> 16 );
+//}
 
