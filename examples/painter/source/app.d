@@ -331,3 +331,30 @@ auto tee(T)( T This )
 //  sense
 //   case event_type == e
 //    enter ~= new class_state()
+
+// Colors
+//  1 Dominant     // lightest <-
+//  2 SubDominant  //            |
+//  3 Third        // +1         |
+//  4 Neitral      //  0         |
+//  5 Disabled     // -1         |
+//  6 Shadow       //            |
+//  7 Background   // darkest    |
+//                               |
+// Button                        |
+//   draw                        |
+//     color 1  -----------------
+
+// Fonts
+//  1 Button Text
+//  2 
+//  3
+//  4 
+//  5 Window Title
+
+// Sizes
+//  1 200x100  Button size
+//  2
+//  3
+//  4
+//  5
