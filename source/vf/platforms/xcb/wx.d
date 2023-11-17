@@ -19,6 +19,11 @@ struct WX
         _super = TBaseWX( Fixed(x,0), Fixed(y,0) );
     }
 
+    this( short x, short y )
+    {
+        _super = TBaseWX( Fixed(x,0), Fixed(y,0) );
+    }
+
     this( Tuple!(Fixed, "x", Fixed, "y") t )
     {
         _super = TBaseWX( t.x, t.y );

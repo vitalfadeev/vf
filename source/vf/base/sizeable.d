@@ -60,4 +60,12 @@ struct Size(WX)
         if ( other.b.y > b.y )
             b.y = other.b.y;
     }
+
+     auto opBinaryRight( string op : "in" )( WX wx )
+     {
+        return (
+            a.x <= wx.x && a.y <= wx.y &&
+            b.x >= wx.x && b.y >= wx.y
+        );
+     }
 }

@@ -3,15 +3,24 @@ module vf.platforms.xcb.rasterizer;
 
 version(XCB):
 import xcb.xcb;
-import vf.base.drawable       : OP;
-import vf.base.drawable       : Go, PointAt;
-import vf.base.rasterizer     : BaseRasterizer;
-import vf.platform            : Platform;
-import vf.platforms.xcb.wx_px : to_px;
-import vf.platforms.xcb.types : uint32_t;
+import vf.base.drawable        : OP;
+import vf.base.drawable        : Go, PointAt;
+import vf.base.rasterizer      : BaseRasterizer;
+import vf.platform             : Platform;
+//import vf.platforms.xcb.window : Window;
+import vf.platforms.xcb.wx_px  : to_px;
+import vf.platforms.xcb.types  : uint32_t;
 
-class XCBRasterizer(WX,PX) : BaseRasterizer!(WX)
+//alias PX = Device.PX;
+//alias PX = Window.PX;
+
+//alias Rasterizer = Device.Rasterizer;
+//alias Rasterizer = Window.Rasterizer;
+
+class XCBRasterizer(Window,WX) : BaseRasterizer!(WX)
 {
+    alias PX = Window.PX;
+
     xcb_connection_t* c;
     xcb_drawable_t    drawable;
     xcb_gcontext_t    gc;

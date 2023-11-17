@@ -54,7 +54,7 @@ class MyGame : Game
 }
 
 
-class WorldWindow(World,Rasterizer,Event,EventType) : Window
+class WorldWindow(World,Event,EventType) : Window
 {
     World      world;
     Rasterizer rasterizer;  // builtin
@@ -71,17 +71,15 @@ class WorldWindow(World,Rasterizer,Event,EventType) : Window
     override
     void draw( Event* event, EventType event_type ) 
     {
+        import vf.base.rasterizer  : BaseRasterizer;
+        import vf.platforms.xcb.wx : WX;
         world.draw();  // ops ~= Line()
         world.to_raster( cast(BaseRasterizer!WX)rasterizer );  // ops -> window
     }
 }
 
 
-import vf.base.rasterizer          : BaseRasterizer;
-import vf.platforms.xcb.rasterizer : XCBRasterizer;
-import vf.platforms.xcb.wx         : WX;
-import vf.platforms.xcb.px         : PX;
-class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EventType)
+class MyWindow : WorldWindow!(World,Event,EventType)
 {
     this(ARGS...)( World world, ARGS args )
     {

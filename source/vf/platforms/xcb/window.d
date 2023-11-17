@@ -2,11 +2,13 @@ module vf.platforms.xcb.window;
 
 version(XCB):
 import xcb.xcb;
-import vf.platform            : Platform;
-import vf.base.oswindow       : BaseOSWindow;
-import vf.platforms.xcb.event : Event, EventType;
-import vf.platforms.xcb.px    : PX;
-import vf.platforms.xcb.types : uint16_t;
+import vf.platform                 : Platform;
+import vf.base.oswindow            : BaseOSWindow;
+import vf.platforms.xcb.event      : Event, EventType;
+import vf.platforms.xcb.px         : XCBPX=PX;
+import vf.platforms.xcb.types      : uint16_t;
+import vf.platforms.xcb.rasterizer : XCBRasterizer;
+import vf.platforms.xcb.wx         : WX;
 
 alias TBaseOSWindow = BaseOSWindow!(xcb_window_t,Event,EventType);
 alias Window = XCBWindow;
@@ -14,7 +16,9 @@ alias Window = XCBWindow;
 
 class XCBWindow : TBaseOSWindow
 {
-    alias T = typeof(this);
+    alias T          = typeof(this);
+    alias PX         = XCBPX;
+    alias Rasterizer = XCBRasterizer!(T,WX);
 
     this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
     {

@@ -67,10 +67,71 @@ import vf.element : Element;
 //}
 
 
+import xcb.xcb                : XCB_EVENT_MASK_BUTTON_PRESS;
+import vf.platforms.xcb.event : Event, EventType;
+import vf.platforms.xcb.wx    : WX;
+import vf.platforms.xcb.px    : PX;
+
+WX to_wx( PX px )
+{
+    return WX( px.x, px.y );
+}
+
 class Button : Element
 {
     mixin auto_methods!(typeof(this));  // sense()
     //mixin auto_cap!(typeof(this));
+
+    override
+    void sense( Event* event, EventType event_type )
+    {
+        if ( event_type == XCB_EVENT_MASK_BUTTON_PRESS )
+        {
+            on_XCB_EVENT_MASK_BUTTON_PRESS( event, event_type );
+        }
+    }
+
+    void on_XCB_EVENT_MASK_BUTTON_PRESS( Event* event, EventType event_type )
+    {
+        //struct xcb_button_press_event_t {
+        //    uint8_t         response_type; /* The type of the event, here it is xcb_button_press_event_t or xcb_button_release_event_t */
+        //    xcb_button_t    detail;
+        //    uint16_t        sequence;
+        //    xcb_timestamp_t time;          /* Time, in milliseconds the event took place in */
+        //    xcb_window_t    root;
+        //    xcb_window_t    event;
+        //    xcb_window_t    child;
+        //    int16_t         root_x;
+        //    int16_t         root_y;
+        //    int16_t         event_x;       /* The x coordinate where the mouse has been pressed in the window */
+        //    int16_t         event_y;       /* The y coordinate where the mouse has been pressed in the window */
+        //    uint16_t        state;         /* A mask of the buttons (or keys) during the event */
+        //    uint8_t         same_screen;
+        //}
+
+        //alias SX = Device.SX;
+        class MouseDevice
+        {
+            alias SX = PX;
+        }
+        alias SX = MouseDevice.SX;
+
+        SX sx = SX( event.button_press.event_x, event.button_press.event_y );
+        WX wx = sx.to_wx;
+        
+        auto element = select_at( wx );
+        
+        import std.stdio : writeln;
+        writeln( element );
+    }
+
+    auto select_at( WX wx )
+    {
+        if ( wx in size )
+            return this;
+
+        return null;
+    }
 
     override
     void draw()

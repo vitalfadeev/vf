@@ -233,7 +233,7 @@ struct Op(WX)
         point_at = b;
     }
 
-    Tuple!(WX, "a", WX, "b") calc_size() { 
+    Tuple!(WX,"a",WX,"b") calc_size() { 
         final
         switch ( type )
         {
@@ -255,7 +255,7 @@ struct Op(WX)
             case OP.ARCS      : break;
         }
 
-        return Tuple!(WX, "a", WX, "b")( WX(), WX() ); 
+        return Tuple!(WX,"a",WX,"b")( WX(), WX() ); 
     };
 
     void apply( M matrix ) {}
