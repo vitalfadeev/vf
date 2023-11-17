@@ -1,9 +1,9 @@
 module vf.base.sensable;
 
 
-class Sensable(Event,EVENT_TYPE)
+class Sensable(Event,EventType)
 {
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     {
         //
     }

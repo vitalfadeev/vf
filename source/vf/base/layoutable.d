@@ -3,7 +3,7 @@ module vf.base.layoutable;
 import vf.base.transformable : TransformAble;
 
 
-class LayoutAble(Event,EVENT_TYPE,WX) : TransformAble!(Event,EVENT_TYPE,WX)
+class LayoutAble(Event,EventType,WX) : TransformAble!(Event,EventType,WX)
 {
     Pos!WX pos;
 }

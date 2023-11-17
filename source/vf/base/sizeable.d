@@ -11,7 +11,7 @@ enum SIZE_MODE
     INTER = 3,
 }
 
-class SizeAble(Event,EVENT_TYPE,WX) : DrawAble!(Event,EVENT_TYPE,WX)
+class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
 {
     Size!WX   _size;
     SIZE_MODE size_mode;
@@ -28,7 +28,7 @@ class SizeAble(Event,EVENT_TYPE,WX) : DrawAble!(Event,EVENT_TYPE,WX)
 }
 
 //
-void update_sizes(Event,EVENT_TYPE,WX)( LayoutAble!(Event,EVENT_TYPE,WX) e )
+void update_sizes(Event,EventType,WX)( LayoutAble!(Event,EventType,WX) e )
 {
     e.each_recursive( &e.calc_size );
 }

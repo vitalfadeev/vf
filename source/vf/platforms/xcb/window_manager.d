@@ -4,12 +4,12 @@ version(XCB):
 import xcb.xcb;
 import vf.base.window_manager  : BaseWindowManager;
 import vf.base.window          : BaseWindow;
-import vf.platforms.xcb.event  : Event, EVENT_TYPE;
+import vf.platforms.xcb.event  : Event, EventType;
 import vf.platforms.xcb.window : XCBWindow;
 
-alias TBaseWindow = BaseWindow!(Event,EVENT_TYPE);
+alias TBaseWindow = BaseWindow!(Event,EventType);
 alias TBaseWindowManager = 
-    BaseWindowManager!(TBaseWindow,xcb_window_t,Event,EVENT_TYPE);
+    BaseWindowManager!(TBaseWindow,xcb_window_t,Event,EventType);
 
 // hwnd -> window
 // window -> hwnd
@@ -17,7 +17,7 @@ class WindowManager : TBaseWindowManager
 {
     //
     override
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     //    this         event             event_type
     //    RDI          RSI               RDX
     {

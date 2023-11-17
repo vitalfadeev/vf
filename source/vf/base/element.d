@@ -10,13 +10,13 @@ import vf.base.enterable : EnterAble;
 //import vf.base.drawable   : DrawAble;
 
 
-alias Element(Event,EVENT_TYPE,WX) = EnterAble!(Event,EVENT_TYPE,WX);
+alias Element(Event,EventType,WX) = EnterAble!(Event,EventType,WX);
 
 
-//class Element(Event,EVENT_TYPE) : ISensAble!(Event,EVENT_TYPE), IEnterAble
+//class Element(Event,EventType) : ISensAble!(Event,EventType), IEnterAble
 //{
 //    // ISensAble
-//    void sense( Event* event, EVENT_TYPE event_type )
+//    void sense( Event* event, EventType event_type )
 //    //      this       event             event_type         
 //    //      RDI        RSI               RDX
 //    {
@@ -24,7 +24,7 @@ alias Element(Event,EVENT_TYPE,WX) = EnterAble!(Event,EVENT_TYPE,WX);
 //    }
 
 //    // IEnterAble
-//    EnterElement!(Event,EVENT_TYPE) enter;
+//    EnterElement!(Event,EventType) enter;
 
 //    // IDrawAble
 //    DrawAble drawable;
@@ -34,9 +34,9 @@ alias Element(Event,EVENT_TYPE,WX) = EnterAble!(Event,EVENT_TYPE,WX);
 //}
 
 
-//struct EnterElement(Event,EVENT_TYPE)
+//struct EnterElement(Event,EventType)
 //{
-//    alias E = Element!(Event,EVENT_TYPE);
+//    alias E = Element!(Event,EventType);
 
 //    E[] _range;
 
@@ -69,7 +69,7 @@ alias Element(Event,EVENT_TYPE,WX) = EnterAble!(Event,EVENT_TYPE,WX);
 //        return result;
 //    }
 
-//    void sense( Event* event, EVENT_TYPE event_type )
+//    void sense( Event* event, EventType event_type )
 //    {
 //        foreach( ref e; _range )
 //            e.sense( event, event_type );

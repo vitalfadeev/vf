@@ -12,7 +12,7 @@ interface IEnterAble
 //interface IEnterRange : InputRange!ISensAble
 //{
 //    void put( ISensAble o );
-//    void sense( Event* event, EVENT_TYPE event_type );
+//    void sense( Event* event, EventType event_type );
 //    //      this       event             event_type         
 //    //      RDI        RSI               RDX
 //    ISensAble[] find( ISensAble sensor );
@@ -31,17 +31,17 @@ interface IHitAble
 }
 
 //
-interface ISensAble(Event,EVENT_TYPE)
+interface ISensAble(Event,EventType)
 {
-    void sense( Event* event, EVENT_TYPE event_type );
+    void sense( Event* event, EventType event_type );
     //      this       event             event_type         
     //      RDI        RSI               RDX
 }
 
 //
-interface IWindow(Event,EVENT_TYPE)
+interface IWindow(Event,EventType)
 {
-    void sense( Event* event, EVENT_TYPE event_type );
+    void sense( Event* event, EventType event_type );
     //      this       event             event_type         
     //      RDI        RSI               RDX
 }

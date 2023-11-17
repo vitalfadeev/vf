@@ -72,9 +72,9 @@ struct Event
     }
 }
 
-alias EVENT_TYPE = uint;
+alias EventType = uint;
 
-enum : EVENT_TYPE {
+enum : EventType {
     XCB_DRAW      = 0x80_01,
     XCB_GAME_OVER = 0x80_02,
 }
@@ -82,7 +82,7 @@ enum : EVENT_TYPE {
 import vf.interfaces : IDrawAble;
 struct DrawEvent
 {
-    EVENT_TYPE type = XCB_DRAW;
+    EventType type = XCB_DRAW;
     IDrawAble drawable;
 }
 

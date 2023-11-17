@@ -4,7 +4,7 @@ import vf.base.layoutable : LayoutAble;
 import vf.base.rasterizer : BaseRasterizer;
 
 
-class RasterAble(Event,EVENT_TYPE,WX) : LayoutAble!(Event,EVENT_TYPE,WX)
+class RasterAble(Event,EventType,WX) : LayoutAble!(Event,EventType,WX)
 {
     // drawable -> rasterable
     void to_raster( BaseRasterizer!WX rasterizer )

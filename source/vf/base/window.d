@@ -1,7 +1,7 @@
 module vf.base.window;
 
 
-class BaseWindow(Event,EVENT_TYPE)
+class BaseWindow(Event,EventType)
 {
     //this(ARGS...)( ARGS args )
     //{
@@ -9,7 +9,7 @@ class BaseWindow(Event,EVENT_TYPE)
     //    _create_renderer();
     //}
 
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     //    this         event             event_type
     //    RDI          RSI               RDX
     {
@@ -28,7 +28,7 @@ class BaseWindow(Event,EVENT_TYPE)
     }
 
 
-    void draw( Event* event, EVENT_TYPE event_type ) 
+    void draw( Event* event, EventType event_type ) 
     {
         //
     }

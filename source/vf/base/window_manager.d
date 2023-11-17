@@ -3,12 +3,12 @@ module vf.base.window_manager;
 
 // hwnd -> window
 // window -> hwnd
-class BaseWindowManager(V,O,Event,EVENT_TYPE)
+class BaseWindowManager(V,O,Event,EventType)
 {
     static O[] _os_windows;
     static V[] _vf_windows;
 
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     //    this         event             event_type
     //    RDI          RSI               RDX
     {

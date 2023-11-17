@@ -6,4 +6,4 @@ module vf.base.event;
 //    //
 //}
 
-//alias EVENT_TYPE = uint;
+//alias EventType = uint;

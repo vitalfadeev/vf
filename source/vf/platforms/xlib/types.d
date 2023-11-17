@@ -94,7 +94,7 @@ void show_throwable( Throwable o )
     catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
 }
 
-alias EVENT_TYPE = ubyte;
+alias EventType = ubyte;
 
 struct Event
 {

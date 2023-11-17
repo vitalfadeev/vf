@@ -3,9 +3,9 @@ module vf.base.game;
 import vf.base.sensors : Sensors;
 
 
-class BaseGame(Queue,Event,EVENT_TYPE)
+class BaseGame(Queue,Event,EventType)
 {
-    Sensors!(Event,EVENT_TYPE) sensors;
+    Sensors!(Event,EventType) sensors;
     Queue   queue;
     int     result;
 

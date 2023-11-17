@@ -5,12 +5,12 @@ import vf.base.sensable;
 
 version(Windows)
 {
-    import vf.platforms.windows.event : Event, EVENT_TYPE;
-    alias Sensable = vf.base.sensable.Sensable!(Event,EVENT_TYPE);
+    import vf.platforms.windows.event : Event, EventType;
+    alias Sensable = vf.base.sensable.Sensable!(Event,EventType);
 }
 
 version(XCB)
 {
-    import vf.platforms.xcb.event : Event, EVENT_TYPE;
-    alias Sensable = vf.base.sensable.Sensable!(Event,EVENT_TYPE);
+    import vf.platforms.xcb.event : Event, EventType;
+    alias Sensable = vf.base.sensable.Sensable!(Event,EventType);
 }

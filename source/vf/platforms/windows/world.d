@@ -5,13 +5,13 @@ import core.sys.windows.windows;
 import vf.base.world   : BaseWorld;
 import vf.interfaces   : ISensAble, IEnterAble;
 import vf.auto_methods : auto_methods;
-import vf.event        : Event, EVENT_TYPE;
+import vf.event        : Event, EventType;
 
 
-class World : BaseWorld!(Event,EVENT_TYPE)
+class World : BaseWorld!(Event,EventType)
 {
     override
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     //      this       event             event_type
     //      RDI        RSI               RDX
     {

@@ -54,7 +54,7 @@ class MyGame : Game
 }
 
 
-class WorldWindow(World,Rasterizer,Event,EVENT_TYPE) : Window
+class WorldWindow(World,Rasterizer,Event,EventType) : Window
 {
     World      world;
     Rasterizer rasterizer;  // builtin
@@ -69,10 +69,10 @@ class WorldWindow(World,Rasterizer,Event,EVENT_TYPE) : Window
     }
 
     override
-    void draw( Event* event, EVENT_TYPE event_type ) 
+    void draw( Event* event, EventType event_type ) 
     {
-        world.draw();
-        world.to_raster( cast(BaseRasterizer!WX)rasterizer );
+        world.draw();  // ops ~= Line()
+        world.to_raster( cast(BaseRasterizer!WX)rasterizer );  // ops -> window
     }
 }
 
@@ -81,7 +81,7 @@ import vf.base.rasterizer          : BaseRasterizer;
 import vf.platforms.xcb.rasterizer : XCBRasterizer;
 import vf.platforms.xcb.wx         : WX;
 import vf.platforms.xcb.px         : PX;
-class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
+class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EventType)
 {
     this(ARGS...)( World world, ARGS args )
     {
@@ -89,7 +89,7 @@ class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
     }
 
     //override
-    //void sense( Event* event, EVENT_TYPE event_type ) 
+    //void sense( Event* event, EventType event_type ) 
     //{
     //    auto_route_event!( this, event, event_type );
     //}
@@ -97,7 +97,7 @@ class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
     // Linux
     //version(XCB)
     //override
-    //void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
+    //void on_XCB_EXPOSE( Event* event, EventType event_type ) 
     //{
         // world
         //   get all draws
@@ -182,7 +182,7 @@ class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
 
     // Windows
 	version(WINDOWS_NATIVE)
-    ERESULT on_WM_PAINT( Event* event, EVENT_TYPE event_type ) 
+    ERESULT on_WM_PAINT( Event* event, EventType event_type ) 
     {
         try {
             HDC         hdc;
@@ -263,13 +263,13 @@ class MyWindow : WorldWindow!(World,XCBRasterizer!(WX,PX),Event,EVENT_TYPE)
     }
 
     version(WINDOWS)
-    void on_WM_LBUTTONDOWN( Event* event, EVENT_TYPE event_type )
+    void on_WM_LBUTTONDOWN( Event* event, EventType event_type )
     {
     	MessageBox( NULL, "on_WM_LBUTTONDOWN", "info", MB_OK | MB_ICONEXCLAMATION );
     }
 
     version(WINDOWS)
-    void on_WM_DESTROY( Event* event, EVENT_TYPE event_type )
+    void on_WM_DESTROY( Event* event, EventType event_type )
     {
         MyGame.instance.quit();
     }

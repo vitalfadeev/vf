@@ -8,5 +8,5 @@ alias M32     = uint;
 alias M64     = ulong;
 alias MPTR    = void*;
 
-alias SENSOR(Event,EVENT_TYPE)  = void delegate(              Event* event, EVENT_TYPE event_type );
-alias SENSORF(Event,EVENT_TYPE) = void function( void* _this, Event* event, EVENT_TYPE event_type );
+alias SENSOR(Event,EventType)  = void delegate(              Event* event, EventType event_type );
+alias SENSORF(Event,EventType) = void function( void* _this, Event* event, EventType event_type );

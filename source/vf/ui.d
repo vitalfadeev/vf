@@ -315,13 +315,13 @@ module vf.ui;
 version(beta):
 class SensAble
 {
-    void sense( Event* event, EVENT_TYPE event_type ) {}
+    void sense( Event* event, EventType event_type ) {}
 }
 
 class DrawAble : SensAble
 {
     override
-    void sense( Event* event, EVENT_TYPE event_type ) {
+    void sense( Event* event, EventType event_type ) {
         switch ( event_type )
         {
             case ON_DRAW : on_draw(); break;
@@ -337,7 +337,7 @@ class DrawAble : SensAble
 class ClickAble : DrawAble
 {
     override
-    void sense( Event* event, EVENT_TYPE event_type ) {
+    void sense( Event* event, EventType event_type ) {
         switch ( event_type )
         {
             case ON_CLICK : on_click(); break;

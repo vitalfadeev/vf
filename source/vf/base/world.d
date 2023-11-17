@@ -3,10 +3,10 @@ module vf.base.world;
 import vf.base.element : Element;
 
 
-class BaseWorld(Event,EVENT_TYPE,WX) : Element!(Event,EVENT_TYPE,WX)
+class BaseWorld(Event,EventType,WX) : Element!(Event,EventType,WX)
 {
     override
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     //      this       event             event_type
     //      RDI        RSI               RDX
     {
@@ -19,12 +19,12 @@ class BaseWorld(Event,EVENT_TYPE,WX) : Element!(Event,EVENT_TYPE,WX)
             to_one( event, event_type );
     }
 
-    void to_all( Event* event, EVENT_TYPE event_type )
+    void to_all( Event* event, EventType event_type )
     {
         enter.sense( event, event_type );
     }
 
-    void to_one( Event* event, EVENT_TYPE event_type )
+    void to_one( Event* event, EventType event_type )
     {
         import std.algorithm.searching : find;
         import std.range : takeOne;

@@ -2,7 +2,7 @@ module vf.platforms.windows.window;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.event          : Event, EVENT_TYPE;
+import vf.event          : Event, EventType;
 import vf.interfaces     : IWindow, ISensAble;
 import vf.types          : PX, WindowsException, W, H;
 
@@ -21,7 +21,7 @@ class Window : IWindow, ISensAble
     }
 
     //
-    void sense( Event* event, EVENT_TYPE event_type ) 
+    void sense( Event* event, EventType event_type ) 
     {
         DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );
     }
@@ -124,7 +124,7 @@ extern( Windows )
 nothrow
 LRESULT window_proc_sense( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
 {   //              RCX,       RDX,            R8,            R9
-    import vf.event          : Event, EVENT_TYPE;
+    import vf.event          : Event, EventType;
     import vf.types          : show_throwable;
     import vf.window_manager : WindowManager;
 

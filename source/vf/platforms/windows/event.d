@@ -25,14 +25,14 @@ struct Event
     }
 }
 
-alias EVENT_TYPE = typeof(MSG.message);
+alias EventType = typeof(MSG.message);
 
 enum VF_DRAW = WM_PAINT;
 
 import vf.interfaces : IDrawAble;
 struct DrawEvent
 {
-    EVENT_TYPE type = VF_DRAW;
+    EventType type = VF_DRAW;
     IDrawAble drawable;
 }
 

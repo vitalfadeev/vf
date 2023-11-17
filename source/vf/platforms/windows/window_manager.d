@@ -4,14 +4,14 @@ version(WINDOWS):
 import core.sys.windows.windows;
 public import vf.base.window_manager;
 import vf.interfaces              : ISensAble, IWindow;
-import vf.platforms.windows.event : Event, EVENT_TYPE;
+import vf.platforms.windows.event : Event, EventType;
 
 // hwnd -> window
 // window -> hwnd
 class WindowManager : vf.base.window_manager.WindowManager!(IWindow,HWND), ISensAble
 {
 
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     //    this         event             event_type
     //    RDI          RSI               RDX
     {

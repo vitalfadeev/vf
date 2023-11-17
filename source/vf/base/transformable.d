@@ -7,7 +7,7 @@ import vf.base.fixed      : Fixed;
 import vf.base.sizeable   : Size;
 
 
-class TransformAble(Event,EVENT_TYPE,WX) : SizeAble!(Event,EVENT_TYPE,WX)
+class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
 {
     Fixed   rotate;
     Fixed   scale;

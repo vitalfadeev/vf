@@ -4,11 +4,11 @@ version(XCB):
 import xcb.xcb;
 import vf.platform            : Platform;
 import vf.base.oswindow       : BaseOSWindow;
-import vf.platforms.xcb.event : Event, EVENT_TYPE;
+import vf.platforms.xcb.event : Event, EventType;
 import vf.platforms.xcb.px    : PX;
 import vf.platforms.xcb.types : uint16_t;
 
-alias TBaseOSWindow = BaseOSWindow!(xcb_window_t,Event,EVENT_TYPE);
+alias TBaseOSWindow = BaseOSWindow!(xcb_window_t,Event,EventType);
 alias Window = XCBWindow;
 
 
@@ -25,7 +25,7 @@ class XCBWindow : TBaseOSWindow
 
     //
     override
-    void sense( Event* event, EVENT_TYPE event_type ) 
+    void sense( Event* event, EventType event_type ) 
     //      this       event             event_type
     //      RDI        RSI               RDX
     {
@@ -90,7 +90,7 @@ class XCBWindow : TBaseOSWindow
     }
 
     override
-    void draw( Event* event, EVENT_TYPE event_type ) 
+    void draw( Event* event, EventType event_type ) 
     {
         //
     }
@@ -149,7 +149,7 @@ class XCBWindow : TBaseOSWindow
     }
 
     //
-    void on_XCB_EXPOSE( Event* event, EVENT_TYPE event_type ) 
+    void on_XCB_EXPOSE( Event* event, EventType event_type ) 
     {
         draw( event, event_type );
     }

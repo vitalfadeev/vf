@@ -5,11 +5,11 @@ import vf.base.rasterizer : BaseRasterizer;
 import vf.base.sizeable   : SizeAble, SIZE_MODE, Size;
 
 
-class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
+class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
 {
     alias TEnterAble = typeof(this);
 
-    Enter!(TEnterAble,Event,EVENT_TYPE,WX) enter;
+    Enter!(TEnterAble,Event,EventType,WX) enter;
 
     void each( void delegate( typeof(this) e ) dg )
     {
@@ -38,7 +38,7 @@ class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
     }
 
     override
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     {
         super.sense( event, event_type );
 
@@ -66,7 +66,7 @@ class EnterAble(Event,EVENT_TYPE,WX) : RasterAble!(Event,EVENT_TYPE,WX)
 }
 
 
-struct Enter(T,Event,EVENT_TYPE,WX)
+struct Enter(T,Event,EventType,WX)
 {
     T[] arr;
     alias arr this;
@@ -85,7 +85,7 @@ struct Enter(T,Event,EVENT_TYPE,WX)
     }
 
 
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     {
         foreach ( ref o; arr )
             o.sense( event, event_type );

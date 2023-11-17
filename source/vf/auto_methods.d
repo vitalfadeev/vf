@@ -3,11 +3,11 @@ module vf.auto_methods;
 
 mixin template auto_sensable(T)
 {
-    import vf.event : Event, EVENT_TYPE;
+    import vf.event : Event, EventType;
     import vf       : VF_DRAW;
 
     override
-    void sense( Event* event, EVENT_TYPE event_type )
+    void sense( Event* event, EventType event_type )
     {
         mixin( _auto_sensable!( T, event, event_type )() );
 
@@ -61,7 +61,7 @@ mixin template auto_drawable(T)
 
     //mixin DrawAble!T;
 
-    void on_VF_DRAW( Event* event, EVENT_TYPE event_type )
+    void on_VF_DRAW( Event* event, EventType event_type )
     {
         draw();
     }

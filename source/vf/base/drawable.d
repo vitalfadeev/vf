@@ -5,7 +5,7 @@ import vf.base.sensable : Sensable;
 import vf.base.types    : M16;
 
 
-class DrawAble(Event,EVENT_TYPE,WX) : Sensable!(Event,EVENT_TYPE)
+class DrawAble(Event,EventType,WX) : Sensable!(Event,EventType)
 {
     Ops!WX ops;
 
