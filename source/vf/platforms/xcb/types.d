@@ -3,8 +3,11 @@ module vf.platforms.xcb.types;
 version(XCB):
 import xcb.xcb;
 public import vf.base.types;
-import vf.platforms.xcb.px    : PX;
-import vf.platforms.xcb.event : Event, EVENT_TYPE;
+import vf.platforms.xcb.px     : PX;
+import vf.platforms.xcb.event  : Event, EVENT_TYPE;
+// for XCB functions
+public import core.stdc.stdint : uint32_t;
+public import core.stdc.stdint : uint16_t;
 
 
 alias SENSOR  = void delegate(              Event* event, EVENT_TYPE event_type );
@@ -14,20 +17,12 @@ alias Y       = short;
 alias W       = short;
 alias H       = short;
 
-// for XCB functions
-alias uint32_t = uint;
-alias uint16_t = ushort;
-
 //
 class XCBException : Exception
 {
-    import xcb.xcb;
-
     this( string s, xcb_connection_t* c )
     {
-        auto err = xcb_connection_has_error( c );
-
-        super( xcb_error_to_string( err ) );
+        super( xcb_error_to_string( xcb_connection_has_error( c ) ) );
     }
 }
 
@@ -62,5 +57,5 @@ void show_throwable( Throwable o )
     catch (Throwable o) { 
         import core.stdc.stdio : printf;
         printf( "show_throwable: o.toString error" );
-}   
+    }   
 }
