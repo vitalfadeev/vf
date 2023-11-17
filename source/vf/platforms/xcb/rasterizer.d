@@ -6,7 +6,7 @@ import xcb.xcb;
 import vf.base.drawable       : OP;
 import vf.base.drawable       : Go, PointAt;
 import vf.base.rasterizer     : BaseRasterizer;
-import vf.platform            : platform;
+import vf.platform            : Platform;
 import vf.platforms.xcb.wx_px : to_px;
 import vf.platforms.xcb.types : uint32_t;
 
@@ -20,11 +20,11 @@ class XCBRasterizer(WX,PX) : BaseRasterizer!(WX)
 
     this(Window)( Window window )
     {
-        this.c           = platform.c;
+        this.c           = Platform.instance.c;
         this.drawable    = window.hwnd;
         this.window_size = window.size;
 
-        xcb_screen_t*   screen      = platform.screen;
+        xcb_screen_t*   screen      = Platform.instance.screen;
         xcb_gcontext_t  foreground  = xcb_generate_id( c );
         uint32_t        values_mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
         uint32_t[2]     values      = [ screen.white_pixel, 0 ];

@@ -2,7 +2,7 @@ module vf.platforms.xcb.window;
 
 version(XCB):
 import xcb.xcb;
-import vf.platform            : platform;
+import vf.platform            : Platform;
 import vf.base.oswindow       : BaseOSWindow;
 import vf.platforms.xcb.event : Event, EVENT_TYPE;
 import vf.platforms.xcb.px    : PX;
@@ -62,7 +62,7 @@ class XCBWindow : TBaseOSWindow
         xcb_get_geometry_cookie_t cookie;
         xcb_get_geometry_reply_t* reply;
 
-        cookie = xcb_get_geometry( platform.c, hwnd );
+        cookie = xcb_get_geometry( Platform.instance.c, hwnd );
 
        //struct xcb_get_geometry_reply_t {
        //    uint8_t      response_type;
@@ -78,7 +78,7 @@ class XCBWindow : TBaseOSWindow
        //    uint8_t      pad0[2];
        //}
 
-        if ( ( reply = xcb_get_geometry_reply( platform.c, cookie, null ) ) !is null ) {
+        if ( ( reply = xcb_get_geometry_reply( Platform.instance.c, cookie, null ) ) !is null ) {
             w = reply.width;
             h = reply.height;
         }
@@ -93,7 +93,7 @@ class XCBWindow : TBaseOSWindow
     // private
     void _create_window( PX size, string name, int cmd_show )
     {
-        auto c = platform.c;
+        auto c = Platform.instance.c;
 
         // Ask for our window's Id
         hwnd = xcb_generate_id( c );
@@ -103,7 +103,7 @@ class XCBWindow : TBaseOSWindow
             XCB_CW_BACK_PIXEL | 
             XCB_CW_EVENT_MASK;
         immutable(uint[]) value_list = [
-            platform.screen.black_pixel,
+            Platform.instance.screen.black_pixel,
             XCB_EVENT_MASK_EXPOSURE |
             XCB_EVENT_MASK_KEY_PRESS |
             XCB_EVENT_MASK_KEY_RELEASE |
@@ -120,12 +120,12 @@ class XCBWindow : TBaseOSWindow
             c,                             // Connection          
             XCB_COPY_FROM_PARENT,          // depth (same as root)
             hwnd,                          // window Id           
-            platform.screen.root,          // parent window       
+            Platform.instance.screen.root, // parent window       
             0, 0,                          // x, y                
             size.x, size.y,                // width, height       
             10,                            // border_width        
             XCB_WINDOW_CLASS_INPUT_OUTPUT, // class               
-            platform.screen.root_visual,   // visual              
+            Platform.instance.screen.root_visual, // visual              
             value_mask,                    // masks
             value_list.ptr                 // not used yet 
         );                                 
@@ -148,7 +148,7 @@ class XCBWindow : TBaseOSWindow
         import vf.platforms.xcb.types : uint32_t;
 
         auto expose = event.expose;
-        auto c      = platform.c;
+        auto c      = Platform.instance.c;
 
         //OSRasterAble!WX os_rasterable = new XCBRasterAble!WX();
         //world.to_raster( os_rasterable );

@@ -3,7 +3,7 @@ module vf.platforms.xcb.queue;
 version(XCB):
 import xcb.xcb;
 public import vf.base.queue;
-import vf.platform : platform;
+import vf.platform : Platform;
 import vf.platforms.xcb.event;
 
 
@@ -17,7 +17,7 @@ struct Queue
     {
         import core.stdc.stdlib : free;
         free( front );
-        front = cast(Event*)xcb_wait_for_event( platform.c );
+        front = cast(Event*)xcb_wait_for_event( Platform.instance.c );
     }
 
     pragma( inline, true )
@@ -26,7 +26,7 @@ struct Queue
         if ( !_started )
         {
             _started = true;
-            front = cast(Event*)xcb_wait_for_event( platform.c );
+            front = cast(Event*)xcb_wait_for_event( Platform.instance.c );
         }
 
         return ( front is null || front.is_game_over );  // XCB_DESTROY_NOTIFY

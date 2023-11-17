@@ -7,17 +7,18 @@ import vf;
 void main()
 {
     import core.runtime : Runtime;
-    import vf.exception : show_throwable;
 
-    try
-    {
+    try {
         Runtime.initialize();
 
     	MyGame.instance.go();
 
         Runtime.terminate();
     }
-    catch ( Throwable o ) { o.show_throwable; }
+    catch ( Throwable o ) { 
+        import vf.exception : show_throwable;
+        o.show_throwable; 
+    }
 }
 
 

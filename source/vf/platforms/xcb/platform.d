@@ -10,10 +10,7 @@ struct Platform
     xcb_connection_t *c;
     xcb_screen_t     *screen;
 
-    @disable 
-    this();
-
-    void do_init()
+    void go_init()
     {
         import vf.platforms.xcb.exception : XCBException;
         import core.stdc.stdlib           : getenv;
@@ -25,5 +22,19 @@ struct Platform
 
         // Get the first screen
         screen = xcb_setup_roots_iterator( xcb_get_setup( c ) ).data;
+    }
+
+    static
+    typeof(this)* instance()
+    {
+        static typeof(this)* _instance;
+        
+        if ( _instance is null )
+        {
+            _instance = new typeof(this);
+            _instance.go_init();
+        }
+
+        return _instance;
     }
 }

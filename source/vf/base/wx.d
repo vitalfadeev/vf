@@ -7,4 +7,3 @@ struct BaseWX(X,Y)
     X x;  // or vector!(xy)
     Y y;  //
 }
-

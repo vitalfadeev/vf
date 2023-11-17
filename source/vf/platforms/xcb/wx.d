@@ -2,6 +2,7 @@ module vf.platforms.xcb.wx;
 
 import vf.base.wx : BaseWX;
 
+
 version(XCB)
 struct WX
 {
