@@ -35,14 +35,14 @@ class XCBRasterizer(Window,WX) : BaseRasterizer!(WX)
         this.drawable    = window.hwnd;
         this.window_size = window.size;
 
-        xcb_screen_t*   screen      = Platform.instance.screen;
-        xcb_gcontext_t  foreground  = xcb_generate_id( c );
-        uint32_t        values_mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-        uint32_t[2]     values      = [ screen.white_pixel, 0 ];
+        xcb_screen_t*  screen      = Platform.instance.screen;
+        xcb_gcontext_t gc          = xcb_generate_id( c );
+        uint32_t       values_mask = XCB_GC_FOREGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+        uint32_t[2]    values      = [ screen.white_pixel, 0 ];
 
-        xcb_create_gc( c, foreground, drawable, values_mask, values.ptr );
+        xcb_create_gc( c, gc, drawable, values_mask, values.ptr );
 
-        this.gc = foreground;
+        this.gc = gc;
    }
 
     override
