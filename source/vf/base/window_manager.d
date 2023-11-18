@@ -15,7 +15,8 @@ class BaseWindowManager(V,O,Event,EventType)
     //    this         event             event_type
     //    RDI          RSI               RDX
     {
-        //
+        foreach ( window; _vf_windows )
+            window.sense( event, event_type );
     }
 
     static 

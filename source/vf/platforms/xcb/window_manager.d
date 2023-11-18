@@ -3,18 +3,19 @@ module vf.platforms.xcb.window_manager;
 version(XCB):
 import xcb.xcb;
 import vf.base.window_manager  : BaseWindowManager;
-import vf.base.window          : BaseWindow;
 import vf.platforms.xcb.event  : Event, EventType;
 import vf.platforms.xcb.window : XCBWindow;
 
-alias TBaseWindow = BaseWindow!(Event,EventType);
 alias TBaseWindowManager = 
-    BaseWindowManager!(TBaseWindow,xcb_window_t,Event,EventType);
+    BaseWindowManager!(XCBWindow,xcb_window_t,Event,EventType);
 
 // hwnd -> window
 // window -> hwnd
 class WindowManager : TBaseWindowManager
 {
+    alias THIS          = typeof(this);
+    alias WindowManager = typeof(this);
+
     //
     override
     void sense( Event* event, EventType event_type )
@@ -39,19 +40,24 @@ class WindowManager : TBaseWindowManager
                 auto os_window = event.expose.window;
                 auto i = _os_windows.countUntil( os_window );
                 if ( i != -1 )
-                {
                     _vf_windows[i].sense( event, event_type );
-                }
                 break;
             }
-            default: {
-                auto os_window = event.expose.window;
+            case XCB_KEY_PRESS: {
+                auto os_window = event.key_press.event;
                 auto i = _os_windows.countUntil( os_window );
                 if ( i != -1 )
-                {
                     _vf_windows[i].sense( event, event_type );
-                }                
+                break;
             }
+            case XCB_BUTTON_PRESS: {
+                auto os_window = event.button_press.event;
+                auto i = _os_windows.countUntil( os_window );
+                if ( i != -1 )
+                    _vf_windows[i].sense( event, event_type );
+                break;
+            }
+            default:
         }
     }
 

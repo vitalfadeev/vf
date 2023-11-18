@@ -1,18 +1,11 @@
 module vf.base.oswindow;
 
-import vf.base.window         : BaseWindow;
-import vf.base.window_manager : BaseWindowManager;
+import vf.base.window : BaseWindow;
 
 class BaseOSWindow(HWND,Event,EventType) : BaseWindow!(Event,EventType)
 {
-    alias BaseWindow = .BaseWindow!(Event,EventType);
+    alias THIS         = typeof(this);
+    alias BaseOSWindow = typeof(this);
 
     HWND hwnd;
-
-
-    this()
-    {
-        BaseWindowManager!(BaseWindow,HWND,Event,EventType)
-            .register( this, this.hwnd );
-    }
 }

@@ -2,15 +2,16 @@ module vf.platforms.xcb.window;
 
 version(XCB):
 import xcb.xcb;
-import vf.platform                 : Platform;
-import vf.base.oswindow            : BaseOSWindow;
-import vf.base.rasterable          : RasterAble;
-import vf.base.px                  : BasePX;
-import vf.platforms.xcb.event      : Event, EventType;
-import vf.platforms.xcb.types      : uint16_t;
-import vf.platforms.xcb.rasterizer : XCBRasterizer;
-import vf.platforms.xcb.types      : X,Y;
-import vf.platforms.xcb.wx         : WX;
+import vf.platform                     : Platform;
+import vf.base.oswindow                : BaseOSWindow;
+import vf.base.rasterable              : RasterAble;
+import vf.base.px                      : BasePX;
+import vf.platforms.xcb.event          : Event, EventType;
+import vf.platforms.xcb.types          : uint16_t;
+import vf.platforms.xcb.rasterizer     : XCBRasterizer;
+import vf.platforms.xcb.types          : X,Y;
+import vf.platforms.xcb.wx             : WX;
+import vf.platforms.xcb.window_manager : WindowManager;
 
 alias Window = XCBWindow;
 
@@ -30,7 +31,7 @@ class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
     {
         _create_window( size, name, cmd_show );
         _create_renderer();
-        super();  // WindowManager.register( this, hwnd )
+        WindowManager.instance.register( this, this.hwnd );
     }
 
     //

@@ -3,8 +3,8 @@ module vf.platforms.xcb.queue;
 version(XCB):
 import xcb.xcb;
 public import vf.base.queue;
-import vf.platform : Platform;
-import vf.platforms.xcb.event;
+import vf.platforms.xcb.platform : Platform;
+import vf.platforms.xcb.event    : Event, EventType;
 
 
 struct Queue
