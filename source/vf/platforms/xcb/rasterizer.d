@@ -86,5 +86,5 @@ class XCBRasterizer(Window,RasterAble) : BaseRasterizer!(RasterAble)
 PX to_px(PX,WX)( WX wx )
 {
     // Fixed -> short
-    return PX( wx.x.a >> 16, wx.y.a >> 16 );
+    return PX( wx.x.a / 2^^16, wx.y.a / 2^^16 );
 }

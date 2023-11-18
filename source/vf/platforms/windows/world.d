@@ -21,4 +21,5 @@ class World : BaseWorld!(Event,EventType,WX)
         TranslateMessage( &event.msg );
         DispatchMessage( &event.msg );
     }
+
 }

@@ -44,7 +44,7 @@ class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
 
         auto calc_size()
         {
-            return CalcSize!(WX)().go( arr );
+            return CalcSize!(WX)( arr );
         }    
 
         void apply(M)( M matrix )
@@ -320,44 +320,38 @@ enum OP : M16  // 16-bit because AH:GROUP, AL:ACTION
 
 
 
-
-
-
-struct CalcSize(WX)
+auto CalcSize(WX,Ops)( ref Ops ops )
 {
-    auto go(Ops)( ref Ops ops )
-    {
-        import std.typecons : tuple;
+    import std.typecons : tuple;
 
-        WX cur;
-        WX a;  // min
-        WX b;  // max
+    WX cur;
+    WX a;  // min
+    WX b;  // max
 
-        foreach ( ref op; ops )
-            final switch ( op.type )
-            {
-                case OP._         : break;
-                case OP.GO_CENTER : cur = WX(); break;
-                case OP.GO        : break;
-                case OP.POINT     : break;
-                case OP.POINTAT   : UPD_MIN_MAX( cur + op.point_at.wx, a, b ); break;
-                case OP.POINTS    : break;
-                case OP.LINE      : break;
-                case OP.LINES     : break;
-                case OP.TRIANGLE  : break;
-                case OP.TRIANGLES : break;
-                case OP.QUAD      : break;
-                case OP.QUADS     : break;
-                case OP.CIRCLE    : break;
-                case OP.CIRCLES   : break;
-                case OP.ARC       : break;
-                case OP.ARCS      : break;
-            }
+    foreach ( ref op; ops )
+        final switch ( op.type )
+        {
+            case OP._         : break;
+            case OP.GO_CENTER : cur = WX(); break;
+            case OP.GO        : break;
+            case OP.POINT     : break;
+            case OP.POINTAT   : UPD_MIN_MAX( cur + op.point_at.wx, a, b ); break;
+            case OP.POINTS    : break;
+            case OP.LINE      : break;
+            case OP.LINES     : break;
+            case OP.TRIANGLE  : break;
+            case OP.TRIANGLES : break;
+            case OP.QUAD      : break;
+            case OP.QUADS     : break;
+            case OP.CIRCLE    : break;
+            case OP.CIRCLES   : break;
+            case OP.ARC       : break;
+            case OP.ARCS      : break;
+        }
 
-            //UPD_MIN_MAX( op.calc_size, a, b );
+        //UPD_MIN_MAX( op.calc_size, a, b );
 
-        return tuple!("a","b")( a, b );
-    }
+    return tuple!("a","b")( a, b );
 }
 
 

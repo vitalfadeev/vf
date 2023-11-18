@@ -1,14 +1,13 @@
 module vf.platforms.xcb.wx;
 
-import vf.base.wx : BaseWX;
+import std.typecons  : Tuple;
+import vf.base.fixed : Fixed;
+import vf.base.wx    : BaseWX;
 
 
 version(XCB)
 struct WX
 {
-    import std.typecons  : Tuple;
-    import vf.base.fixed : Fixed;
-
     alias TBaseWX = BaseWX!( Fixed, Fixed );
 
     TBaseWX _super;
@@ -43,6 +42,12 @@ struct WX
     WX opBinary( string op : "+" )( WX b )
     {
         return WX( x + b.x, y + b.y );
+    }
+
+    string toString()
+    {
+        import std.format : format;
+        return format!"%s(%s,%s)"( typeof(this).stringof, x, y );
     }
 }
 

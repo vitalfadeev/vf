@@ -26,10 +26,10 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
     override
     bool hit_test( WX wx )
     {
+        import std.stdio : writeln;
+        writeln( "wx in size: ", wx, " in ", (_size + this.wx) );
         return ( wx in (_size + this.wx) );
     }
-
-
 
     //
     struct Size

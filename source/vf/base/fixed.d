@@ -8,7 +8,7 @@ struct Fixed
 
     this( int _int, int _fraq )
     {
-        a = _int << 16  + _fraq;
+        a = _int * 2^^16 + _fraq;
     }
 
     this( int _fixed )
@@ -35,7 +35,7 @@ struct Fixed
     string toString()
     {
         import std.format : format;
-        return format!"%s(%d)"( typeof(this).stringof, a>>16 );
+        return format!"%s(%d)"( typeof(this).stringof, a / 2^^16 );
     }
 }
 

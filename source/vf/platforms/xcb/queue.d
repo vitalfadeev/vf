@@ -9,15 +9,15 @@ import vf.platforms.xcb.event    : Event, EventType;
 
 struct Queue
 {
-    Event* front;  // xcb_generic_event_t* front;
-    bool   _started = false;
+    Event front;  // xcb_generic_event_t* front;
+    bool  _started = false;
 
     pragma( inline, true )
     void popFront()
     {
         import core.stdc.stdlib : free;
-        free( front );
-        front = cast(Event*)xcb_wait_for_event( Platform.instance.c );
+        free( front.generic );
+        front.generic = xcb_wait_for_event( Platform.instance.c );
     }
 
     pragma( inline, true )
@@ -26,10 +26,10 @@ struct Queue
         if ( !_started )
         {
             _started = true;
-            front = cast(Event*)xcb_wait_for_event( Platform.instance.c );
+            front.generic = xcb_wait_for_event( Platform.instance.c );
         }
 
-        return ( front is null || front.is_game_over );  // XCB_DESTROY_NOTIFY
+        return ( front.generic is null || front.is_game_over );  // XCB_DESTROY_NOTIFY
     }
 
     //alias put(T) = opOpAssign!("~", T)(T t);

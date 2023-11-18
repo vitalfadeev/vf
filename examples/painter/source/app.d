@@ -1,5 +1,6 @@
 import std.stdio;
 import vf;
+import vf.base.fixed : Fixed;
 
 //version=READ;
 //version=WRITE;
@@ -57,7 +58,7 @@ class MyGame : Game
 class WorldWindow(World,Event,EventType) : Window
 {
     World world;
-    WX    world_offset;
+    WX    world_offset = WX( Fixed(-320,0), Fixed(-240,0) );
 
     this(ARGS...)( World world, ARGS args )
     {
@@ -74,6 +75,7 @@ class WorldWindow(World,Event,EventType) : Window
     {
         event.world_offset = world_offset;
         super.sense( event, event_type );
+        //world.sense( event, event_type, world_offset );
     }
 
 
@@ -89,7 +91,7 @@ void GLine(World,Rasterizer)( World world, Rasterizer rasterizer )
 {
     world.draw();       // ops ~= Line()
     world.calc_size();  // size
-    world.layout();     // pos
+    world.layout();     // pos   // now Button at 0,0 always, World offset is 320,240
     world.to_raster( rasterizer );  // ops -> window        
 }
 

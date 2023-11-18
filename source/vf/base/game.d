@@ -12,7 +12,7 @@ class BaseGame(Queue,Event,EventType)
     void go()
     {
         foreach( ref event; queue )
-            sensors.sense( event, event.type );
+            sensors.sense( &event, event.type );
     }
 
     void quit( int quit_code=0 )

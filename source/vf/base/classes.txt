@@ -1,3 +1,7 @@
+Button
+  sense( Event* event, EventType event_type, World world, WX world_offset )
+WorldElement
+  sense( Event* event, EventType event_type, World world, WX world_offset )
 Element
   |
 EnterAble

@@ -68,20 +68,10 @@ import vf.element : Element;
 
 
 import xcb.xcb                 : XCB_EVENT_MASK_BUTTON_PRESS;
+import vf.base.fixed           : Fixed;
 import vf.platforms.xcb.event  : Event, EventType;
 import vf.platforms.xcb.wx     : WX;
-import vf.platforms.xcb.window : Window;
 
-class MouseDevice
-{
-    alias SX = Window.PX;
-}
-alias SX = MouseDevice.SX;
-
-WX to_wx( SX sx )
-{
-    return WX( sx.x, sx.y );
-}
 
 class Button : Element
 {
@@ -115,30 +105,23 @@ class Button : Element
         //    uint8_t         same_screen;
         //}
 
-        auto element = 
-            select_at( 
-                SX( 
-                    event.button_press.event_x,
-                    event.button_press.event_y
-                )
-                    .to_wx 
-                    + event.world_offset           //
-            );                                     // 
-                                                   // event.to_wx 
-                                                   //   devide.to_wx 
-                                                   //   src.to_wx 
-        
+        WX _wx = WX( Fixed(event.button_press.event_x,0),
+                    Fixed(event.button_press.event_y,0)
+                ) + event.world_offset;
+
         import std.stdio : writeln;
-        writeln( element );
-    }
+        writeln( _wx );
 
-    auto select_at( WX wx )
-    {
-
-        if ( hit_test( wx ) )
-            return this;
-
-        return null;
+        if ( hit_test( _wx ) )
+        {
+            import std.stdio : writeln;
+            writeln( this );
+        }
+        else
+        {
+            import std.stdio : writeln;
+            writeln( null );
+        }
     }
 
     override
