@@ -3,9 +3,10 @@ module vf.base.rasterizer;
 import vf.base.drawable : OP;
 
 
-class BaseRasterizer(RasterAble,Event,EventType,WX)
+class BaseRasterizer(RasterAble)
 {
-    alias DrawAble   = RasterAble;
+    alias DrawAble = RasterAble;
+    alias WX       = RasterAble.WX;
 
     void rasterize( RasterAble rasterable )
     {

@@ -13,7 +13,7 @@ import vf.platforms.xcb.types  : uint32_t;
 //alias Rasterizer = Device.Rasterizer;
 //alias Rasterizer = Window.Rasterizer;
 
-class XCBRasterizer(Window,RasterAble,Event,EventType,WX) : BaseRasterizer!(RasterAble,Event,EventType,WX)
+class XCBRasterizer(Window,RasterAble) : BaseRasterizer!(RasterAble)
 {
     alias PX       = Window.PX;
     alias Platform = .Platform;
