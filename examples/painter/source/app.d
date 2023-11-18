@@ -24,7 +24,7 @@ void main()
 
 class MyGame : Game
 {
-	alias T = typeof(this);
+	alias THIS = typeof(this);
 
     this()
     {        
@@ -73,6 +73,7 @@ class WorldWindow(World,Event,EventType) : Window
     }
 }
 
+pragma( inline, true )
 void GLine(World,Rasterizer)( World world, Rasterizer rasterizer )
 {
     world.draw();       // ops ~= Line()

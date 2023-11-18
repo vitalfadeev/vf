@@ -6,8 +6,10 @@ import vf.base.rasterizer : BaseRasterizer;
 
 class RasterAble(Event,EventType,WX) : LayoutAble!(Event,EventType,WX)
 {
+    alias RasterAble = typeof( this );
+
     // drawable -> rasterable
-    void to_raster( BaseRasterizer!(Event,EventType,WX) rasterizer )
+    void to_raster( BaseRasterizer!(RasterAble,Event,EventType,WX) rasterizer )
     {
         rasterizer.rasterize( this );
     }

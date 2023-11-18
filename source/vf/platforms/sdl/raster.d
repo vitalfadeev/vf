@@ -10,9 +10,9 @@ import vf.gfx.raster;
 
 class Raster : vf.gfx.raster.Raster!(SDL_Color,W,H)
 {
-    alias T = SDL_Color;
+    alias THIS = SDL_Color;
 
-    this( T[] pixels, W w, H h, size_t pitch, void*  current, T color )
+    this( THIS[] pixels, W w, H h, size_t pitch, void*  current, THIS color )
     {
         this.pixels  = pixels;
         this.w       = w;

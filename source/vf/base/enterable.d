@@ -7,7 +7,7 @@ import vf.base.sizeable   : SizeAble, SIZE_MODE;
 
 class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
 {
-    alias TEnterAble = typeof(this);
+    alias EnterAble = typeof(this);
 
     Enter enter;
 
@@ -35,7 +35,7 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
             e.calc_size( this );
     }
 
-    void calc_size( TEnterAble outer )
+    void calc_size( EnterAble outer )
     {
         final
         switch ( size_mode )
@@ -56,7 +56,7 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
     }
 
     override
-    void to_raster( BaseRasterizer!(Event,EventType,WX) rasterizer )
+    void to_raster( BaseRasterizer!(RasterAble,Event,EventType,WX) rasterizer )
     {
         super.to_raster( rasterizer );
 
@@ -76,10 +76,10 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
 
     struct Enter
     {
-        TEnterAble[] arr;
+        EnterAble[] arr;
         alias arr this;
 
-        auto size( TEnterAble outer )
+        auto size( EnterAble outer )
         {
             Size _size;
 
@@ -100,7 +100,7 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
         }
 
 
-        void put( TEnterAble o )
+        void put( EnterAble o )
         {
             arr ~= o;
         }

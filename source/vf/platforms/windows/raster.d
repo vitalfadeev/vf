@@ -8,9 +8,9 @@ import vf.gfx.raster;
 
 class Raster : vf.gfx.raster.Raster!(RGBQUAD,W,H)
 {
-    alias T = RGBQUAD;
+    alias THIS = RGBQUAD;
 
-    this( T[] pixels, W w, H h, size_t pitch, T*  current, T color )
+    this( THIS[] pixels, W w, H h, size_t pitch, THIS*  current, THIS color )
     {
         this.pixels  = pixels;
         this.w       = w;

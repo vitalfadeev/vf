@@ -11,7 +11,7 @@ class Window
     Display* x_display;
     Screen   x_screen;
 
-    alias T = typeof(this);
+    alias THIS = typeof(this);
 
 
     this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
@@ -142,10 +142,10 @@ class Window
     struct WindowManager
     {
         static HWND[] _os_windows;
-        static T[]    _vf_windows;
+        static THIS[]    _vf_windows;
 
         static
-        T vf_window( HWND hwnd )
+        THIS vf_window( HWND hwnd )
         {
             import std.algorithm.searching : countUntil;
             auto i = _os_windows.countUntil( hwnd );
@@ -201,15 +201,15 @@ class Window
 }
 
 
-LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
+LRESULT auto_route_event(THIS)( THIS This, Event e, EventCode code, EventValue value )
 {
     import std.traits;
     import std.string;
     import std.format;
 
     // on_
-    static foreach( m; __traits( allMembers, T ) )
-        static if ( isCallable!(__traits(getMember, T, m)) )
+    static foreach( m; __traits( allMembers, THIS ) )
+        static if ( isCallable!(__traits(getMember, THIS, m)) )
             static if ( m.startsWith( "on_" ) )
                 if ( e == mixin( m[3..$] ) )
                     return __traits(getMember, This, m)( e, code, value ); 

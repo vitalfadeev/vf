@@ -8,7 +8,7 @@ import vf.types;
 
 class Window
 {
-    alias T = typeof(this);
+    alias THIS = typeof(this);
 
     // Custom memory
     SDL_Window*   window;
@@ -71,15 +71,15 @@ class Window
 }
 
 
-LRESULT auto_route_event(T)( T This, Event e, EventCode code, EventValue value )
+LRESULT auto_route_event(THIS)( THIS This, Event e, EventCode code, EventValue value )
 {
     import std.traits;
     import std.string;
     import std.format;
 
     // on_
-    static foreach( m; __traits( allMembers, T ) )
-        static if ( isCallable!(__traits(getMember, T, m)) )
+    static foreach( m; __traits( allMembers, THIS ) )
+        static if ( isCallable!(__traits(getMember, THIS, m)) )
             static if ( m.startsWith( "on_" ) )
                 if ( e.type == mixin( m[3..$] ) )
                     return __traits(getMember, This, m)( e, code, value ); 

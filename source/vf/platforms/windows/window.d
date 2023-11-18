@@ -11,7 +11,7 @@ class Window : IWindow, ISensAble
 {
     HWND hwnd;
 
-    alias T = typeof(this);
+    alias THIS = typeof(this);
 
 
     this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
@@ -154,7 +154,7 @@ string _auto_route_event( alias This, alias event, alias event_type )()
     import std.format;
     import vf.traits;
 
-    alias T = typeof( This );
+    alias THIS = typeof( This );
 
     string s;
     s ~= "import core.sys.windows.windows;";

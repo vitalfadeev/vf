@@ -4,21 +4,22 @@ version(XCB):
 import xcb.xcb;
 import vf.platform                 : Platform;
 import vf.base.oswindow            : BaseOSWindow;
+import vf.base.rasterable          : RasterAble;
 import vf.platforms.xcb.event      : Event, EventType;
 import vf.platforms.xcb.px         : XCBPX=PX;
 import vf.platforms.xcb.types      : uint16_t;
 import vf.platforms.xcb.rasterizer : XCBRasterizer;
 import vf.platforms.xcb.wx         : WX;
 
-alias TBaseOSWindow = BaseOSWindow!(xcb_window_t,Event,EventType);
 alias Window = XCBWindow;
 
 
-class XCBWindow : TBaseOSWindow
+class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
 {
-    alias T          = typeof(this);
+    alias THIS       = typeof(this);
     alias PX         = XCBPX;
-    alias Rasterizer = XCBRasterizer!(T,Event,EventType,WX);
+    alias TRasterAble = RasterAble!(Event,EventType,WX);
+    alias Rasterizer = XCBRasterizer!(THIS,TRasterAble,Event,EventType,WX);
 
     Rasterizer rasterizer;
 
@@ -173,7 +174,7 @@ string _auto_route_event( alias This, alias event, alias event_type )()
     import std.format;
     import vf.traits;
 
-    alias T = typeof( This );
+    alias THIS = typeof( This );
 
     string s;
     s ~= "import xcb.xcb;";

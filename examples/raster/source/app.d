@@ -10,7 +10,7 @@ void main()
 
 class MyGame : Game
 {
-	alias T = typeof(this);
+	alias THIS = typeof(this);
 
 	override
     Window new_window()
@@ -22,13 +22,13 @@ class MyGame : Game
     //   MyGame().go() 
     //   MyGame().quit()
     static
-    T opCall()
+    THIS opCall()
     {
         static 
-        T _instance;
+        THIS _instance;
 
         if ( _instance is null )
-            _instance = new T();
+            _instance = new THIS();
 
         return _instance;
     }

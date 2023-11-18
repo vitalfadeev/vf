@@ -24,7 +24,7 @@ struct Fixed_16_16
         }
     }
 
-    alias T = typeof(this);
+    alias THIS = typeof(this);
 
 
     this( M32 a )
@@ -91,22 +91,22 @@ struct Fixed_16_16
     //    l = 0;
     //}
 
-    T opBinary( string op : "+" )( T b )
+    THIST opBinary( string op : "+" )( THIS b )
     {
-        return T( this.a + b.a );
+        return THIS( this.a + b.a );
     }
 
 
-    T opBinary( string op : "-" )( T b )
+    THIS opBinary( string op : "-" )( THIS b )
     {
-        return T( this.a + b.a );
+        return THIS( this.a + b.a );
     }
 
 
-    T opBinary( string op : "*" )( T b )
+    THIS opBinary( string op : "*" )( THIS b )
     { // SHR, IMUL
         return 
-            T( cast(M32)(
+            THIS( cast(M32)(
                 (
                     ( cast(long)this.a ) * 
                     ( cast(long)   b.a )
@@ -115,16 +115,16 @@ struct Fixed_16_16
     }
 
 
-    T opBinary( string op : "*" )( M32 b )
+    THIS opBinary( string op : "*" )( M32 b )
     {
-        return T( this.a * b );
+        return THIS( this.a * b );
     }
 
 
-    T opBinary( string op : "/" )( T b )
+    THIS opBinary( string op : "/" )( THIS b )
     { // SHL, IDIV
         return 
-            T( 
+            THIS( 
                 cast(M32)( 
                     ( ( cast(long)(this.a) ) << 16 ) / b.a
                 ) 
@@ -132,9 +132,9 @@ struct Fixed_16_16
     }
 
 
-    T opBinary( string op : "/" )( M32 b )
+    THIS opBinary( string op : "/" )( M32 b )
     {
-        return T( this.a / b );
+        return THIS( this.a / b );
     }
 
     int opCmp( Fixed_16_16 b )
@@ -365,15 +365,15 @@ struct CosSin
     Fixed_16_16 c;
     Fixed_16_16 s;
 
-    alias T = typeof(this);
+    alias THIS = typeof(this);
 
 
     static 
-    T FromAngle( M16 h, M16 l )
+    THIS FromAngle( M16 h, M16 l )
     {
         auto c = .cos( l );
         auto s = .sin( l );
 
-        return T( c, s );
+        return THIS( c, s );
     }
 }
