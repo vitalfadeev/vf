@@ -12,6 +12,8 @@ SizeAble
   calc_size  size
 DrawAble
   draw
+HitAble
+  hit_test
 WxAble
   wx
 Sensable

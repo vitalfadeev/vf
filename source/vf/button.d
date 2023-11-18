@@ -118,10 +118,15 @@ class Button : Element
         auto element = 
             select_at( 
                 SX( 
-                    event.button_press.event_x, 
-                    event.button_press.event_y 
-                ).to_wx 
-            );
+                    event.button_press.event_x,
+                    event.button_press.event_y
+                )
+                    .to_wx 
+                    + event.world_offset           //
+            );                                     // 
+                                                   // event.to_wx 
+                                                   //   devide.to_wx 
+                                                   //   src.to_wx 
         
         import std.stdio : writeln;
         writeln( element );
@@ -129,7 +134,8 @@ class Button : Element
 
     auto select_at( WX wx )
     {
-        if ( wx in size )
+
+        if ( hit_test( wx ) )
             return this;
 
         return null;

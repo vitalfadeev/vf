@@ -64,7 +64,11 @@ class WindowManager : TBaseWindowManager
 
         auto i = _os_windows.countUntil( os_window );
         if ( i != -1 )
-            _vf_windows[i].sense( event, event_type );
+        {
+            auto _window = _vf_windows[i];
+            event.window = _window;
+            _window.sense( event, event_type );
+        }
     }
 
     static

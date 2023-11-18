@@ -23,6 +23,15 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
         return _size;
     }
 
+    override
+    bool hit_test( WX wx )
+    {
+        return ( wx in (_size + this.wx) );
+    }
+
+
+
+    //
     struct Size
     {
         WX a;
@@ -32,6 +41,12 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
         {
             a = t.a;
             b = t.b;
+        }
+
+        this( WX a, WX b )
+        {
+            this.a = a;
+            this.b = b;
         }
 
         void grow( Size other )
@@ -57,6 +72,11 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
                 a.x <= wx.x && a.y <= wx.y &&
                 b.x >= wx.x && b.y >= wx.y
             );
+         }
+
+         typeof(this) opBinary( string op : "+" )( WX wx )
+         {
+            return typeof(this)( a+wx, b+wx );
          }
     }
 }

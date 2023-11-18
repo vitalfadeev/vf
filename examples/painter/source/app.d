@@ -57,6 +57,7 @@ class MyGame : Game
 class WorldWindow(World,Event,EventType) : Window
 {
     World world;
+    WX    world_offset;
 
     this(ARGS...)( World world, ARGS args )
     {
@@ -65,6 +66,16 @@ class WorldWindow(World,Event,EventType) : Window
         move_to_center();
         show();
     }
+
+    override
+    void sense( Event* event, EventType event_type )
+    //      this       event             event_type
+    //      RDI        RSI               RDX
+    {
+        event.world_offset = world_offset;
+        super.sense( event, event_type );
+    }
+
 
     override
     void draw( Event* event, EventType event_type ) 

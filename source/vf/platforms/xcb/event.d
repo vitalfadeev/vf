@@ -3,8 +3,17 @@ module vf.platforms.xcb.event;
 version(XCB):
 import xcb.xcb;
 import vf.base.event;
-import vf.base.sensable : SensAble;
+import vf.base.sensable        : SensAble;
+import vf.platforms.xcb.wx     : WX;
+import vf.platforms.xcb.window : XCBWindow;
+import vf.platforms.xcb.world  : World;
 
+
+struct SX 
+{
+    short x;
+    short y;
+}
 
 struct Event
 {
@@ -41,6 +50,11 @@ struct Event
         xcb_ge_generic_event_t        ge_generic;
         //
         DrawEvent draw;
+        // world_offset
+        // add_world_offset = T delegate( wx )
+        XCBWindow window;
+        World     world;
+        WX        world_offset;
     }
 
     auto type()
@@ -50,6 +64,11 @@ struct Event
     }
 
     SensAble!(Event,EventType) dst()
+    {
+        return null;
+    }
+
+    Source src()  // event source. device
     {
         return null;
     }
@@ -68,6 +87,23 @@ struct Event
     {
         import std.format : format;
         return format!"Event( 0x%04X )"(generic.response_type);
+    }
+
+    //
+    class Source
+    {
+        WX to_wx( SX sx )
+        {
+            return WX( sx.x, sx.y );
+        }
+    }
+    class MouseSource : Source
+    {
+        override
+        WX to_wx( SX sx )
+        {
+            return WX( sx.x, sx.y );
+        }
     }
 }
 

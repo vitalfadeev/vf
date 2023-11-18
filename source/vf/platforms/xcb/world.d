@@ -14,6 +14,7 @@ class World : BaseWorld!(Event,EventType,WX)
     //      this       event             event_type
     //      RDI        RSI               RDX
     {
+        event.world = this;
         super.sense( event, event_type );
     }
 }

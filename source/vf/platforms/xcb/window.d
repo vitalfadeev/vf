@@ -27,11 +27,10 @@ class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
 
     Rasterizer rasterizer;
 
-    this( PX size=PX(640,480), string name="Windows Window", int cmd_show=1 )
+    this( PX size=PX(640,480), string name="XCB Window", int cmd_show=1 )
     {
         _create_window( size, name, cmd_show );
         _create_renderer();
-        WindowManager.instance.register( this, this.hwnd );
     }
 
     //
@@ -100,12 +99,6 @@ class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
         return PX( w, h );
     }
 
-    override
-    void draw( Event* event, EventType event_type ) 
-    {
-        //
-    }
-
 
     // private
     void _create_window( PX size, string name, int cmd_show )
@@ -114,6 +107,9 @@ class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
 
         // Ask for our window's Id
         hwnd = xcb_generate_id( c );
+
+        // Register OS window for route events to this class
+        WindowManager.instance.register( this, hwnd );
 
         //
         immutable(uint)   value_mask = 
