@@ -8,8 +8,10 @@ import vf.auto_methods : auto_methods;
 import vf.event        : Event, EventType;
 
 
-class World : BaseWorld!(Event,EventType)
+class World : BaseWorld!(Event,EventType,WX)
 {
+    alias WX = WX;
+
     override
     void sense( Event* event, EventType event_type )
     //      this       event             event_type

@@ -8,7 +8,7 @@ import vf.platforms.xcb.wx    : WX;
 
 
 class World : BaseWorld!(Event,EventType,WX)
-{
+{    
     override
     void sense( Event* event, EventType event_type )
     //      this       event             event_type

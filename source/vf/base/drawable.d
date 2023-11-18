@@ -5,8 +5,10 @@ import vf.base.sensable : Sensable;
 import vf.base.types    : M16;
 
 
-class DrawAble(Event,EventType,WX) : Sensable!(Event,EventType)
+class DrawAble(Event,EventType,TWX) : Sensable!(Event,EventType)
 {
+    alias WX = TWX;
+
     Ops ops;
 
     void point( int x, int y )

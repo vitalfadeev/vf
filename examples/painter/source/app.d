@@ -69,14 +69,16 @@ class WorldWindow(World,Event,EventType) : Window
     override
     void draw( Event* event, EventType event_type ) 
     {
-        import vf.base.rasterizer : BaseRasterizer;
-        import vf.wx              : WX;
-        alias TBaseRasterizer = BaseRasterizer!(Event,EventType,WX);
-        world.draw();       // ops ~= Line()
-        world.calc_size();  // size
-        world.layout();     // pos
-        world.to_raster( cast(TBaseRasterizer)rasterizer );  // ops -> window
+        GLine( world, rasterizer );
     }
+}
+
+void GLine(World,Rasterizer)( World world, Rasterizer rasterizer )
+{
+    world.draw();       // ops ~= Line()
+    world.calc_size();  // size
+    world.layout();     // pos
+    world.to_raster( rasterizer );  // ops -> window        
 }
 
 
