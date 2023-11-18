@@ -15,7 +15,8 @@ import vf.platforms.xcb.types  : uint32_t;
 
 class XCBRasterizer(Window,RasterAble,Event,EventType,WX) : BaseRasterizer!(RasterAble,Event,EventType,WX)
 {
-    alias PX        = Window.PX;
+    alias PX       = Window.PX;
+    alias Platform = .Platform;
 
     xcb_connection_t* c;
     xcb_drawable_t    drawable;

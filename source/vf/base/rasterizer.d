@@ -1,15 +1,13 @@
 module vf.base.rasterizer;
 
-import vf.base.drawable   : OP;
-import vf.base.rasterable : RasterAble;
+import vf.base.drawable : OP;
 
 
-class BaseRasterizer(TDrawAble,Event,EventType,WX)
+class BaseRasterizer(RasterAble,Event,EventType,WX)
 {
-    alias DrawAble    = TDrawAble;
-    alias TRasterAble = RasterAble!(Event,EventType,WX);
+    alias DrawAble   = RasterAble;
 
-    void rasterize( TRasterAble rasterable )
+    void rasterize( RasterAble rasterable )
     {
         go_center();
 
@@ -42,12 +40,12 @@ class BaseRasterizer(TDrawAble,Event,EventType,WX)
         //
     }
 
-    void go( ref TDrawAble.Op.Go op )
+    void go( ref DrawAble.Op.Go op )
     {
         //
     }
 
-    void point_at( ref TDrawAble.Op.PointAt op )
+    void point_at( ref DrawAble.Op.PointAt op )
     {
         //
     }

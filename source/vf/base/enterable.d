@@ -1,12 +1,12 @@
 module vf.base.enterable;
 
 import vf.base.rasterable : RasterAble;
-import vf.base.rasterizer : BaseRasterizer;
 import vf.base.sizeable   : SizeAble, SIZE_MODE;
 
 
 class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
 {
+    alias THIS      = typeof(this);
     alias EnterAble = typeof(this);
 
     Enter enter;
@@ -56,7 +56,7 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
     }
 
     override
-    void to_raster( BaseRasterizer!(RasterAble,Event,EventType,WX) rasterizer )
+    void to_raster( BaseRasterizer rasterizer )
     {
         super.to_raster( rasterizer );
 

@@ -6,7 +6,7 @@ import vf.platform                 : Platform;
 import vf.base.oswindow            : BaseOSWindow;
 import vf.base.rasterable          : RasterAble;
 import vf.platforms.xcb.event      : Event, EventType;
-import vf.platforms.xcb.px         : XCBPX=PX;
+import vf.platforms.xcb.px         : PX;
 import vf.platforms.xcb.types      : uint16_t;
 import vf.platforms.xcb.rasterizer : XCBRasterizer;
 import vf.platforms.xcb.wx         : WX;
@@ -17,9 +17,9 @@ alias Window = XCBWindow;
 class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
 {
     alias THIS       = typeof(this);
-    alias PX         = XCBPX;
-    alias TRasterAble = RasterAble!(Event,EventType,WX);
-    alias Rasterizer = XCBRasterizer!(THIS,TRasterAble,Event,EventType,WX);
+    alias PX         = .PX;
+    alias RasterAble = .RasterAble!(Event,EventType,WX);
+    alias Rasterizer = XCBRasterizer!(THIS,RasterAble,Event,EventType,WX);
 
     Rasterizer rasterizer;
 
