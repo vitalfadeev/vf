@@ -1,18 +1,20 @@
 module vf.base.rasterizer;
 
-import vf.base.drawable : OP;
-import vf.base.drawable : DrawAble;
+import vf.base.drawable   : OP;
+import vf.base.drawable   : DrawAble;
+import vf.base.rasterable : RasterAble;
 
 
 class BaseRasterizer(Event,EventType,WX)
 {
-    alias TDrawAble = DrawAble!(Event,EventType,WX);
+    alias TDrawAble   = DrawAble!(Event,EventType,WX);
+    alias TRasterAble = RasterAble!(Event,EventType,WX);
 
-    void rasterize(OPS)( ref OPS ops )
+    void rasterize( TRasterAble rasterable )
     {
         go_center();
 
-        foreach ( ref op; ops )
+        foreach ( ref op; rasterable.ops )
             final switch ( op.type )
             {
                 case OP._         : break;

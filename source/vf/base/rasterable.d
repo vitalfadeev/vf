@@ -9,7 +9,7 @@ class RasterAble(Event,EventType,WX) : LayoutAble!(Event,EventType,WX)
     // drawable -> rasterable
     void to_raster( BaseRasterizer!(Event,EventType,WX) rasterizer )
     {
-        rasterizer.rasterize( ops );
+        rasterizer.rasterize( this );
     }
 }
 
