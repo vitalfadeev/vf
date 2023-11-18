@@ -1,13 +1,12 @@
 module vf.base.drawable;
 
-import vf.base.sensable : SensAble;
+import vf.base.wxable   : WxAble;
 import vf.base.types    : M16;
 
 
-class DrawAble(Event,EventType,TWX) : SensAble!(Event,EventType)
+class DrawAble(Event,EventType,WX) : WxAble!(Event,EventType,WX)
 {
     alias THIS = typeof(this);
-    alias WX   = TWX;
 
     Ops ops;
 

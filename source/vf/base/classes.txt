@@ -12,6 +12,8 @@ SizeAble
   calc_size  size
 DrawAble
   draw
+WxAble
+  wx
 Sensable
   sense
 
