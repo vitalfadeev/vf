@@ -1,12 +1,13 @@
 module vf.base.transformable;
 
 import vf.base.sizeable   : SizeAble;
-import vf.base.types      : M16;
 import vf.base.fixed      : Fixed;
 
 
 class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
 {
+    alias THIS = typeof(this);
+
     Fixed   rotate;
     Fixed   scale;
     Ops     transformed_ops;

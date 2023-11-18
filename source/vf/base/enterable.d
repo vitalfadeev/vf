@@ -1,7 +1,6 @@
 module vf.base.enterable;
 
 import vf.base.rasterable : RasterAble;
-import vf.base.sizeable   : SizeAble, SIZE_MODE;
 
 
 class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)

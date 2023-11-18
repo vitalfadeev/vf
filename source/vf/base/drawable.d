@@ -1,13 +1,13 @@
 module vf.base.drawable;
 
-import std.typecons     : Tuple;
 import vf.base.sensable : Sensable;
 import vf.base.types    : M16;
 
 
 class DrawAble(Event,EventType,TWX) : Sensable!(Event,EventType)
 {
-    alias WX = TWX;
+    alias THIS = typeof(this);
+    alias WX   = TWX;
 
     Ops ops;
 

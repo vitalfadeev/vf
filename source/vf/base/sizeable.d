@@ -4,15 +4,11 @@ import std.typecons     : Tuple;
 import vf.base.drawable : DrawAble;
 
 
-enum SIZE_MODE
-{
-    OUTER = 1,
-    FIXED = 2,
-    INTER = 3,
-}
-
 class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
 {
+    alias THIS      = typeof(this);
+    alias SIZE_MODE = .SIZE_MODE;
+
     Size      _size;
     SIZE_MODE size_mode;
 
@@ -68,5 +64,12 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
 void update_sizes(Event,EventType,WX)( LayoutAble!(Event,EventType,WX) e )
 {
     e.each_recursive( &e.calc_size );
+}
+
+enum SIZE_MODE
+{
+    OUTER = 1,
+    FIXED = 2,
+    INTER = 3,
 }
 

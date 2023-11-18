@@ -18,8 +18,10 @@ class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
 {
     alias THIS       = typeof(this);
     alias PX         = .PX;
+    alias WX         = .WX;
     alias RasterAble = .RasterAble!(Event,EventType,WX);
-    alias Rasterizer = XCBRasterizer!(THIS,RasterAble);
+    alias Rasterizer = .XCBRasterizer!(THIS,RasterAble);
+    alias Platform   = .Platform;
 
     Rasterizer rasterizer;
 

@@ -3,6 +3,7 @@ module vf.base.sensable;
 
 class Sensable(TEvent,TEventType)
 {
+    alias THIS      = typeof(this);
     alias Event     = TEvent;
     alias EventType = TEventType;
 
