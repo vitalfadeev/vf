@@ -25,21 +25,6 @@ class WindowManager : TBaseWindowManager
         import std.algorithm.searching : countUntil;
 
         // Free window
-        switch ( event_type )
-        {
-            case XCB_DESTROY_NOTIFY: {
-                auto os_window = event.destroy_notify.window;
-                auto i = _os_windows.countUntil( os_window );
-                if ( i != -1 )
-                {
-                    _vf_windows[i].sense( event, event_type );
-                    unregister( event.destroy_notify.window );
-                }
-                return;
-            }
-            default:
-        }
-
         // Sens event to window
         xcb_window_t os_window;
 
@@ -66,6 +51,14 @@ class WindowManager : TBaseWindowManager
             case XCB_SELECTION_REQUEST : { os_window = event.selection_request.owner; break; }
             case XCB_COLORMAP_NOTIFY   : { os_window = event.colormap_notify.window; break; }
             case XCB_CLIENT_MESSAGE    : { os_window = event.client_message.window; break; }
+            case XCB_DESTROY_NOTIFY    : { os_window = event.destroy_notify.window;
+                auto i = _os_windows.countUntil( os_window );
+                if ( i != -1 ) {
+                    _vf_windows[i].sense( event, event_type );
+                    unregister( event.destroy_notify.window );
+                }
+                return;
+            }
             default: return;
         }
 
