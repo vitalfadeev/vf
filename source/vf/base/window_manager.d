@@ -5,6 +5,9 @@ module vf.base.window_manager;
 // window -> hwnd
 class BaseWindowManager(V,O,Event,EventType)
 {
+    alias THIS              = typeof(this);
+    alias BaseWindowManager = typeof(this);
+
     static O[] _os_windows;
     static V[] _vf_windows;
 

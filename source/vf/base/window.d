@@ -3,6 +3,9 @@ module vf.base.window;
 
 class BaseWindow(Event,EventType)
 {
+    alias THIS       = typeof(this);
+    alias BaseWindow = typeof(this);
+
     //this(ARGS...)( ARGS args )
     //{
     //    _create_window( args );

@@ -9,7 +9,7 @@ import vf.platforms.xcb.event  : Event, EventType;
 public import core.stdc.stdint : uint32_t;
 public import core.stdc.stdint : uint16_t;
 
-alias SENSOR  = void delegate( Event* event, EventType event_type );
+alias Sensor  = vf.base.types.Sensor!(Event,EventType);
 alias X       = short;
 alias Y       = short;
 alias W       = short;

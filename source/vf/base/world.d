@@ -5,6 +5,9 @@ import vf.base.element : Element;
 
 class BaseWorld(Event,EventType,WX) : Element!(Event,EventType,WX)
 {
+    alias THIS      = typeof(this);
+    alias BaseWorld = typeof(this);
+
     override
     void sense( Event* event, EventType event_type )
     //      this       event             event_type
@@ -14,17 +17,17 @@ class BaseWorld(Event,EventType,WX) : Element!(Event,EventType,WX)
         //   NULL : to all
         //   X    : to X
         if ( event.dst is null )
-            to_all( event, event_type );
+            _to_all( event, event_type );
         else
-            to_one( event, event_type );
+            _to_one( event, event_type );
     }
 
-    void to_all( Event* event, EventType event_type )
+    void _to_all( Event* event, EventType event_type )
     {
         enter.sense( event, event_type );
     }
 
-    void to_one( Event* event, EventType event_type )
+    void _to_one( Event* event, EventType event_type )
     {
         import std.algorithm.searching : find;
         import std.range : takeOne;

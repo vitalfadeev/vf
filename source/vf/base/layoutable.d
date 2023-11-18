@@ -5,7 +5,8 @@ import vf.base.transformable : TransformAble;
 
 class LayoutAble(Event,EventType,WX) : TransformAble!(Event,EventType,WX)
 {
-    alias THIS = typeof(this);
+    alias THIS       = typeof(this);
+    alias LayoutAble = typeof(this);
 
     Pos pos;
 

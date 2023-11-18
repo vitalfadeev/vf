@@ -7,6 +7,7 @@ import vf.base.drawable : DrawAble;
 class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
 {
     alias THIS      = typeof(this);
+    alias SizeAble  = typeof(this);
     alias SIZE_MODE = .SIZE_MODE;
 
     Size      _size;

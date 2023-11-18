@@ -6,7 +6,8 @@ import vf.base.fixed      : Fixed;
 
 class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
 {
-    alias THIS = typeof(this);
+    alias THIS          = typeof(this);
+    alias TransformAble = typeof(this);
 
     Fixed   rotate;
     Fixed   scale;
