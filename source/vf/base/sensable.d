@@ -1,7 +1,7 @@
 module vf.base.sensable;
 
 
-class Sensable(TEvent,TEventType)
+class SensAble(TEvent,TEventType)
 {
     alias THIS      = typeof(this);
     alias Sensable  = typeof(this);

@@ -3,7 +3,6 @@ module vf.platforms.xcb.types;
 version(XCB):
 import xcb.xcb;
 public import vf.base.types;
-import vf.platforms.xcb.px     : PX;
 import vf.platforms.xcb.event  : Event, EventType;
 // for XCB functions
 public import core.stdc.stdint : uint32_t;

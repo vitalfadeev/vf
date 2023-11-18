@@ -3,7 +3,7 @@ module vf.platforms.xcb.event;
 version(XCB):
 import xcb.xcb;
 import vf.base.event;
-import vf.interfaces : ISensAble;
+import vf.base.sensable : SensAble;
 
 
 struct Event
@@ -49,10 +49,9 @@ struct Event
         return generic.response_type;
     }
 
-    auto dst()
+    SensAble!(Event,EventType) dst()
     {
-        //return cast( ISensAble )( msg.hwnd );
-        return cast( ISensAble )null;
+        return null;
     }
 
     bool is_game_over()
