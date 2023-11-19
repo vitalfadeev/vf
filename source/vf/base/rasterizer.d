@@ -19,7 +19,7 @@ class BaseRasterizer(RasterAble)
                 case OP.GO_CENTER : go_center(); break;
                 case OP.GO        : go( op.go ); break;
                 case OP.POINT     : break;
-                case OP.POINTAT   : point_at( op.point_at); break;
+                case OP.POINTAT   : point_at( op.point_at ); break;
                 case OP.POINTS    : break;
                 case OP.LINE      : break;
                 case OP.LINES     : break;
@@ -31,6 +31,7 @@ class BaseRasterizer(RasterAble)
                 case OP.CIRCLES   : break;
                 case OP.ARC       : break;
                 case OP.ARCS      : break;
+                case OP.COLOR     : color( op.color ); break;
             }
 
         flush();
@@ -47,6 +48,11 @@ class BaseRasterizer(RasterAble)
     }
 
     void point_at( ref DrawAble.Op.PointAt op )
+    {
+        //
+    }
+
+    void color( ref DrawAble.Op.Color op )
     {
         //
     }

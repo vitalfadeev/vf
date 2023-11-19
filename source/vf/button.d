@@ -71,6 +71,7 @@ import xcb.xcb                 : XCB_EVENT_MASK_BUTTON_PRESS;
 import vf.base.fixed           : Fixed;
 import vf.platforms.xcb.event  : Event, EventType;
 import vf.platforms.xcb.wx     : WX;
+import vf.platforms.xcb.color  : Colors;
 
 
 class Button : Element
@@ -82,6 +83,7 @@ class Button : Element
     void draw()
     {
         clear();
+        color( Colors.primary );
         point_at( -10, -10 ); point_at( 0, -10 ); point_at( +10, -10 );
         point_at( -10,   0 ); point_at( 0,   0 ); point_at( +10,   0 );
         point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );
@@ -89,7 +91,8 @@ class Button : Element
 
     void to_pressed()
     {
-        //
+        //if ( i_clicked )
+        //    to!Pressed;
     }
 
     void to_disabled()
@@ -97,26 +100,30 @@ class Button : Element
         //
     }
 
-    ////
-    //class Pressed
-    //{
-    //    mixin auto_methods!(typeof(this));  // sense()
+    //
+    class Pressed
+    {
+        mixin auto_methods!(typeof(this));  // sense()
 
-    //    void draw()
-    //    {
-    //        drawable.point( 0, 0 );  // drawable
-    //    }
+        void draw()
+        {
+            clear();
+            color( Colors.secondary );
+            point_at( -10, -10 ); point_at( 0, -10 ); point_at( +10, -10 );
+            point_at( -10,   0 ); point_at( 0,   0 ); point_at( +10,   0 );
+            point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );
+        }
 
-    //    void to_()
-    //    {
-    //        //
-    //    }
+        void to_()
+        {
+            //
+        }
 
-    //    void to_disabled()
-    //    {
-    //        //
-    //    }
-    //}
+        void to_disabled()
+        {
+            //
+        }
+    }
 
     //class Disabled : ISensAble, IEnterAble, IDrawAble
     //{

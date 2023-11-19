@@ -1,7 +1,8 @@
 module vf.base.drawable;
 
-import vf.base.hitable  : HitAble;
-import vf.base.types    : M16;
+import vf.base.hitable        : HitAble;
+import vf.base.types          : M16;
+import vf.platforms.xcb.color : Color;
 
 
 class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
@@ -20,14 +21,20 @@ class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
         ops ~= Op( Op.PointAt( WX( x, y ) ) );
     }
 
-    void draw()
+    void color( Color color )
     {
-        //
+        ops ~= Op( Op.Color( color ) );
     }
 
+    //
     void clear()
     {
         ops.length = 0;
+    }
+
+    void draw()
+    {
+        //
     }
 
     //
@@ -71,6 +78,7 @@ class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
             Points      points;
             Line        line;
             Lines       lines;
+            Color       color;
         }
 
         this( Point b )
@@ -81,6 +89,11 @@ class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
         this( PointAt b )
         {
             point_at = b;
+        }
+
+        this( Color b )
+        {
+            color = b;
         }
 
 
@@ -128,6 +141,17 @@ class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
         {
             OP   type = OP.LINES;
             WX[] wxs;
+        }
+
+        struct Color
+        {
+            OP     type = OP.COLOR;
+            .Color color;
+
+            this( .Color color )
+            {
+                this.color = color;
+            }
         }
 
         void apply( M matrix ) {}
@@ -228,6 +252,7 @@ auto to_raster(WINDOW:Window)( Painter painter, WINDOW window, HDC hdc )
             case OP.CIRCLES   : break;
             case OP.ARC       : break;
             case OP.ARCS      : break;
+            case OP.COLOR     : break;
         }
     }
 
@@ -321,6 +346,7 @@ enum OP : M16  // 16-bit because AH:GROUP, AL:ACTION
     CIRCLES   = 0b00100000_00000010,
     ARC       = 0b01000000_00000001,
     ARCS      = 0b01000000_00000010,
+    COLOR     = 0b10000000_00000001,
 }
 
 
@@ -352,6 +378,7 @@ auto CalcSize(WX,Ops)( ref Ops ops )
             case OP.CIRCLES   : break;
             case OP.ARC       : break;
             case OP.ARCS      : break;
+            case OP.COLOR     : break;
         }
 
         //UPD_MIN_MAX( op.calc_size, a, b );

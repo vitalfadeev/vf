@@ -76,6 +76,14 @@ class XCBRasterizer(Window,RasterAble) : BaseRasterizer!(RasterAble)
     }
 
     override
+    void color( ref DrawAble.Op.Color op )
+    {
+        uint32_t mask = XCB_GC_FOREGROUND;
+        uint32_t foreground_value = op.color;
+        xcb_change_gc( c, gc, mask, &foreground_value );        
+    }
+
+    override
     void flush()
     {
         xcb_flush( c );
