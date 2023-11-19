@@ -131,10 +131,6 @@ class Button : Element
         point_at( -10, -10 ); point_at( 0, -10 ); point_at( +10, -10 );
         point_at( -10,   0 ); point_at( 0,   0 ); point_at( +10,   0 );
         point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );
-
-        //
-        import std.stdio : writeln;
-        writeln( "calc_size: ", ops.calc_size() );
     }
 
     void to_pressed()

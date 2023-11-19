@@ -18,11 +18,13 @@ class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
     {
         //M matrix;
         //transformed_ops = ops.apply( matrix );
+        transformed_ops = ops.dup;
     }
 
     override
     void calc_size()
     {
+        super.calc_size();
         transformed_size = Size( transformed_ops.calc_size() );
     }
     

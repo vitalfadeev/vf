@@ -39,9 +39,9 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
         final
         switch ( size_mode )
         {
-            case SIZE_MODE.OUTER: size = outer.size; break;
-            case SIZE_MODE.FIXED: super.calc_size(); break;
-            case SIZE_MODE.INTER: size = outer.size; break;
+            case SIZE_MODE.OUTER: _size = outer.size; break;
+            case SIZE_MODE.FIXED:  calc_size(); break;
+            case SIZE_MODE.INTER: _size = outer.size; break;
         }
     }
 

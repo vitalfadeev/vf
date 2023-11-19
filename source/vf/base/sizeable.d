@@ -11,7 +11,7 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
     alias SIZE_MODE = .SIZE_MODE;
 
     Size      _size;
-    SIZE_MODE size_mode;
+    SIZE_MODE size_mode = SIZE_MODE.FIXED;
 
     void calc_size()
     {
