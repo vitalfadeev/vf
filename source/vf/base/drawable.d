@@ -22,6 +22,11 @@ class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
 
     void draw()
     {
+        //
+    }
+
+    void clear()
+    {
         ops.length = 0;
     }
 

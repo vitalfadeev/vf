@@ -89,11 +89,13 @@ class WorldWindow(World,Event,EventType) : Window
 pragma( inline, true )
 void GLine(World,Rasterizer)( World world, Rasterizer rasterizer )
 {
-    world.draw();      // ops ~= Line()
-    world.transform(); // ops.apply( matrix )
-    world.calc_size(); // size = calc_size()
-    world.layout();    // pos   // now Button at 0,0 always, World offset is 320,240
-    world.to_raster( rasterizer );  // ops -> window        
+    with ( world ) {
+        draw();      // ops ~= Line()
+        transform(); // ops.apply( matrix )
+        calc_size(); // size = calc_size()
+        layout();    // pos   // now Button at 0,0 always, World offset is 320,240
+        to_raster( rasterizer );  // ops -> window        
+    }
 }
 
 
@@ -102,6 +104,11 @@ class MyWindow : WorldWindow!(World,Event,EventType)
     this(ARGS...)( World world, ARGS args )
     {
     	super( world, args );
+    }
+
+    class FocusManager
+    {
+        //
     }
 
     //override

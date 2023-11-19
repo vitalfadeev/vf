@@ -79,55 +79,9 @@ class Button : Element
     //mixin auto_cap!(typeof(this));
 
     override
-    void sense( Event* event, EventType event_type )
-    {
-        if ( event_type == XCB_EVENT_MASK_BUTTON_PRESS )
-        {
-            on_XCB_EVENT_MASK_BUTTON_PRESS( event, event_type );
-        }
-    }
-
-    void on_XCB_EVENT_MASK_BUTTON_PRESS( Event* event, EventType event_type )
-    {
-        //struct xcb_button_press_event_t {
-        //    uint8_t         response_type; /* The type of the event, here it is xcb_button_press_event_t or xcb_button_release_event_t */
-        //    xcb_button_t    detail;
-        //    uint16_t        sequence;
-        //    xcb_timestamp_t time;          /* Time, in milliseconds the event took place in */
-        //    xcb_window_t    root;
-        //    xcb_window_t    event;
-        //    xcb_window_t    child;
-        //    int16_t         root_x;
-        //    int16_t         root_y;
-        //    int16_t         event_x;       /* The x coordinate where the mouse has been pressed in the window */
-        //    int16_t         event_y;       /* The y coordinate where the mouse has been pressed in the window */
-        //    uint16_t        state;         /* A mask of the buttons (or keys) during the event */
-        //    uint8_t         same_screen;
-        //}
-
-        WX _wx = WX( Fixed(event.button_press.event_x,0),
-                    Fixed(event.button_press.event_y,0)
-                ) + event.world_offset;
-
-        import std.stdio : writeln;
-        writeln( _wx );
-
-        if ( hit_test( _wx ) )
-        {
-            import std.stdio : writeln;
-            writeln( this );
-        }
-        else
-        {
-            import std.stdio : writeln;
-            writeln( null );
-        }
-    }
-
-    override
     void draw()
     {
-        ops.length = 0;
+        clear();
         point_at( -10, -10 ); point_at( 0, -10 ); point_at( +10, -10 );
         point_at( -10,   0 ); point_at( 0,   0 ); point_at( +10,   0 );
         point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );

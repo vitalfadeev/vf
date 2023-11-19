@@ -10,7 +10,7 @@ import vf.platforms.xcb.event    : Event, EventType;
 struct Queue
 {
     Event front;  // xcb_generic_event_t* front;
-    bool  _started = false;
+    bool  initialized = false;
 
     pragma( inline, true )
     void popFront()
@@ -23,9 +23,9 @@ struct Queue
     pragma( inline, true )
     bool empty()
     {
-        if ( !_started )
+        if ( !initialized )
         {
-            _started = true;
+            initialized = true;
             front.generic = xcb_wait_for_event( Platform.instance.c );
         }
 

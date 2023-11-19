@@ -26,7 +26,7 @@ class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
     //{
     //    transformed_size = Size( transformed_ops.calc_size() );
     //}
-    
+    //
     //override
     //ref Size size()
     //{

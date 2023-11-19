@@ -1,6 +1,7 @@
 module vf.base.enterable;
 
 import vf.base.rasterable : RasterAble;
+import xcb.xproto         : XCB_EVENT_MASK_BUTTON_PRESS;
 
 
 class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
@@ -50,8 +51,25 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
     {
         super.sense( event, event_type );
 
-        foreach ( ref e; enter )
-            e.sense( event, event_type );
+        switch ( event_type  )
+        {
+            case XCB_EVENT_MASK_BUTTON_PRESS: on_XCB_EVENT_MASK_BUTTON_PRESS( event, event_type ); break;
+            default:
+                foreach ( ref e; enter )
+                    e.sense( event, event_type );
+        }
+    }
+
+    void on_XCB_EVENT_MASK_BUTTON_PRESS( Event* event, EventType event_type )
+    {
+        if ( hit_test( event.button_press_wx ) )
+        {
+            import std.stdio : writeln;
+            writeln( "i clicked: ", this );
+
+            foreach ( ref e; enter )
+                e.sense( event, event_type );
+        }
     }
 
     override

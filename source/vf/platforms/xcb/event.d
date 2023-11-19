@@ -56,6 +56,7 @@ struct Event
     XCBWindow window;
     World     world;
     WX        world_offset;
+    WX        button_press_wx;
 
     auto type()
     {
