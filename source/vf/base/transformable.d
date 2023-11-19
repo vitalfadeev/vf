@@ -21,17 +21,16 @@ class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
         transformed_ops = ops.dup;
     }
 
-    override
-    void calc_size()
-    {
-        super.calc_size();
-        transformed_size = Size( transformed_ops.calc_size() );
-    }
+    //override
+    //void calc_size()
+    //{
+    //    transformed_size = Size( transformed_ops.calc_size() );
+    //}
     
-    override
-    ref Size size()
-    {
-        return transformed_size;
-    }
+    //override
+    //ref Size size()
+    //{
+    //    return transformed_size;
+    //}
 }
 
