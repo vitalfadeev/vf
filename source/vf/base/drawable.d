@@ -7,7 +7,8 @@ import vf.platforms.xcb.color : Color;
 
 class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
 {
-    alias THIS = typeof(this);
+    alias THIS     = typeof(this);
+    alias DrawAble = typeof(this);
 
     Ops ops;
 
@@ -33,6 +34,11 @@ class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
     }
 
     void draw()
+    {
+        //
+    }
+
+    void redraw()
     {
         //
     }

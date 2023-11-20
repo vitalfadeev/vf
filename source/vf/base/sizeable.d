@@ -24,6 +24,12 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
     }
 
     override
+    void redraw()
+    {
+        //send_event( VF_REDRAW, this.size );
+    }
+
+    override
     bool hit_test( WX wx )
     {
         import std.stdio : writeln;

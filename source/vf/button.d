@@ -68,6 +68,7 @@ import vf.element : Element;
 
 
 import xcb.xcb                 : XCB_EVENT_MASK_BUTTON_PRESS;
+import xcb.xcb                 : XCB_EVENT_MASK_BUTTON_RELEASE;
 import vf.base.fixed           : Fixed;
 import vf.platforms.xcb.event  : Event, EventType;
 import vf.platforms.xcb.wx     : WX;
@@ -76,8 +77,23 @@ import vf.platforms.xcb.color  : Colors;
 
 class Button : Element
 {
+    alias THIS   = typeof(this);
+    alias Button = typeof(this);
+
     mixin auto_methods!(typeof(this));  // sense()
     //mixin auto_cap!(typeof(this));
+    mixin StateAble!(typeof(this));
+
+    override
+    void sense( Event* event, EventType event_type )
+    {
+        super.sense( event, event_type );
+
+        // try go to new state
+        //static if( StateAble && hasMethod!"to" )
+        try_to_( this, event, event_type );
+    }
+
 
     override
     void draw()
@@ -89,22 +105,27 @@ class Button : Element
         point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );
     }
 
-    void to_pressed()
+    void to_pressed( Event* event, EventType event_type )
     {
-        //if ( i_clicked )
-        //    to!Pressed;
+        switch ( event_type )
+        {
+            case XCB_EVENT_MASK_BUTTON_PRESS: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+            default:
+        }
     }
 
-    void to_disabled()
+    void to_disabled( Event* event, EventType event_type )
     {
         //
     }
 
-    //
-    class Pressed
+
+    // States
+    class Pressed : Button
     {
         mixin auto_methods!(typeof(this));  // sense()
 
+        override
         void draw()
         {
             clear();
@@ -114,16 +135,18 @@ class Button : Element
             point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );
         }
 
-        void to_()
+        void to_normal( Event* event, EventType event_type )
         {
-            //
-        }
-
-        void to_disabled()
-        {
-            //
+            switch ( event_type )
+            {
+                case XCB_EVENT_MASK_BUTTON_RELEASE: to!Button(); break;
+                default:
+            }
         }
     }
+} 
+
+//
 
     //class Disabled : ISensAble, IEnterAble, IDrawAble
     //{
@@ -144,7 +167,6 @@ class Button : Element
     //        //
     //    }
     //}
-} 
 
 
 //void init_world()
@@ -171,3 +193,47 @@ class Button : Element
 //     rasterize
 //
 
+
+mixin template StateAble( T )
+{
+    void to(CLS)()
+    {
+        // o
+        //   state -> state'
+
+        // o
+        //   __vptr
+        //   __monitor
+        //   interfaces
+        //   fields
+        import std.conv;
+        import vf.traits : isSameInstaneSize;
+
+        // object.sizeof != object.sizeof
+        //   assert
+        static 
+        if ( !isSameInstaneSize!(CLS,T) )
+            static assert( "Class instance size must be equal. " ~ 
+                CLS.stringof ~ " and " ~ typeof(this).stringof ~ ". " ~  
+                __traits( classInstanceSize, CLS ).to!string ~ " != " ~ __traits( classInstanceSize, typeof(this) ).to!string ~ "."
+            );
+
+        //
+        this.__vptr = cast(immutable(void*)*)typeid(CLS).vtbl.ptr;
+    }
+}
+
+// Try
+//   to_Init()
+//   to_Hover()
+//pragma( inline, true )
+void try_to_(THIS)( THIS _this, Event* event, EventType event_type )
+{
+    import std.string;
+    import std.traits;
+
+    static foreach( m; __traits( allMembers, THIS ) )
+        static if ( isCallable!(__traits( getMember, THIS, m )) )
+            static if ( m.startsWith( "to_" ) && m != "to_raster" )
+                __traits( getMember, _this, m )( event, event_type ); 
+}
