@@ -13,6 +13,13 @@ import vf.platforms.xcb.types  : uint32_t;
 //alias Rasterizer = Device.Rasterizer;
 //alias Rasterizer = Window.Rasterizer;
 
+//void XCBRasterizer(World,Window)( World world, Window window )
+//void XCBRasterizer(Ops,Drawable,Window,WX,PX,WX2PX)( Ops ops, Drawable drawable, Window window )
+//                                                                       src              dst
+//{
+//    //
+//}
+
 class XCBRasterizer(Window,RasterAble) : BaseRasterizer!(RasterAble)
 {
     alias PX       = Window.PX;

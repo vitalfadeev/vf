@@ -6,6 +6,47 @@ public import vf.base.queue;
 import vf.platforms.xcb.platform : Platform;
 import vf.platforms.xcb.event    : Event, EventType;
 
+// evdev
+//   mice - driver - kernel - evdev (timestamp) - program
+//    /dev/input/eventX
+// keyboard
+//   ...
+// mousedev
+//    /dev/input/mouseX
+//    /dev/input/mice
+// joydev
+//    /dev/input/jsX
+
+//struct input_event {
+//    timeval time;  // long, long
+//    ushort  type;
+//    ushort  code;
+//    uint    value;
+//}
+//
+//struct timeval
+//{
+//    time_t      tv_sec;   // long
+//    suseconds_t tv_usec;  // long 
+//}
+
+// pause until
+//   xcb
+//   evdev
+//   net
+//   timer
+//   local socket
+//   pipe
+//   process
+// vf not paused, because prog
+
+// ACTIVATE_WINDOW
+//   connect to evdev /dev/events/*       (mouse,keyvoard,joystick)
+//   or enable input
+// DEACTIVATE_WINDOW
+//   disconnect from evdev /dev/events/*  (mouse,keyvoard,joystick)
+//   or disable input
+
 
 struct Queue
 {
@@ -118,6 +159,7 @@ struct VFQueue
         return _events.empty;
     }
 }
+
 
 struct XCBQueue
 {

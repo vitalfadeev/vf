@@ -95,6 +95,7 @@ void GLine(World,Rasterizer)( World world, Rasterizer rasterizer )
         calc_size(); // size = calc_size()
         layout();    // pos   // now Button at 0,0 always, World offset is 320,240
         to_raster( rasterizer );  // ops -> window        
+        // rasterizer( world, window );
     }
 }
 
