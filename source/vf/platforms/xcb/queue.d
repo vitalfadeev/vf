@@ -135,50 +135,24 @@ struct Queue
 }
 
 
-struct VFQueue
-{
-    import std.range : front, empty, popFront;
+//struct XCBQueue
+//{
+//    Event front;  // xcb_generic_event_t* front;
 
-    Event[] _events;
+//    pragma( inline, true )
+//    void popFront()
+//    {
+//        import core.stdc.stdlib : free;
+//        free( front.generic );
+//        front.generic = xcb_poll_for_event( Platform.instance.c );
+//    }
 
-    pragma( inline, true )
-    Event front() @property
-    {
-        return _events.front;
-    }
-
-    pragma( inline, true )
-    void popFront() 
-    {
-        _events.popFront();
-    }
-
-    pragma( inline, true )
-    bool empty() 
-    { 
-        return _events.empty;
-    }
-}
-
-
-struct XCBQueue
-{
-    Event front;  // xcb_generic_event_t* front;
-
-    pragma( inline, true )
-    void popFront()
-    {
-        import core.stdc.stdlib : free;
-        free( front.generic );
-        front.generic = xcb_poll_for_event( Platform.instance.c );
-    }
-
-    pragma( inline, true )
-    bool empty()
-    {
-        return ( 
-            xcb_poll_for_queued_event( Platform.instance.c ) is null 
-         );
-    }
-}
+//    pragma( inline, true )
+//    bool empty()
+//    {
+//        return ( 
+//            xcb_poll_for_queued_event( Platform.instance.c ) is null 
+//         );
+//    }
+//}
 

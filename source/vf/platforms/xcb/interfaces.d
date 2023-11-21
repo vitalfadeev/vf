@@ -3,7 +3,7 @@ module vf.platforms.xcb.interfaces;
 version(XCB):
 import xcb.xcb;
 import vf.base.interfaces;
-import vf.event : Event, EventType;
+import vf.input.event : Event,EventType;
 
 alias ISensAble      = vf.base.interfaces.ISensAble!(Event,EventType);
 alias IWindow        = vf.base.interfaces.IWindow!(Event,EventType);

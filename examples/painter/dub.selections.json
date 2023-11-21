@@ -6,6 +6,7 @@
 		"intel-intrinsics": "1.11.15",
 		"queue": "1.0.0",
 		"vf": {"path":"../.."},
+		"xau": {"path":"../../deps/xau"},
 		"xcb-d": "2.1.1+1.11.1"
 	}
 }

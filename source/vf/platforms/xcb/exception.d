@@ -46,13 +46,3 @@ void show_throwable( Throwable o )
         printf( "show_throwable: o.toString error" );
     }   
 }
-
-
-//
-class InputException : Exception
-{
-    this( string s )
-    {
-        super( s );
-    }
-}
