@@ -1,0 +1,29 @@
+{
+	"authors": [
+		"Tristan Hume"
+	],
+	"configurations": [
+		{
+			"name": "library",
+			"targetType": "library"
+		}
+	],
+	"copyright": "Copyright © 2017, Tristan Hume",
+	"dependencies": {
+		"dunit": "~>1.0.14"
+	},
+	"description": "A DBus library for D",
+	"homepage": "https://github.com/trishume/ddbus",
+	"importPaths": [
+		"source/"
+	],
+	"lflags": [
+		"-ldbus-1"
+	],
+	"license": "MIT",
+	"name": "ddbus",
+	"sourcePaths": [
+		"source/"
+	],
+	"version": "2.3.0"
+}

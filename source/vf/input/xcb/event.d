@@ -40,7 +40,7 @@ struct XcbEvent
         xcb_ge_generic_event_t        ge_generic;
     }
 
-    alias Timestamp = typeof(xcb_key_press_event_t.time);
-    alias EventType = ubyte;
+    alias Timestamp = typeof( xcb_key_press_event_t.time );
+    alias EventType = typeof ( type );
 }
 

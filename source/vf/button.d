@@ -107,6 +107,45 @@ class Button : Element
 
     void to_pressed( Event* event, EventType event_type )
     {
+        //                 M32
+        if ( event_type == EV_KEY_KEY_A ) if ( hit_test( event.button_press_wx ) ) { to!Pressed(); redraw(); }
+
+        //                 M64
+        if ( event_type == EV_KEY_KEY_A_DOWN ) if ( hit_test( event.button_press_wx ) ) { to!Pressed(); redraw(); }
+
+        // key A down  - include/uapi/linux/input-event-codes.h
+        switch ( event_type.code ) {
+            case EV_KEY: switch ( event_type.detail ) {
+                case KEY_A: if ( value == 1 ) if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+                default:}
+            default:
+        }
+
+        // key A down  - Winuser.h                   M16     M16
+        switch ( event_type.code ) { // WM_KEYDOWN = 0x0100, detail = wParam, VK_A = 0x41
+            case WM_KEYDOWN: switch ( event_type.detail ) {
+                case VK_A: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+                default:}
+            default:
+        }
+
+        // key A down  - X11/keysymdef.h
+        switch ( event_type.response_type ) { // XK_A = 0x0041
+            case XCB_EVENT_MASK_KEY_PRESS: switch ( event_type.detail ) {
+                case XK_A: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+                default:}
+            default:
+        }
+
+        // key A down  - SDL/include/SDL_scancode.h
+        switch ( event_type.response_type ) { // SDL_SCANCODE_A = 0x0004
+            case SDL_KEYDOWN: switch ( event_type.detail ) { // keysym.scancode
+                case SDL_SCANCODE_A: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+                default:}
+            default:
+        }
+
+        //
         switch ( event_type )
         {
             case XCB_EVENT_MASK_BUTTON_PRESS: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;

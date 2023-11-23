@@ -23,22 +23,23 @@ alias EventType =
 
 struct Event
 {
-    EventSource    source;
+    EventSourceType type;
     union {
-        VfEvent    vf;
-        XcbEvent   xcb;
-        EvdevEvent evdev;
-    }
+        VfEvent     vf;     // 
+        XcbEvent    xcb;    //      type detail sequence time
+        EvdevEvent  evdev;  // time type        code     value
+    }                       //      M8   M8     M16
+    Device          device;
 
     Timestamp timestamp()
     {
         final
         switch ( source )
         {
-            case EventSource._     : return 0;
-            case EventSource.VF    : return vf.timestamp;
-            case EventSource.XCB   : return xcb.timestamp;
-            case EventSource.EVDEV : return evdev.timestamp;
+            case EventSourceType._     : return 0;
+            case EventSourceType.VF    : return vf.timestamp;
+            case EventSourceType.XCB   : return xcb.timestamp;
+            case EventSourceType.EVDEV : return evdev.timestamp;
         }
     }
 
@@ -47,10 +48,10 @@ struct Event
         final
         switch ( source )
         {
-            case EventSource._     : return 0;
-            case EventSource.VF    : return vf.type;
-            case EventSource.XCB   : return xcb.type;
-            case EventSource.EVDEV : return evdev.type;
+            case EventSourceType._     : return 0;
+            case EventSourceType.VF    : return vf.type;
+            case EventSourceType.XCB   : return xcb.type;
+            case EventSourceType.EVDEV : return evdev.type;
         }
     }
 
@@ -59,10 +60,10 @@ struct Event
         final
         switch ( source )
         {
-            case EventSource._     : return null;
-            case EventSource.VF    : return vf.dst;
-            case EventSource.XCB   : return null;
-            case EventSource.EVDEV : return null;
+            case EventSourceType._     : return null;
+            case EventSourceType.VF    : return vf.dst;
+            case EventSourceType.XCB   : return null;
+            case EventSourceType.EVDEV : return null;
         }
     }
 
@@ -72,16 +73,16 @@ struct Event
         final
         switch ( source )
         {
-            case EventSource._     : return false;
-            case EventSource.VF    : return false;
-            case EventSource.XCB   : return ( xcb.generic.response_type == XCB_DRAW );
-            case EventSource.EVDEV : return false;
+            case EventSourceType._     : return false;
+            case EventSourceType.VF    : return false;
+            case EventSourceType.XCB   : return ( xcb.generic.response_type == XCB_DRAW );
+            case EventSourceType.EVDEV : return false;
         }
     }
 
     bool is_quit()
     {
-        return ( source == EventSource.VF && vf.type == VfEventType.QUIT );
+        return ( source == EventSourceType.VF && vf.type == VfEventType.QUIT );
     }
 
     //
@@ -93,7 +94,7 @@ struct Event
 }
 
 
-enum EventSource : ubyte
+enum EventSourceType : ubyte
 {
     _     = 0,
     VF    = 1,
@@ -101,6 +102,33 @@ enum EventSource : ubyte
     EVDEV = 3,
 }
 
+
+struct Device
+{
+    DeviceType type;
+    union {
+        MouseDevice    mouse;
+        KeyboardDevice keyboard;
+    }
+}
+
+enum DeviceType : ubyte
+{
+    _        = 0,
+    MOUSE    = 1,
+    KEYBOARD = 2,
+}
+
+
+struct MouseDevice
+{
+    //
+}
+
+struct KeyboardDevice
+{
+    //
+}
 
 
 //alias Element = vf.base.element.Element!(Event,EventType,WX);

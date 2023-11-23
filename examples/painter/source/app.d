@@ -99,7 +99,6 @@ void GLine(World,Rasterizer)( World world, Rasterizer rasterizer )
     }
 }
 
-
 class MyWindow : WorldWindow!(World,Event,EventType)
 {
     this(ARGS...)( World world, ARGS args )
@@ -386,3 +385,359 @@ auto tee(T)( T This )
 //  3
 //  4
 //  5
+
+
+// void button_clicked(GtkWidget *button, gpointer data)
+// void a_callback_function(GtkWidget *widget, gpointer user_data);
+// signal( Source, Event )
+//
+// Source
+//   signal() -> ( Source, Event )  ---
+//                                     |
+// Element                             |
+//   sense()  <- ( Source, Event )  <--
+//     signal
+//   signal() -> ( Element, Event )
+//
+// SignalAble
+//   signal()
+// SenseAble
+//   sense()
+// Element : SenseAble, SignalAble
+//
+// Evdev : SignalAble
+//   signal()
+// Udev : SignalAble
+//   signal()
+// Dbus : SignalAble
+//   signal()
+// Xcb : SignalAble
+//   signal()
+// Vf : SignalAble
+//   signal()
+//
+// QueueSource
+//   Queue
+//   foreach ( e; queue )
+//     Queue.signal( QueueSource, e )
+//
+// EvdevSource
+//   Queue
+//   foreach ( e; queue )
+//     Queue.signal( QueueSource, e )
+//
+// KeyboardSource : DevSource
+//   Evdev
+//     Queue
+//
+// DevSource  // /dev/input/eventX
+//   Evdev
+//     Queue
+//   cap_abilities
+
+// connect( src, signal_name, dst,   callback, data )
+// connect( src, signal_name, null,  callback, data )
+// connect( src, signal_name, delegate       , data )
+// connect( src, signal_name, data1, callback, data )
+// 
+//  call
+//    callback( dst, data )
+//    callback( data1, ... )
+//
+
+// InputDevice
+// InputDriver
+// InputEvent
+// 
+// InputDevice     input_device      Mouse
+// InputDriver     input_driver      Evdev
+// InputEvent      input_event       
+// InputEvent      input_event       ButtonInputEvent
+// InputEventType  input_event_type  BUTTON_PRESSED
+// ...                               data
+//
+// ElementEvent    element_event
+// ...                               element
+
+// MouseDeviceSource
+//   signal
+//   click -> 
+//     ClickManager  (World,Window) SX->WX
+//       find_element
+//         send Event
+
+// HardKey -> Evdev -> PointerDevice
+//
+// HardKey -> Evdev -> KeyboardDevice
+//  
+// HardKey -> Evdev -> VolumeControllerDevice
+//
+
+// HardKey -> Evdev -> PointerDevice -> MouseCursor -> Event
+//                                      MouseButton
+//                                      MouseWheel
+
+// Event
+//  source : Device, Vf
+//    type = DEVICE
+//    device : Cursor, Keyboad
+//      type = MOUSE
+//      mouse
+//        type = MOVE
+//        relXY
+//        ...
+
+// Event
+//  source : Device, Vf
+//    type = DEVICE
+//    device : Cursor, Keyboad
+//      type = KEYBOARD
+//      keyboard
+//        type = KEY_PRESSED
+//        scancode
+//        ...
+
+// Event
+//  source : Device, Vf
+//    type = VF
+//    vf
+//      element
+
+// hard_device -> evdev -> /dev/input/eventX -> open,poll,read -> event
+//
+// HardDevice
+//   driver
+//     evdev
+//       file = "/dev/input/eventX"
+//   
+// hard_device.connect( "button_pressed", click_manager )
+// hard_device.connect( button.pressed, click_manager )
+// click_manager.sense( event )
+
+// CursorMover
+//   sense
+//     MouseEvent
+//     KeyEvent
+//     ApiEvent
+//   connect
+//     to MouseSource
+//     to KeySource
+//     to ApiSource
+
+
+struct CursorMover
+{
+    void sense( Event* event )
+    {
+        //
+    }
+
+    void _connections()
+    {
+        MouseSource.connect( this );
+        KeySource.connect( this );
+        ApiSource.connect( this );
+    }
+}
+
+class Source
+{
+    void connect( SenseAble senseable )
+    {
+        //
+    }
+
+    void send( Event* event )
+    {
+        foreach ( senseable; senseables )
+            senseable.sense( event );
+
+        // or 
+
+        Queue.put( this, event, sensable );
+    }
+}
+
+class MouseSource : Source
+{
+    override
+    void connect( SenseAble senseable )
+    {
+        //
+    }
+
+    override
+    void send( Event* event )
+    {
+        foreach ( senseable; senseables )
+            senseable.sense( event );
+
+        // or 
+
+        Queue.put( this, event, sensable );
+    }
+}
+
+class SourceManager : Source
+{
+    MouseSource _mouse_source;
+    KeySource _keyboard_sourec;
+
+    override
+    void connect( SenseAble senseable )
+    {
+        //
+    }
+
+    override
+    void send( Event* event )
+    {
+        foreach ( senseable; senseables )
+            senseable.sense( event );
+
+        // or 
+
+        Queue.put( this, event, sensable );
+    }
+}
+
+
+// MouseManager
+//   MouseDevice
+//   MouseDevice
+
+// Device
+// MouseDevice
+// EvdevMouseDevice
+//
+// class Device 
+// class MouseDevice : Device 
+// class EvdevMouseDevice : MouseDevice
+//
+// MouseDevice.connect( this )
+// MouseDevice.connect( click, this )
+//
+// MouseDeviceManager
+// MouseDeviceManager.connect( this )
+// MouseDeviceManager.connect( click, this )
+
+// ConnectAble
+//   connect()
+//   send()
+
+// SenseAble
+//   sense()
+
+// SendAble
+//   send()
+
+// predefined paged dynamic array
+//   ppda arr
+// class
+//   PPDA(T,N,N2)
+//     page1
+//       size_t      length
+//       T[N]        items
+//       Page!(T,N2) next
+//  ForEach
+//    2 methods:
+//      1: 1 page
+//        if page1.next is null
+//           foreach ( e; page1.items )
+//             ...
+//      2: N pages
+//        page = &page1
+//        while ( 1 )
+//           foreach ( e; page.items )
+//             ...
+//           if page.next
+//             page = page.next
+//             continue
+//           else
+//             break
+
+// Connect vs Filter
+// World
+//   Queue.filter_for_me( this, Filter )
+//   same as
+//   this
+//     sense()
+//       Filter()
+// 
+// signal
+//   send
+//   no call..return 
+
+// Source
+//   slot clicked          // caps
+//   slot button_pressed   //
+//   slot button_released  //
+// EV_KEY, EV_REL, EV_ABS, EV_MSC, EV_SW, EV_LED, EV_SND, EV_REP, EV_FF, EV_PWR, EV_FF_STATUS
+
+// Source
+//   slot key_pressed   //
+//   slot key_released  //
+
+// WindowSource 
+//   slot activated     //
+//   slot deactivated   //
+//   slot moved         //
+//   slot resized       //
+//   slot paint         //
+
+//                                          Router
+// evdev                -|- queue by time -  Source 
+// Windows.GetMessage() -|                    slot - processor
+// vf                   -|                    slot
+//                                            slot
+
+// Router
+//   Source
+//     slot - processor,processor,...
+//   Source
+//     slot
+
+// Router
+//   Source
+//     slot.connect( processor ) 
+
+// Router
+//   Key
+//     pressed
+//     released
+//   Mouse
+//     moved
+//     pressed
+//     released
+//     wheel
+//   Window
+//     activated
+//     deactivated
+
+// World
+//  sense( Event* )
+
+
+// SIGNAL
+// signaler
+//   signal - subscribers
+//   signal - subscribers
+
+// element
+//   send
+//   signal
+//
+// dbus
+//   send
+//   signal
+//   connect( subscriber, signals[] )
+//
+// evdev
+//   send
+//   signal
+//
+// vf
+//   send
+//   signal
+
+// dbus.connect( element, [mounted,unmounted] )

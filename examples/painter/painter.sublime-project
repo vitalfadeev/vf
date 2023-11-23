@@ -8,8 +8,7 @@
 			"path": "./../../source/vf"
 		},
 		{
-			"path": "~/.dub/packages/xcb-d/2.1.1+1.11.1/xcb-d/source/xcb",
-			"file_include_patterns": ["*.d"]
+			"path": "./../../deps"
 		},
 		{
 			"path": "/usr/include/dmd/druntime",

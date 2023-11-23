@@ -9,6 +9,8 @@ struct Sensors(Event,EventType)
     alias _sensors this;
 
     void sense( Event* event, EventType event_type )
+    //    this         event            event_type
+    //    RDI          RSI              RDX
     {
         foreach( sensor; _sensors )
             sensor( event, event_type );

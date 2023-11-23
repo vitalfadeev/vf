@@ -14,7 +14,8 @@
 			"libs"           : [],
 			"dependencies"   : {
                "xcb-d" : { "path":"deps/xcb-d" , "version":"*" },
-               "xau"   : { "path":"deps/xau" , "version":"*" }
+               "xau"   : { "path":"deps/xau"   , "version":"*" },
+               "ddbus" : { "path":"deps/ddbus" , "version":"*" }
 			},
 		},
 		{
