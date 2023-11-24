@@ -5,6 +5,7 @@ import vf.input.xcb.event   : XcbEvent;
 import vf.input.evdev.event : EvdevEvent;
 import std.traits           : Largest;
 import vf.base.sensable     : SensAble;
+import vf.input.timer.event : TimerEvent;
 
 alias Timestamp = 
     Largest!( 
@@ -13,23 +14,32 @@ alias Timestamp =
         EvdevEvent.Timestamp,
     );
 
-alias EventType = 
-    Largest!( 
-        VfEvent.EventType, 
-        XcbEvent.EventType, 
-        EvdevEvent.EventType,
-    );
+//alias EventType = 
+//    Largest!( 
+//        VfEvent.EventType, 
+//        XcbEvent.EventType, 
+//        EvdevEvent.EventType,
+//    );
+
+struct EventType
+{
+    ushort type;
+    ushort code;
+    uint   value;
+}
 
 
 struct Event
 {
     EventSourceType type;
-    union {
-        VfEvent     vf;     // 
+    union {                 //      M8   M8     M16 
+        VfEvent     vf;     //      
         XcbEvent    xcb;    //      type detail sequence time
         EvdevEvent  evdev;  // time type        code     value
-    }                       //      M8   M8     M16
-    Device          device;
+        //TimerEvent  timer;  //      
+        //DbusEvent   dbus;   //      
+    }                       
+    //Device          device;
 
     Timestamp timestamp()
     {
@@ -43,7 +53,7 @@ struct Event
         }
     }
 
-    EventType type()
+    EventType event_type()
     {
         final
         switch ( source )

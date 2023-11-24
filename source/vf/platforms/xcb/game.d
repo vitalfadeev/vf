@@ -32,7 +32,8 @@ version(XCB):
 import xcb.xcb;
 import vf.base.game                    : BaseGame;
 import vf.platforms.xcb.world          : World;
-import vf.platforms.xcb.queue          : Queue;
+//import vf.platforms.xcb.queue          : Queue;
+import vf.input.queue                  : Queue;
 import vf.platforms.xcb.window         : Window;
 import vf.platforms.xcb.window_manager : WindowManager;
 import vf.platforms.xcb.event          : Event, EventType;

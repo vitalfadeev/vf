@@ -1,8 +1,15 @@
 module vf.input.evdev.event;
 
+import core.time      : MonoTime;
+import core.time      : dur;
+import vf.input.event : EventType;
+
 
 struct EvdevEvent
 {
+    Timestamp timestamp() { return MonoTime( dur!"usecs"(time.tv_usec) ); };
+    //EventType event_type;
+
     union {
         struct {
             Timeval   time;
@@ -12,23 +19,20 @@ struct EvdevEvent
         }
         InputEvent    input_event;
         struct {
-            Timeval   time;
+            Timeval   time_;
             EventType event_type;
         }
     }
 
-    alias Timestamp = typeof( time.tv_sec );
+    alias Timestamp = MonoTime;  //  typeof( time.tv_sec ) = long
 
-    struct EventType
-    {
-        ushort type;
-        ushort code;
-        uint   value;
-    }
+    //struct EventType
+    //{
+    //    ushort type;
+    //    ushort code;
+    //    uint   value;
+    //}
 }
-
-alias time_t      = long;  // 'long' on 64-bit systen
-alias suseconds_t = long;
 
 struct InputEvent {
     Timeval time;  // long, long
@@ -42,4 +46,7 @@ struct Timeval
     time_t      tv_sec;
     suseconds_t tv_usec;
 }
+
+alias time_t      = long;  // 'long' on 64-bit systen
+alias suseconds_t = long;
 

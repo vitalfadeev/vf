@@ -1,9 +1,12 @@
 module vf.input.dbus.event;
 
-
+version(DBUS):
 // libdbus
 struct DbusEvent
 {
+    Timestamp timestamp;
+    EventType event_type;
+
     alias Timestamp = ulong;
     alias EventType = uint;  // string to uint:
                              //   "/org/freedesktop/UDisks2" . "GetBlockDevices"

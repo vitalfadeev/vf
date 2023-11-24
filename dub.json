@@ -15,7 +15,7 @@
 			"dependencies"   : {
                "xcb-d" : { "path":"deps/xcb-d" , "version":"*" },
                "xau"   : { "path":"deps/xau"   , "version":"*" },
-               "ddbus" : { "path":"deps/ddbus" , "version":"*" }
+               "ddbus" : { "path":"deps/ddbus/2.3.0/ddbus/" , "version":"*" }
 			},
 		},
 		{

@@ -367,7 +367,7 @@ struct DBusAny {
       valueStr = boolean ? "true" : "false";
       break;
     case 'a':
-      import std.digest.digest : toHexString;
+      import std.digest : toHexString;
 
       if (signature == ['y']) {
         valueStr = "binary(" ~ binaryData.toHexString ~ ')';
@@ -448,17 +448,17 @@ struct DBusAny {
   }
 
   /// If the value is an array of DictionaryEntries this will return a HashMap
-  deprecated("Please use to!(V[K])") DBusAny[DBusAny] toAA() {
-    enforce(type == 'a' && signature && signature[0] == '{');
-    DBusAny[DBusAny] aa;
+  //deprecated("Please use to!(V[K])") DBusAny[DBusAny] toAA() {
+  //  enforce(type == 'a' && signature && signature[0] == '{');
+  //  DBusAny[DBusAny] aa;
 
-    foreach (val; array) {
-      enforce(val.type == 'e');
-      aa[val.entry.key] = val.entry.value;
-    }
+  //  foreach (val; array) {
+  //    enforce(val.type == 'e');
+  //    aa[val.entry.key] = val.entry.value;
+  //  }
 
-    return aa;
-  }
+  //  return aa;
+  //}
 
   /++
     Get the DBus type signature of the value stored in the DBusAny object.
@@ -590,7 +590,7 @@ struct DBusAny {
     }
   }
 
-  bool opEquals(ref in DBusAny b) const {
+  bool opEquals(ref DBusAny b) const {
     if (b.type != type || b.explicitVariant != explicitVariant) {
       return false;
     }

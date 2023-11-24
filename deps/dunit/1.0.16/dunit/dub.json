@@ -1,0 +1,45 @@
+{
+	"authors": [
+		"Gary Willoughby"
+	],
+	"buildTypes": {
+		"docs": {
+			"buildOptions": [
+				"syntaxOnly",
+				"warningsAsErrors",
+				"deprecationErrors"
+			],
+			"dflags": [
+				"-c",
+				"-Ddtemp",
+				"-op"
+			],
+			"postBuildCommands": [
+				"rm -rf docs",
+				"mv temp/source docs",
+				"rm -rf temp"
+			]
+		}
+	},
+	"configurations": [
+		{
+			"excludedSourceFiles": [
+				"source/example.d"
+			],
+			"name": "library",
+			"targetType": "library"
+		}
+	],
+	"copyright": "Copyright (c) 2015 Gary Willoughby",
+	"description": "Advanced unit testing toolkit for the D programming language",
+	"homepage": "https://github.com/nomad-software/dunit",
+	"importPaths": [
+		"source/"
+	],
+	"license": "MIT",
+	"name": "dunit",
+	"sourcePaths": [
+		"source/"
+	],
+	"version": "1.0.16"
+}

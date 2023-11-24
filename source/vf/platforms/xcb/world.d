@@ -26,7 +26,6 @@ class World : BaseWorld!(Event,EventType,WX)
         super.sense( event, event_type );
     }
 
-    override
     void on_XCB_EVENT_MASK_BUTTON_PRESS( Event* event, EventType event_type )
     {
         WX _wx = WX( Fixed(event.button_press.event_x,0),
@@ -53,6 +52,48 @@ class World : BaseWorld!(Event,EventType,WX)
     //}
 }
 
+
+class EventRouter
+{
+    World world;
+
+    void sense( Event* event, EventType event_type )
+    //      this       event             event_type
+    //      RDI        RSI               RDX
+    {
+        switch ( event_type )
+        {
+            case XCB_EVENT_MASK_BUTTON_PRESS: on_XCB_EVENT_MASK_BUTTON_PRESS( event, event_type ); break;
+            default:
+                world.sense( event, event_type );
+        }
+    }
+
+    void on_XCB_EVENT_MASK_BUTTON_PRESS( Event* event, EventType event_type )
+    {
+        auto element = find_element( event, world );
+        if ( element !is null )
+            element.sense( event, event_type );
+    }    
+
+    Element find_element( Event* event, Element root )
+    {
+        foreach( ref e; root.enter )
+        {
+            if ( hit_test( event.button_press_wx ) )
+            {
+                auto deep_e = find_element( event, e );
+                if ( deep_e !is null )
+                    return deep_e;
+                else
+                    return e;
+            }
+        }
+
+        return null;
+    }
+}
+
 import vf.platforms.xcb.window : Window;
 
 class MouseDevice
@@ -65,4 +106,5 @@ WX to_wx( SX sx )
 {
     return WX( sx.x, sx.y );
 }
+
 

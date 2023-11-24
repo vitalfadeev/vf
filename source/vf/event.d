@@ -7,3 +7,4 @@ module vf.event;
 //public import vf.platforms.xcb.event;
 
 
+public import vf.input.event : Event,EventType;

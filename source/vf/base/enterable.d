@@ -2,6 +2,8 @@ module vf.base.enterable;
 
 import vf.base.rasterable : RasterAble;
 import xcb.xproto         : XCB_EVENT_MASK_BUTTON_PRESS;
+import vf.input.vf.event  : ElementUpdatedEvent;
+import vf.input.vf.queue  : send_event;
 
 
 class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
@@ -29,9 +31,7 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
     override
     void redraw()
     {
-        import vf.platforms.xcb.event : send_event;
-        import vf.platforms.xcb.event : VF_ELEMENT_UPDATED;
-        send_event( VF_ELEMENT_UPDATED, this ); // updated, need redraw rect, in window
+        send_event( ElementUpdatedEvent( this ) ); // updated, need redraw rect, in window
         // find element in World
         //   get location
         //   get size
@@ -66,25 +66,8 @@ class EnterAble(Event,EventType,WX) : RasterAble!(Event,EventType,WX)
     {
         super.sense( event, event_type );
 
-        switch ( event_type )
-        {
-            case XCB_EVENT_MASK_BUTTON_PRESS: on_XCB_EVENT_MASK_BUTTON_PRESS( event, event_type ); break;
-            default:
-                foreach ( ref e; enter )
-                    e.sense( event, event_type );
-        }
-    }
-
-    void on_XCB_EVENT_MASK_BUTTON_PRESS( Event* event, EventType event_type )
-    {
-        if ( hit_test( event.button_press_wx ) )
-        {
-            import std.stdio : writeln;
-            writeln( "i clicked: ", this );
-
-            foreach ( ref e; enter )
-                e.sense( event, event_type );
-        }
+        foreach ( ref e; enter )
+            e.sense( event, event_type );
     }
 
     override
