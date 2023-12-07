@@ -1,14 +1,16 @@
-module vf.input.dbus.event;
+module vf.input.dbus.la;
+
+import vf.base.timeval : Timeval;
+
 
 version(DBUS):
 // libdbus
-struct DbusEvent
+struct DbusLa
 {
-    Timestamp timestamp;
-    EventType event_type;
+    Timeval   timeval;
+    LaType la_type;
 
-    alias Timestamp = ulong;
-    alias EventType = uint;  // string to uint:
+    alias LaType = uint;  // string to uint:
                              //   "/org/freedesktop/UDisks2" . "GetBlockDevices"
                              //   0x0001                       0x0001
 }
@@ -132,7 +134,7 @@ class DbusException : Exception
 
 
 // udisks
-struct UdisksEvent
+struct UdisksLa
 {
     //
 }
@@ -161,8 +163,8 @@ struct UdisksEvent
 
 // dbus
 //   bus     - is queue
-//   service - is event.type
-//      mask - is event.type mask
+//   service - is la.type
+//      mask - is la.type mask
 
 // dbus
 //   Вызовы методов.

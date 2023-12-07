@@ -1,50 +1,105 @@
 import std.stdio;
 import vf;
-import vf.base.fixed : Fixed;
+import vf.base.fixed   : Fixed;
+import vf.base.timeval : Timeval;
+import vf.base.focus_manager : FocusManager;
 
 //version=READ;
 //version=WRITE;
+LaType;
+EV_WINDOW_ACTIVATED;
+EV_WINDOW_DEACTIVATED;
+la;
 
-void main()
-{
+void 
+main () {
     import core.runtime : Runtime;
 
     try {
         Runtime.initialize();
+        scope (exit) Runtime.terminate();
 
-    	MyGame.instance.go();
+        alias Window = BaseWindow!LaType;
 
-        Runtime.terminate();
+        alias WindowFocusManager = 
+            FocusManager!(
+                Window,
+                LaType,
+                EV_WINDOW_ACTIVATED,
+                EV_WINDOW_DEACTIVATED,
+                ()=>(la.window)
+            );
+        WindowFocusManager wfm;
+
+        alias World = BaseWorld;
+        World world;
+
+        alias la_switch = 
+            LaSwitch!(
+                LaType,
+                    EV_REL, 
+                    EV_BTN, 
+                    EV_KEY, 
+                    EV_APP_WINDOW_ACTIVATED,
+                    EV_APP_ELEMENT_SET_FOCUS,
+                    EV_APP_ELEMENT_AUT_FOCUS,
+                    EV_APP_QUIT,
+                        &wfm.sense,
+                    EV_APP_WORLD_REL, 
+                    EV_APP_WORLD_BTN, 
+                        &world.sense,
+            );  // provides delegate: sense (la_type)
+
+        void 
+        delegate_sense (LaType la_type) {
+            writeln ("delegate_sense: ", la_type);
+        }
+
+
+        alias Sensors = AliasSeq!( 
+            &delegate_sense,
+            &Struct().sense,
+            &la_switch.sense  // --> window, --> world
+        );
+
+    	BaseGame !(Queue,Sensors)
+            .go;
     }
+
     catch ( Throwable o ) { 
         import vf.exception : show_throwable;
         o.show_throwable; 
     }
 }
 
+struct 
+Struct  {
+    void 
+    sense (LaType la_type) {
+        writeln ("Delegater.sense: ", la_type);
+    }
+}
+
 
 class MyGame : Game
 {
-	alias THIS = typeof(this);
+	alias THIS = typeof (this);
 
-    this()
-    {        
+    this () {        
         import vf.button : Button;
         world.enter.put( new Button() );
     }
 
-	override
-    Window new_window()
-    {
+	override Window 
+    new_window () {
         return new MyWindow( world );
     }
 
     // for able 
     //   MyGame().go() 
     //   MyGame().quit()
-    static
-    typeof(this) instance()
-    {
+    static typeof(this) 
+    instance () {
         static typeof(this) _instance;
         
         if ( _instance is null )
@@ -55,7 +110,7 @@ class MyGame : Game
 }
 
 
-class WorldWindow(World,Event,EventType) : Window
+class WorldWindow(World,Event,LaType) : Window
 {
     World world;
     WX    world_offset = WX( Fixed(-320,0), Fixed(-240,0) );
@@ -69,18 +124,18 @@ class WorldWindow(World,Event,EventType) : Window
     }
 
     override
-    void sense( Event* event, EventType event_type )
-    //      this       event             event_type
+    void sense( Event* event, LaType la_type )
+    //      this       event             la_type
     //      RDI        RSI               RDX
     {
         event.world_offset = world_offset;
-        super.sense( event, event_type );
-        //world.sense( event, event_type, world_offset );
+        super.sense( event, la_type );
+        //world.sense( event, la_type, world_offset );
     }
 
 
     override
-    void draw( Event* event, EventType event_type ) 
+    void draw( Event* event, LaType la_type ) 
     {
         GLine( world, rasterizer );
     }
@@ -99,28 +154,23 @@ void GLine(World,Rasterizer)( World world, Rasterizer rasterizer )
     }
 }
 
-class MyWindow : WorldWindow!(World,Event,EventType)
+class MyWindow : WorldWindow!(World,Event,LaType)
 {
     this(ARGS...)( World world, ARGS args )
     {
     	super( world, args );
     }
 
-    class FocusManager
-    {
-        //
-    }
-
     //override
-    //void sense( Event* event, EventType event_type ) 
+    //void sense( Event* event, LaType la_type ) 
     //{
-    //    auto_route_event!( this, event, event_type );
+    //    auto_route_event!( this, event, la_type );
     //}
 
     // Linux
     //version(XCB)
     //override
-    //void on_XCB_EXPOSE( Event* event, EventType event_type ) 
+    //void on_XCB_EXPOSE( Event* event, LaType la_type ) 
     //{
         // world
         //   get all draws
@@ -205,7 +255,7 @@ class MyWindow : WorldWindow!(World,Event,EventType)
 
     // Windows
 	version(WINDOWS_NATIVE)
-    ERESULT on_WM_PAINT( Event* event, EventType event_type ) 
+    ERESULT on_WM_PAINT( Event* event, LaType la_type ) 
     {
         try {
             HDC         hdc;
@@ -286,13 +336,13 @@ class MyWindow : WorldWindow!(World,Event,EventType)
     }
 
     version(WINDOWS)
-    void on_WM_LBUTTONDOWN( Event* event, EventType event_type )
+    void on_WM_LBUTTONDOWN( Event* event, LaType la_type )
     {
     	MessageBox( NULL, "on_WM_LBUTTONDOWN", "info", MB_OK | MB_ICONEXCLAMATION );
     }
 
     version(WINDOWS)
-    void on_WM_DESTROY( Event* event, EventType event_type )
+    void on_WM_DESTROY( Event* event, LaType la_type )
     {
         MyGame.instance.quit();
     }
@@ -356,7 +406,7 @@ auto tee(T)( T This )
 // 
 // World
 //  sense
-//   case event_type == e
+//   case la_type == e
 //    enter ~= new class_state()
 
 // Colors
@@ -453,7 +503,7 @@ auto tee(T)( T This )
 // InputDriver     input_driver      Evdev
 // InputEvent      input_event       
 // InputEvent      input_event       ButtonInputEvent
-// InputEventType  input_event_type  BUTTON_PRESSED
+// InputLaType  input_la_type  BUTTON_PRESSED
 // ...                               data
 //
 // ElementEvent    element_event
@@ -741,3 +791,162 @@ class SourceManager : Source
 //   signal
 
 // dbus.connect( element, [mounted,unmounted] )
+
+// APP_QUEUE
+// EVDEV_QUEUE
+// TIMER_QUEUE
+// DBUS_QUEUE
+//
+// APP_QUEUE
+//  APP_ELEMENT_UPDATED, APP_ELEMENT_UPDATED
+// EVDEV_QUEUE
+//  EV_KEY, EV_KEY
+// TIMER_QUEUE
+//  TIMER_EV, TIMER_EV  // timestamp, timestamp
+// DBUS_QUEUE
+//  DBUS_UDISKS2_NEW_DISK, DBUS_UDISKS2_REMOVE_DISK
+// 
+// timestamp
+//   secons (from 1970/01/01) +
+//   micro_secons (1/1_000_000 sec)
+
+alias Timestamp = Timeval;
+
+// recursive to non-recutsive
+// stack  -> PTR[] stack
+// func( root ) -> func( root, &stack )..while..loop
+
+//var stack = [];
+//stack.push(firstObject);
+//// while not empty
+//while (stack.length) {
+//    // Pop off end of stack.
+//    obj = stack.pop();
+//    // Do stuff.
+//    // Push other objects on the stack as needed.
+//    ...
+//}
+
+// find deepest iterated
+E find_deepest(E,TEST)( E e, TEST test )
+  if ( is( TEST : bool function(E) ) )
+{
+    E tested_deepest_e;
+
+    loop:
+    foreach ( e2; e.enter )
+    if ( test( e2 ) ) {
+        tested_deepest_e = e2;
+        e = e2;
+        goto loop;
+    }
+
+    return tested_deepest_e;
+}
+
+// Button Play
+//   get from audio-player
+//   move by mouse into desktop
+//   press on button - play in audio-player
+//
+// save with button
+//   instance id
+//   player start command line + dir + env / .desktop-file / .lnk
+//   button id
+//   app-play-event emited by button
+//
+// when press button
+//   send app-play-event in instance id
+//   if instance id not exists
+//      start  player
+//      send app-play-event in instance
+
+// Timer Queue
+//   min_timeval
+//   timers[]
+//     timer1: id, timeval, interval
+//     timer2: id, timeval, interval
+//     timer3: id, timeval, interval
+//
+// queue
+//   app
+//   evdev
+//   dbus
+//   timers
+//
+//   poll
+//     evdev
+//       /dev/input/eventX
+//     dbus
+//       DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+
+// KEY MODIFIER
+// space + key = modified key
+// space        = space
+//
+// GAME MODE KEYS
+// left hand:
+//     w   - cursor move
+//   a s d -
+//
+//   small 3     ukaz
+//   fingr fingr fingr
+//   ----- ----- ----- -------------
+//   ~     1 2 3 4
+//   tab   q . e r
+//   caps  . . . f
+//   shift z x c v
+//   ----- ----- -------------------
+//             |       space       |
+//   -------------------------------
+//                    big fingr
+// 
+//   big finger
+//   ----------
+//   space + key = modified key
+//   space       = space
+// 
+// right hand:
+
+//   mouse
+
+//
+// GAME
+//
+// -----
+// evdev --
+// -----   \   Event                            -------------              ------------                  -------
+//           - switch                           WindowManager              FocusManager                  Element
+//               EV_KEY --------------------> active       ------------> focused     ----------------> sense                              --------
+//                                         -> set_active    |         -> change_focused             -> set_focus -> EV_ELEMENT_FOCUSED -> AppQueue
+// ---                                   /      |           |       /      ------------           /      -------                          --------
+// xcb  -------- EV_WINDOW_ACTIVATED ---        |           |      /                             /
+// ---                                          |           |     /                             /
+//             - EV_ELEMENT_FOCUSED  ----------------------------                              /
+// --------   /                                 |           |                                 /
+// AppQueue -                                   |           |         ----------------       /
+// --------                                     |           |         ElementManager        /
+//               EV_BTN (left) -------------> active       -------> find_element_at_xy  ---
+//                                              |           |         |              |
+//                                              |           |         |              |
+//                                              |           |         |              |
+//                                              |           |         |              |
+//               EV_REL --------------------> active       -------> 
+//                                              -------------         ----------------
+//    
+//                                                                     ----------------
+//                                                                     HoverManager  
+//                                                                    in
+//                                                                    over
+//                                                                    out
+//                                                                     ----------------
+
+
+// EVT_BTN
+//   window
+//     clickcy -> world.xy
+//     emit WOLRD_CLICK_XY
+//
+// WOLRD_CLICK_XY
+//   world
+//     ...

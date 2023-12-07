@@ -4,37 +4,37 @@ version(WINDOWS):
 import core.sys.windows.windows;
 public import vf.base.window_manager;
 import vf.interfaces              : ISensAble, IWindow;
-import vf.platforms.windows.event : Event, EventType;
+import vf.platforms.windows.la : La, LaType;
 
 // hwnd -> window
 // window -> hwnd
 class WindowManager : vf.base.window_manager.WindowManager!(IWindow,HWND), ISensAble
 {
 
-    void sense( Event* event, EventType event_type )
-    //    this         event             event_type
+    void sense( La* la, LaType la_type )
+    //    this         la             la_type
     //    RDI          RSI               RDX
     {
         import std.algorithm.searching : countUntil;
 
-        switch ( event_type )
+        switch ( la_type )
         {
             case WM_DESTROY: {
-                auto os_window = event.msg.hwnd;
+                auto os_window = la.msg.hwnd;
                 auto i = _os_windows.countUntil( os_window );
                 if ( i != -1 )
                 {
-                    _vf_windows[i].sense( event, event_type );
-                    unregister( event.msg.hwnd );
+                    _vf_windows[i].sense( la, la_type );
+                    unregister( la.msg.hwnd );
                 }
                 break;
             }
             //case WM_PAINT: {
-            //    auto os_window = event.expose.window;
+            //    auto os_window = la.expose.window;
             //    auto i = _os_windows.countUntil( os_window );
             //    if ( i != -1 )
             //    {
-            //        _vf_windows[i].sense( event, event_type );
+            //        _vf_windows[i].sense( la, la_type );
             //    }
             //    break;
             //}

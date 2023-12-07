@@ -7,12 +7,12 @@ import vf.types;
 
 struct Queue
 {
-    SDL_Event front;
+    SDL_La front;
 
     pragma( inline, true )
     void popFront()
     {
-        if ( SDL_WaitEvent( cast( SDL_Event* )&this.front ) == 0 )
+        if ( SDL_WaitLa( cast( SDL_La* )&this.front ) == 0 )
             throw new SDLException( "Queue.popFront: " );
     }
 
@@ -25,34 +25,34 @@ struct Queue
     //alias put(T) = opOpAssign!("~", T)(T t);
 
     pragma( inline, true )
-    void opOpAssign( string op : "~" )( SDL_EventType t )
+    void opOpAssign( string op : "~" )( SDL_LaType t )
     {
-        SDL_Event event;
-        event.type = t;
-        SDL_PushEvent( &event ); // The event is copied into the queue.
+        SDL_La la;
+        la.type = t;
+        SDL_PushLa( &la ); // The la is copied into the queue.
     }
 
     pragma( inline, true )
     void opOpAssign( string op : "~" )( D d )
     {
-        SDL_PushEvent( cast(SDL_Event*)&d ); // The event is copied into the queue.
+        SDL_PushLa( cast(SDL_La*)&d ); // The la is copied into the queue.
     }
 
     pragma( inline, true )
-    void opOpAssign( string op : "~" )( SDL_UserEvent d )
+    void opOpAssign( string op : "~" )( SDL_UserLa d )
     {
-        SDL_PushEvent( cast(SDL_Event*)&d ); // The event is copied into the queue.
+        SDL_PushLa( cast(SDL_La*)&d ); // The la is copied into the queue.
     }
 
     pragma( inline, true )
     void opOpAssign( string op : "~" )( D_LA d )
     {
-        SDL_PushEvent( cast(SDL_Event*)&d ); // The event is copied into the queue.
+        SDL_PushLa( cast(SDL_La*)&d ); // The la is copied into the queue.
     }
 
     pragma( inline, true )
     void opOpAssign( string op : "~" )( D_KEY_PRESSED d )
     {
-        SDL_PushEvent( cast(SDL_Event*)&d ); // The event is copied into the queue.
+        SDL_PushLa( cast(SDL_La*)&d ); // The la is copied into the queue.
     }
 }

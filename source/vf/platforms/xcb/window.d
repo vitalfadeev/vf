@@ -6,7 +6,7 @@ import vf.platform                     : Platform;
 import vf.base.oswindow                : BaseOSWindow;
 import vf.base.rasterable              : RasterAble;
 import vf.base.px                      : BasePX;
-import vf.platforms.xcb.event          : Event, EventType;
+import vf.platforms.xcb.la          : La, LaType;
 import vf.platforms.xcb.types          : uint16_t;
 import vf.platforms.xcb.rasterizer     : XCBRasterizer;
 import vf.platforms.xcb.types          : X,Y;
@@ -16,12 +16,12 @@ import vf.platforms.xcb.window_manager : WindowManager;
 alias Window = XCBWindow;
 
 
-class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
+class XCBWindow : BaseOSWindow!(xcb_window_t,La,LaType)
 {
     alias THIS       = typeof(this);
     alias PX         = .BasePX!(X,Y); 
     alias WX         = .WX;
-    alias RasterAble = .RasterAble!(Event,EventType,WX);
+    alias RasterAble = .RasterAble!(La,LaType,WX);
     alias Rasterizer = .XCBRasterizer!(THIS,RasterAble);
     alias Platform   = .Platform;
 
@@ -35,16 +35,16 @@ class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
 
     //
     override
-    void sense( Event* event, EventType event_type ) 
-    //      this       event             event_type
+    void sense( La* la, LaType la_type ) 
+    //      this       la             la_type
     //      RDI        RSI               RDX
     {
-        switch (event_type)
+        switch (la_type)
         {
-            case XCB_EXPOSE: on_XCB_EXPOSE( event, event_type ); break;
+            case XCB_EXPOSE: on_XCB_EXPOSE( la, la_type ); break;
             default:
         }
-        super.sense( event, event_type );
+        super.sense( la, la_type );
     }
 
 
@@ -108,7 +108,7 @@ class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
         // Ask for our window's Id
         hwnd = xcb_generate_id( c );
 
-        // Register OS window for route events to this class
+        // Register OS window for route las to this class
         WindowManager.instance.register( this, hwnd );
 
         //
@@ -156,18 +156,18 @@ class XCBWindow : BaseOSWindow!(xcb_window_t,Event,EventType)
     }
 
     //
-    void on_XCB_EXPOSE( Event* event, EventType event_type ) 
+    void on_XCB_EXPOSE( La* la, LaType la_type ) 
     {
-        draw( event, event_type );
+        draw( la, la_type );
     }
 }
 
-void auto_route_event( alias This, alias event, alias event_type )()
+void auto_route_la( alias This, alias la, alias la_type )()
 {
-    mixin( _auto_route_event!( This, event, event_type )() );
+    mixin( _auto_route_la!( This, la, la_type )() );
 }
 
-string _auto_route_event( alias This, alias event, alias event_type )()
+string _auto_route_la( alias This, alias la, alias la_type )()
 {
     import std.traits;
     import std.string;
@@ -179,10 +179,10 @@ string _auto_route_event( alias This, alias event, alias event_type )()
     string s;
     s ~= "import xcb.xcb;";
 
-    s ~= "switch (event_type) {";
+    s ~= "switch (la_type) {";
 
     static foreach( h; Handlers!T )
-        s ~= "case "~(HandlerName!h)[3..$]~":  { This."~(HandlerName!h)~"( event, event_type ); break; } ";
+        s ~= "case "~(HandlerName!h)[3..$]~":  { This."~(HandlerName!h)~"( la, la_type ); break; } ";
 
     //
         s ~= "default: {}";

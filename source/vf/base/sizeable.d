@@ -4,7 +4,7 @@ import std.typecons     : Tuple;
 import vf.base.drawable : DrawAble;
 
 
-class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
+class SizeAble(La,LaType,WX) : DrawAble!(La,LaType,WX)
 {
     alias THIS      = typeof(this);
     alias SizeAble  = typeof(this);
@@ -26,7 +26,7 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
     override
     void redraw()
     {
-        //send_event( VF_REDRAW, this.size );
+        //send_la( VF_REDRAW, this.size );
     }
 
     override
@@ -88,7 +88,7 @@ class SizeAble(Event,EventType,WX) : DrawAble!(Event,EventType,WX)
 }
 
 //
-void update_sizes(Event,EventType,WX)( LayoutAble!(Event,EventType,WX) e )
+void update_sizes(La,LaType,WX)( LayoutAble!(La,LaType,WX) e )
 {
     e.each_recursive( &e.calc_size );
 }

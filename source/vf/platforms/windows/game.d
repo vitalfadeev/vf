@@ -74,10 +74,10 @@ import vf.queue          : Queue;
 import vf.world          : World;
 import vf.window         : Window;
 import vf.window_manager : WindowManager;
-import vf.event          : Event, EventType;
+import vf.la          : La, LaType;
 
 
-class Game : vf.base.game.Game!(Queue,Event,EventType)
+class Game : vf.base.game.Game!(Queue,La,LaType)
 {
     World world = new World();
 
@@ -107,10 +107,10 @@ class Game : vf.base.game.Game!(Queue,Event,EventType)
 
 
     //
-    void delegate_sense( Event* event, EventType event_type )
+    void delegate_sense( La* la, LaType la_type )
     {
         import std.stdio : writeln;
-        writeln( "sense: ", *event, "; ", event_type );
+        writeln( "sense: ", *la, "; ", la_type );
     }
 }
 

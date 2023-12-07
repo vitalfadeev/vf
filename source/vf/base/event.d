@@ -1,9 +1,9 @@
-module vf.base.event;
+module vf.base.la;
 
 
-//struct Event
+//struct La
 //{
 //    //
 //}
 
-//alias EventType = uint;
+//alias LaType = uint;

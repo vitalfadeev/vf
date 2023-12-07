@@ -21,7 +21,7 @@ class Window
     }
 
     //
-    LRESULT event( Event e, EventCode code, EventValue value ) 
+    LRESULT la( La e, LaCode code, LaValue value ) 
     {
         return DefWindowProc( hwnd, cast(UINT)e, cast(WPARAM)code, cast(LPARAM)value );
     }
@@ -57,9 +57,9 @@ class Window
                 x_visual, 
                 AllocAll );
 
-        attribmask = CWEventMask | CWColormap | CWBorderPixel;
+        attribmask = CWLaMask | CWColormap | CWBorderPixel;
 
-        attribs.event_mask =
+        attribs.la_mask =
             KeyPressMask
             | KeyReleaseMask
             // | PointerMotionMask | ButtonPressMask | ButtonReleaseMask
@@ -172,7 +172,7 @@ class Window
 
         extern( Windows ) 
         static nothrow
-        LRESULT event( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
+        LRESULT la( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
         {   //              RCX,       RDX,            R8,            R9
             // Microsoft x64 calling convention:
             //   RCX, RDX, R8, R9
@@ -183,13 +183,13 @@ class Window
                 {
                     if ( message == WM_DESTROY )
                     {
-                        auto ret = _vf_windows[i].event( Event(message), EventCode(wParam), EventValue(lParam) );
+                        auto ret = _vf_windows[i].la( La(message), LaCode(wParam), LaValue(lParam) );
                         unregister( hwnd );
                         return ret;
                     }
                     else
                     {
-                        return _vf_windows[i].event( Event(message), EventCode(wParam), EventValue(lParam) );
+                        return _vf_windows[i].la( La(message), LaCode(wParam), LaValue(lParam) );
                     }
                 }
             } 
@@ -201,7 +201,7 @@ class Window
 }
 
 
-LRESULT auto_route_event(THIS)( THIS This, Event e, EventCode code, EventValue value )
+LRESULT auto_route_la(THIS)( THIS This, La e, LaCode code, LaValue value )
 {
     import std.traits;
     import std.string;

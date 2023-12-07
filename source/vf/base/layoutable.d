@@ -1,22 +1,15 @@
 module vf.base.layoutable;
 
-import vf.base.transformable : TransformAble;
+import vf.base.posable : PosAble;
 
 
-class LayoutAble(Event,EventType,WX) : TransformAble!(Event,EventType,WX)
+class LayoutAble(La,LaType,WX) : PosAble!(La,LaType,WX)
 {
     alias THIS       = typeof(this);
     alias LayoutAble = typeof(this);
 
-    Pos pos;
-
     void layout()
     {
         //
-    }
-
-    struct Pos
-    {
-        WX wx;
     }
 }

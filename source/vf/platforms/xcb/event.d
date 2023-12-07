@@ -1,8 +1,8 @@
-module vf.platforms.xcb.event;
+module vf.platforms.xcb.la;
 
 version(XCB):
 import xcb.xcb;
-import vf.base.event;
+import vf.base.la;
 import vf.base.sensable        : SensAble;
 import vf.platforms.xcb.wx     : WX;
 import vf.platforms.xcb.window : XCBWindow;
@@ -15,44 +15,44 @@ struct SX
     short y;
 }
 
-struct Event
+struct La
 {
     alias Timestamp = uint;  // xcb_timestamp_t = uint
 
     union {
-        xcb_generic_event_t*           generic;
-        xcb_key_press_event_t*         key_press;
-        xcb_button_press_event_t*      button_press;
-        xcb_motion_notify_event_t*     motion_notify;
-        xcb_enter_notify_event_t*      enter_notify;
-        xcb_focus_in_event_t*          focus_in;
-        xcb_keymap_notify_event_t*     keymap_notify;
-        xcb_expose_event_t*            expose;
-        xcb_graphics_exposure_event_t* graphics_exposure;
-        xcb_no_exposure_event_t*       no_exposure;
-        xcb_visibility_notify_event_t* visibility_notify;
-        xcb_create_notify_event_t*     create_notify;
-        xcb_destroy_notify_event_t*    destroy_notify;
-        xcb_unmap_notify_event_t*      unmap_notify;
-        xcb_map_notify_event_t*        map_notify;
-        xcb_map_request_event_t*       map_request;
-        xcb_reparent_notify_event_t*   reparent_notify;
-        xcb_configure_notify_event_t*  configure_notify;
-        xcb_configure_request_event_t* configure_request;
-        xcb_gravity_notify_event_t*    gravity_notify;
-        xcb_resize_request_event_t*    resize_request;
-        xcb_circulate_notify_event_t*  circulate_notify;
-        xcb_property_notify_event_t*   property_notify;
-        xcb_selection_clear_event_t*   selection_clear;
-        xcb_selection_request_event_t* selection_request;
-        xcb_selection_notify_event_t*  selection_notify;
-        xcb_colormap_notify_event_t*   colormap_notify;
-        xcb_client_message_event_t*    client_message;
-        xcb_mapping_notify_event_t*    mapping_notify;
-        xcb_ge_generic_event_t*        ge_generic;
+        xcb_generic_la_t*           generic;
+        xcb_key_press_la_t*         key_press;
+        xcb_button_press_la_t*      button_press;
+        xcb_motion_notify_la_t*     motion_notify;
+        xcb_enter_notify_la_t*      enter_notify;
+        xcb_focus_in_la_t*          focus_in;
+        xcb_keymap_notify_la_t*     keymap_notify;
+        xcb_expose_la_t*            expose;
+        xcb_graphics_exposure_la_t* graphics_exposure;
+        xcb_no_exposure_la_t*       no_exposure;
+        xcb_visibility_notify_la_t* visibility_notify;
+        xcb_create_notify_la_t*     create_notify;
+        xcb_destroy_notify_la_t*    destroy_notify;
+        xcb_unmap_notify_la_t*      unmap_notify;
+        xcb_map_notify_la_t*        map_notify;
+        xcb_map_request_la_t*       map_request;
+        xcb_reparent_notify_la_t*   reparent_notify;
+        xcb_configure_notify_la_t*  configure_notify;
+        xcb_configure_request_la_t* configure_request;
+        xcb_gravity_notify_la_t*    gravity_notify;
+        xcb_resize_request_la_t*    resize_request;
+        xcb_circulate_notify_la_t*  circulate_notify;
+        xcb_property_notify_la_t*   property_notify;
+        xcb_selection_clear_la_t*   selection_clear;
+        xcb_selection_request_la_t* selection_request;
+        xcb_selection_notify_la_t*  selection_notify;
+        xcb_colormap_notify_la_t*   colormap_notify;
+        xcb_client_message_la_t*    client_message;
+        xcb_mapping_notify_la_t*    mapping_notify;
+        xcb_ge_generic_la_t*        ge_generic;
     }
     //
-    DrawEvent draw;
+    DrawLa draw;
     // world_offset
     // add_world_offset = T delegate( wx )
     XCBWindow window;
@@ -66,12 +66,12 @@ struct Event
         return generic.response_type;
     }
 
-    SensAble!(Event,EventType) dst()
+    SensAble!(La,LaType) dst()
     {
         return null;
     }
 
-    Source src()  // event source. device
+    Source src()  // la source. device
     {
         return null;
     }
@@ -111,13 +111,13 @@ struct Event
     string toString()
     {
         import std.format : format;
-        return format!"Event( 0x%04X )"(generic.response_type);
+        return format!"La( 0x%04X )"(generic.response_type);
     }
 }
 
-alias EventType = uint;
+alias LaType = uint;
 
-enum : EventType {
+enum : LaType {
     XCB_DRAW      = 0x80_01,
     XCB_GAME_OVER = 0x80_02,
 
@@ -131,9 +131,9 @@ enum : EventType {
 }
 
 import vf.interfaces : IDrawAble;
-struct DrawEvent
+struct DrawLa
 {
-    EventType type = XCB_DRAW;
+    LaType type = XCB_DRAW;
     IDrawAble drawable;
 }
 
@@ -142,27 +142,27 @@ struct DrawEvent
  * Tell the given window that it was configured to a size of 800x600 pixels.
  */
 import vf.platforms.xcb.element : Element;
-void send_event( EventType event_type, Element element ) 
+void send_la( LaType la_type, Element element ) 
 {
     //
-    // Every X11 event is 32 bytes long. Therefore, XCB will copy 32 bytes.
+    // Every X11 la is 32 bytes long. Therefore, XCB will copy 32 bytes.
     // In order to properly initialize these bytes, we allocate 32 bytes even
-    // though we only need less for an xcb_configure_notify_event_t
+    // though we only need less for an xcb_configure_notify_la_t
     //
     import core.stdc.stdlib : calloc;
-    xcb_configure_notify_event_t* event = 
-        cast( xcb_configure_notify_event_t* )calloc( 32, 1 );
+    xcb_configure_notify_la_t* la = 
+        cast( xcb_configure_notify_la_t* )calloc( 32, 1 );
 
-    event.response_type = cast(ubyte)event_type;
+    la.response_type = cast(ubyte)la_type;
 
     import vf.platforms.xcb.platform : Platform;
     xcb_connection_t* c = Platform.instance.c;
 
     //XCB_CLIENT_MESSAGE
-    //xcb_send_event( c, false, window, XCB_EVENT_MASK_STRUCTURE_NOTIFY, cast(char*)event );
+    //xcb_send_la( c, false, window, XCB_EVENT_MASK_STRUCTURE_NOTIFY, cast(char*)la );
 
     xcb_flush( c );
     
     import core.stdc.stdlib : free;
-    free( event );
+    free( la );
 }

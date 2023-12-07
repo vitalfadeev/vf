@@ -3,7 +3,7 @@ module vf.platforms.sdl;
 version(SDL):
 public import vf.platforms.sdl.color;
 public import vf.platforms.sdl.game;
-public import vf.platforms.sdl.event;
+public import vf.platforms.sdl.la;
 public import vf.platforms.sdl.painter;
 public import vf.platforms.sdl.platform;
 public import vf.platforms.sdl.queue;

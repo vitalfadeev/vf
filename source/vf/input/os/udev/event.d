@@ -1,13 +1,13 @@
-module vf.input.udev.event;
+module vf.input.os.udev.la;
 
 // kernel
 //   Device Mapper 
 //     [netlink socket]
-//       uevent            -- MODALIAS  - USB-mouse-MODALIAS = usb:v046DpC03Ed2000dc00dsc00dp00ic03isc01ip02
+//       ula            -- MODALIAS  - USB-mouse-MODALIAS = usb:v046DpC03Ed2000dc00dsc00dp00ic03isc01ip02
 //                            depmod
 //                              /lib/modules/$(uname -r)/modules.alias
-//                            boot-time uevent's (before / root fs mounted)
-//                              /sys/*/uevent
+//                            boot-time ula's (before / root fs mounted)
+//                              /sys/*/ula
 //         systemd-udevd  <-- /etc/udev/rules.d  - by administrator
 //                            /run/udev/rules.d  - by administrator
 //                            /lib/udev/rules.d  - by packages
@@ -32,7 +32,7 @@ module vf.input.udev.event;
 //   udevd
 //   udevadm
 //
-// direct events via
+// direct las via
 //   libudev
 //   gudev
 //   GUdevClient
@@ -53,11 +53,11 @@ module vf.input.udev.event;
 // Device Mapper 
 //   [link](https://www.kernel.org/doc/html/latest/admin-guide/device-mapper/)
 //
-//   device-mapper uevent
-//   [link](https://www.kernel.org/doc/html/latest/admin-guide/device-mapper/dm-uevent.html)
+//   device-mapper ula
+//   [link](https://www.kernel.org/doc/html/latest/admin-guide/device-mapper/dm-ula.html)
 //
-//   void dm_path_uevent(  enum dm_uevent_type event_type, struct dm_target *ti, const char *path, unsigned nr_valid_paths )
-//   void dm_send_uevents( struct list_head *events, struct kobject *kobj )
+//   void dm_path_ula(  enum dm_ula_type la_type, struct dm_target *ti, const char *path, unsigned nr_valid_paths )
+//   void dm_send_ulas( struct list_head *las, struct kobject *kobj )
 
 // man udev
 // man udevd
@@ -65,7 +65,7 @@ module vf.input.udev.event;
 // man udev.conf
 
 
-// kernel - netlink - uevent
+// kernel - netlink - ula
 //             netlink
 //               netlink.h
 //               rtnetlink.h
@@ -106,21 +106,21 @@ module vf.input.udev.event;
 
 
 
-struct uevent
+struct ula
 {
     //
 }
 
 // Android 
-//struct uevent {
+//struct ula {
 //    char *path;
-//    enum uevent_action action;
+//    enum ula_action action;
 //    char *subsystem;
 //    char *param[UEVENT_PARAMS_MAX];
 //    unsigned int seqnum;
 //};
 
-//struct Uevent {
+//struct Ula {
 //    std::string action;
 //    std::string path;
 //    std::string subsystem;

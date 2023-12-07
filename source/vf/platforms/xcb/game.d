@@ -36,10 +36,10 @@ import vf.platforms.xcb.world          : World;
 import vf.input.queue                  : Queue;
 import vf.platforms.xcb.window         : Window;
 import vf.platforms.xcb.window_manager : WindowManager;
-import vf.platforms.xcb.event          : Event, EventType;
+import vf.platforms.xcb.la          : La, LaType;
 
 
-class WindowedGame(Window) : BaseGame!(Queue,Event,EventType)
+class WindowedGame(Window) : BaseGame!(Queue,La,LaType)
 {
     Window window;
 
@@ -54,7 +54,7 @@ class WindowedGame(Window) : BaseGame!(Queue,Event,EventType)
     }
 }
 
-class WorldGame(World) : BaseGame!(Queue,Event,EventType)
+class WorldGame(World) : BaseGame!(Queue,La,LaType)
 {
     World world = new World();
 
@@ -66,7 +66,7 @@ class WorldGame(World) : BaseGame!(Queue,Event,EventType)
     }
 }
 
-class Game : BaseGame!(Queue,Event,EventType)
+class Game : BaseGame!(La,LaType,LaSwitch,WindowManager,FocusManager)
 {
     World world = new World();
     
@@ -96,9 +96,9 @@ class Game : BaseGame!(Queue,Event,EventType)
 
 
     //
-    void delegate_sense( Event* event, EventType event_type )
+    void delegate_sense( La* la, LaType la_type )
     {
         import std.stdio : writeln;
-        writeln( "sense: ", *event );
+        writeln( "sense: ", *la );
     }
 }

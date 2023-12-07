@@ -4,11 +4,11 @@ version(XCB):
 import xcb.xcb;
 public import vf.base.queue;
 import vf.platforms.xcb.platform : Platform;
-import vf.platforms.xcb.event    : Event, EventType;
+import vf.platforms.xcb.la    : La, LaType;
 
 // evdev
 //   mice - driver - kernel - evdev (timestamp) - program
-//    /dev/input/eventX
+//    /dev/input/laX
 // keyboard
 //   ...
 // mousedev
@@ -17,7 +17,7 @@ import vf.platforms.xcb.event    : Event, EventType;
 // joydev
 //    /dev/input/jsX
 
-//struct input_event {
+//struct input_la {
 //    timeval time;  // long, long
 //    ushort  type;
 //    ushort  code;
@@ -41,16 +41,16 @@ import vf.platforms.xcb.event    : Event, EventType;
 // vf not paused, because prog
 
 // ACTIVATE_WINDOW
-//   connect to evdev /dev/events/*       (mouse,keyvoard,joystick)
+//   connect to evdev /dev/las/*       (mouse,keyvoard,joystick)
 //   or enable input
 // DEACTIVATE_WINDOW
-//   disconnect from evdev /dev/events/*  (mouse,keyvoard,joystick)
+//   disconnect from evdev /dev/las/*  (mouse,keyvoard,joystick)
 //   or disable input
 
 
 //struct Queue
 //{
-//    Event front;  // xcb_generic_event_t* front;
+//    La front;  // xcb_generic_la_t* front;
 
 //    pragma( inline, true )
 //    void popFront()  
@@ -94,8 +94,8 @@ import vf.platforms.xcb.event    : Event, EventType;
 //                break;
 //            }
 //            case Selector.XCB_VF: {
-//                Event.Timestamp _vf_time;   // 
-//                Event.Timestamp _xcb_time;  // xcb_timestamp_t = uint
+//                La.Timestamp _vf_time;   // 
+//                La.Timestamp _xcb_time;  // xcb_timestamp_t = uint
 //                _vf_time   = _vf_queue.front.timestamp;
 //                _xcb_time  = _xcb_queue.front.timestamp;
 
@@ -118,7 +118,7 @@ import vf.platforms.xcb.event    : Event, EventType;
 //    pragma( inline, true )
 //    bool empty()
 //    { 
-//        // wait for event
+//        // wait for la
 //        //  loop:
 //        //   check
 //        //   if empty
@@ -127,7 +127,7 @@ import vf.platforms.xcb.event    : Event, EventType;
 //        return ( _vf_queue.empty && _xcb_queue.empty );
 //    }
 
-//    // event readers
+//    // la readers
 //    //   XCB
 //    //   VF
 //    VFQueue  _vf_queue;
@@ -137,21 +137,21 @@ import vf.platforms.xcb.event    : Event, EventType;
 
 //struct XCBQueue
 //{
-//    Event front;  // xcb_generic_event_t* front;
+//    La front;  // xcb_generic_la_t* front;
 
 //    pragma( inline, true )
 //    void popFront()
 //    {
 //        import core.stdc.stdlib : free;
 //        free( front.generic );
-//        front.generic = xcb_poll_for_event( Platform.instance.c );
+//        front.generic = xcb_poll_for_la( Platform.instance.c );
 //    }
 
 //    pragma( inline, true )
 //    bool empty()
 //    {
 //        return ( 
-//            xcb_poll_for_queued_event( Platform.instance.c ) is null 
+//            xcb_poll_for_queued_la( Platform.instance.c ) is null 
 //         );
 //    }
 //}

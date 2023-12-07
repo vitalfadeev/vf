@@ -1,15 +1,15 @@
 module vf.base.sensable;
 
 
-class SensAble(TEvent,TEventType)
+class SensAble(TLa,TLaType)
 {
     alias THIS      = typeof(this);
     alias Sensable  = typeof(this);
-    alias Event     = TEvent;
-    alias EventType = TEventType;
+    alias La     = TLa;
+    alias LaType = TLaType;
 
-    void sense( Event* event, EventType event_type )
-    //    this         event            event_type   src   ...  ...
+    void sense( La* la, LaType la_type )
+    //    this         la            la_type   src   ...  ...
     //    RDI          RSI              RDX          RCX   R8   R9
     {
         //

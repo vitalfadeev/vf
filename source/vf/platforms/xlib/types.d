@@ -13,8 +13,8 @@ alias M16     = ushort;
 alias M32     = uint;
 alias M64     = ulong;
 alias MPTR    = void*;
-alias SENSOR  = void delegate( Event m );
-alias SENSORF = void function( Event m );
+alias SENSOR  = void delegate( La m );
+alias SENSORF = void function( La m );
 alias X       = short;
 alias Y       = short;
 alias W       = X;
@@ -94,11 +94,11 @@ void show_throwable( Throwable o )
     catch (Throwable o) { MessageBox( NULL, "Window: o.toString error", "Error", MB_OK | MB_ICONEXCLAMATION ); }
 }
 
-alias EventType = ubyte;
+alias LaType = ubyte;
 
-struct Event
+struct La
 {
-    xcb_generic_event_t _super;
+    xcb_generic_la_t _super;
     alias _super this;
 }
 

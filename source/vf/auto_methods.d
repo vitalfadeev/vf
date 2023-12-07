@@ -3,23 +3,23 @@ module vf.auto_methods;
 
 mixin template auto_sensable(T)
 {
-    import vf.event : Event, EventType;
+    import vf.la : La, LaType;
     import vf       : VF_DRAW;
 
     override
-    void sense( Event* event, EventType event_type )
+    void sense( La* la, LaType la_type )
     {
-        mixin( _auto_sensable!( T, event, event_type )() );
+        mixin( _auto_sensable!( T, la, la_type )() );
 
         // recursive
         static if ( hasInterface!( T, IEnterAble ) )
-            enter.sense( event, event_type );
+            enter.sense( la, la_type );
 
-        super.sense( e, event_type );
+        super.sense( e, la_type );
     }
 }
 
-string _auto_sensable( T, alias event, alias event_type )()
+string _auto_sensable( T, alias la, alias la_type )()
 {
     import std.traits;
     import std.string;
@@ -27,10 +27,10 @@ string _auto_sensable( T, alias event, alias event_type )()
     import vf.traits;
 
     string s;
-    s ~= "switch (event_type) {";
+    s ~= "switch (la_type) {";
 
     static foreach( h; Handlers!T )
-        s ~= "case "~(HandlerName!h)[3..$]~":  { this."~(HandlerName!h)~"( event, event_type ); break; } ";
+        s ~= "case "~(HandlerName!h)[3..$]~":  { this."~(HandlerName!h)~"( la, la_type ); break; } ";
 
     //
         s ~= "default: {}";
@@ -61,7 +61,7 @@ mixin template auto_drawable(T)
 
     //mixin DrawAble!T;
 
-    void on_VF_DRAW( Event* event, EventType event_type )
+    void on_VF_DRAW( La* la, LaType la_type )
     {
         draw();
     }

@@ -1,7 +1,7 @@
 Button
-  sense( Event* event, EventType event_type, World world, WX world_offset )
+  sense( La* la, LaType la_type, World world, WX world_offset )
 WorldElement
-  sense( Event* event, EventType event_type, World world, WX world_offset )
+  sense( La* la, LaType la_type, World world, WX world_offset )
 Element
   |
 EnterAble
@@ -9,7 +9,10 @@ EnterAble
 RasterAble
   to_raster
 LayoutAble
-  pos  layout
+  layout
+PosAble
+  pos  at
+    rx wx - is relative xy, world xy
 TransformAble
   transform  rotate  scale
 SizeAble

@@ -4,7 +4,7 @@ import vf.base.layoutable : LayoutAble;
 import vf.base.rasterizer : BaseRasterizer;
 
 
-class RasterAble(Event,EventType,WX) : LayoutAble!(Event,EventType,WX)
+class RasterAble(La,LaType,WX) : LayoutAble!(La,LaType,WX)
 {
     alias THIS           = typeof( this );
     alias RasterAble     = typeof( this );

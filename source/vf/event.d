@@ -1,10 +1,10 @@
-module vf.event;
+module vf.la;
 
 //version(WINDOWS)
-//public import vf.platforms.windows.event;
+//public import vf.platforms.windows.la;
 //else
 //version(XCB)
-//public import vf.platforms.xcb.event;
+//public import vf.platforms.xcb.la;
 
 
-public import vf.input.event : Event,EventType;
+public import vf.input.la : La,LaType;

@@ -1,16 +1,16 @@
-module vf.platforms.windows.event;
+module vf.platforms.windows.la;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.base.event;
+import vf.base.la;
 import vf.interfaces : ISensAble;
 
 
-struct Event
+struct La
 {
     union {
         MSG       msg;
-        DrawEvent draw;
+        DrawLa draw;
     }
 
     auto type()
@@ -25,14 +25,14 @@ struct Event
     }
 }
 
-alias EventType = typeof(MSG.message);
+alias LaType = typeof(MSG.message);
 
 enum VF_DRAW = WM_PAINT;
 
 import vf.interfaces : IDrawAble;
-struct DrawEvent
+struct DrawLa
 {
-    EventType type = VF_DRAW;
+    LaType type = VF_DRAW;
     IDrawAble drawable;
 }
 

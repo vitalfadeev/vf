@@ -3,7 +3,7 @@ module vf.base.hitable;
 import vf.base.wxable   : WxAble;
 
 
-class HitAble(Event,EventType,WX) : WxAble!(Event,EventType,WX)
+class HitAble(La,LaType,WX) : WxAble!(La,LaType,WX)
 {
     alias THIS    = typeof(this);
     alias HitAble = typeof(this);

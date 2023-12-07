@@ -1,7 +1,7 @@
 module vf.element;
 
 import vf.base.enterable : EnterAble;
-import vf.event          : Event,EventType;
+import vf.la          : La,LaType;
 import vf.wx             : WX;
  
-alias Element = EnterAble!(Event,EventType,WX);
+alias Element = EnterAble!(La,LaType,WX);

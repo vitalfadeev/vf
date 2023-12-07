@@ -3,16 +3,16 @@ module vf.base.sensors;
 import vf.base.types : Sensor;
 
 
-struct Sensors(Event,EventType)
+struct Sensors(La,LaType)
 {
-    Sensor!(Event,EventType)[] _sensors;
+    Sensor!(La,LaType)[] _sensors;
     alias _sensors this;
 
-    void sense( Event* event, EventType event_type )
-    //    this         event            event_type
+    void sense( La* la, LaType la_type )
+    //    this         la            la_type
     //    RDI          RSI              RDX
     {
         foreach( sensor; _sensors )
-            sensor( event, event_type );
+            sensor( la, la_type );
     }
 }

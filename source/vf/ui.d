@@ -263,7 +263,7 @@ module vf.ui;
 // +----------------------------------------------------------+
 // |  queue                                                   |
 // |  +---+                                                   |
-// |  |   |-  event                                           |
+// |  |   |-  la                                           |
 // |  +---+ | +---+                                           |
 // |         -|   |-  switch                                  |
 // |          +---+ | +----+                                  |
@@ -279,18 +279,18 @@ module vf.ui;
 
 // view
 //   limits rect
-//   sense ( event )
-//     draw ( event.context: at_point, limit )
-//   on_draw ( event.context: drawable )
+//   sense ( la )
+//     draw ( la.context: at_point, limit )
+//   on_draw ( la.context: drawable )
 //     drawable.point
 //     drawable.line
-//     inner.sense( event, canvas, outer, outer_loc, inner_loc )
+//     inner.sense( la, canvas, outer, outer_loc, inner_loc )
 //   inner ( view | layout )
-//     sense ( event )
+//     sense ( la )
 //       case draw   : draw
 //       case layout : layout
 //     on_draw
-//       event, canvas, outer, outer_loc, inner_loc
+//       la, canvas, outer, outer_loc, inner_loc
 //       outer_loc : at_point, limits
 //       inner_loc : at_point, limits
 //   
@@ -299,7 +299,7 @@ module vf.ui;
 // all relative
 
 // outer
-//   inner.sense( event, canvas, outer, outer_loc, inner_loc )
+//   inner.sense( la, canvas, outer, outer_loc, inner_loc )
 //   inner_canvas
 //     scale_to_outer
 //       up_size
@@ -315,21 +315,21 @@ module vf.ui;
 version(beta):
 class SensAble
 {
-    void sense( Event* event, EventType event_type ) {}
+    void sense( La* la, LaType la_type ) {}
 }
 
 class DrawAble : SensAble
 {
     override
-    void sense( Event* event, EventType event_type ) {
-        switch ( event_type )
+    void sense( La* la, LaType la_type ) {
+        switch ( la_type )
         {
             case ON_DRAW : on_draw(); break;
-            default      : super.sense( event, event_type );
+            default      : super.sense( la, la_type );
         }
     }
 
-    void on_draw( Event* event ) {
+    void on_draw( La* la ) {
         //
     }
 }
@@ -337,15 +337,15 @@ class DrawAble : SensAble
 class ClickAble : DrawAble
 {
     override
-    void sense( Event* event, EventType event_type ) {
-        switch ( event_type )
+    void sense( La* la, LaType la_type ) {
+        switch ( la_type )
         {
             case ON_CLICK : on_click(); break;
-            default       : super.sense( event, event_type );
+            default       : super.sense( la, la_type );
         }
     }
 
-    void on_click( Event* event ) {
+    void on_click( La* la ) {
         //
     }
 }

@@ -2,7 +2,7 @@ module vf.platforms.windows.window;
 
 version(WINDOWS):
 import core.sys.windows.windows;
-import vf.event          : Event, EventType;
+import vf.la          : La, LaType;
 import vf.interfaces     : IWindow, ISensAble;
 import vf.types          : PX, WindowsException, W, H;
 
@@ -21,9 +21,9 @@ class Window : IWindow, ISensAble
     }
 
     //
-    void sense( Event* event, EventType event_type ) 
+    void sense( La* la, LaType la_type ) 
     {
-        DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );
+        DefWindowProc( la.msg.hwnd, la_type, la.msg.wParam, la.msg.lParam );
     }
 
     // private
@@ -124,30 +124,30 @@ extern( Windows )
 nothrow
 LRESULT window_proc_sense( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam )
 {   //              RCX,       RDX,            R8,            R9
-    import vf.event          : Event, EventType;
+    import vf.la          : La, LaType;
     import vf.types          : show_throwable;
     import vf.window_manager : WindowManager;
 
-    Event event;
-    event.msg.message = message;
-    event.msg.hwnd    = hwnd;
-    event.msg.wParam  = wParam;
-    event.msg.lParam  = lParam;
-    alias event_type  = message;
+    La la;
+    la.msg.message = message;
+    la.msg.hwnd    = hwnd;
+    la.msg.wParam  = wParam;
+    la.msg.lParam  = lParam;
+    alias la_type  = message;
     try {
-        WindowManager.instance.sense( &event, event_type );
+        WindowManager.instance.sense( &la, la_type );
     } catch ( Throwable o ) { o.show_throwable; }
     return DefWindowProc( hwnd, message, wParam, lParam );
 }
 
 
 
-void auto_route_event( alias This, alias event, alias event_type )()
+void auto_route_la( alias This, alias la, alias la_type )()
 {
-    mixin( _auto_route_event!( This, event, event_type )() );
+    mixin( _auto_route_la!( This, la, la_type )() );
 }
 
-string _auto_route_event( alias This, alias event, alias event_type )()
+string _auto_route_la( alias This, alias la, alias la_type )()
 {
     import std.traits;
     import std.string;
@@ -159,13 +159,13 @@ string _auto_route_event( alias This, alias event, alias event_type )()
     string s;
     s ~= "import core.sys.windows.windows;";
 
-    s ~= "switch (event_type) {";
+    s ~= "switch (la_type) {";
 
     static foreach( h; Handlers!T )
-        s ~= "case "~(HandlerName!h)[3..$]~":  { This."~(HandlerName!h)~"( event, event_type ); break; } ";
+        s ~= "case "~(HandlerName!h)[3..$]~":  { This."~(HandlerName!h)~"( la, la_type ); break; } ";
 
     //
-        s ~= "default: DefWindowProc( event.msg.hwnd, event_type, event.msg.wParam, event.msg.lParam );";
+        s ~= "default: DefWindowProc( la.msg.hwnd, la_type, la.msg.wParam, la.msg.lParam );";
 
     s ~= "}";
 

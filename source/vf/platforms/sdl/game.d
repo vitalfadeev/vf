@@ -51,7 +51,7 @@ class Game
 
         foreach( e; queue )
         {
-            window.event( Event(e) );
+            window.la( La(e) );
         }
     }
 
@@ -63,8 +63,8 @@ class Game
     static
     void quit( int quit_code=0 )
     {   
-        SDL_QuitEvent e;
-        SDL_PushEvent( cast(SDL_Event*)&e );
+        SDL_QuitLa e;
+        SDL_PushLa( cast(SDL_La*)&e );
     }
 }
 
@@ -94,7 +94,7 @@ this()
     init_sdl();
 
     // PS
-    // on Windows SDL Window must be created for using event loop
-    //   because events going from window &WindowProc
+    // on Windows SDL Window must be created for using la loop
+    //   because las going from window &WindowProc
 }
 

@@ -1,27 +1,30 @@
 module vf.base.game;
 
-import vf.base.sensors : Sensors;
 
-
-class BaseGame(Queue,Event,EventType)
+template 
+BaseGame (Queue,Sensors...) 
+    // if Queue has 'instance'
+    // if Queue is Range
+    // if Queue.front has 'type'
+    // if each Sensors is delegate(LaType)
 {
-    Sensors!(Event,EventType) sensors;
-    Queue   queue;
-    int     result;
+    void 
+    go () {
+        auto queue = Queue.instance;
 
-    void go()
-    {
-        foreach( ref event; queue )
-        {
-            sensors.sense( &event, event.type );
-
-            if ( event.is_quit )
-                break;
-        }
+        foreach( ref la; queue )
+            sense( la.type );
     }
 
-    void quit( int quit_code=0 )
-    {   
+    void 
+    sense (LaType)(LaType la_type) {
+        static foreach( s; Sensors )
+            s( la_type );  // delegate
+    }
+
+    void
+    aut (T)(T aut_code=0) {
         //
     }
 }
+

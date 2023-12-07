@@ -6,7 +6,7 @@ import std.container.dlist : DList;
 import std.traits;
 import vf.traits;
 import vf.fixed_16_16;
-public import vf.platforms.sdl.event_codes;
+public import vf.platforms.sdl.la_codes;
 
 
 alias M       = void;
@@ -16,8 +16,8 @@ alias M16     = ushort;
 alias M32     = uint;
 alias M64     = ulong;
 alias MPTR    = void*;
-alias SENSOR  = void delegate( Event m );
-alias SENSORF = void function( Event m );
+alias SENSOR  = void delegate( La m );
+alias SENSORF = void function( La m );
 alias X       = short;
 alias Y       = short;
 alias W       = X;
@@ -50,19 +50,19 @@ class SDLException : Exception
     }
 }
 
-struct Event 
+struct La 
 {
-    SDL_Event _super;
+    SDL_La _super;
     alias _super this;
 }
 
-struct EventCode
+struct LaCode
 {
     void* _super;
     alias _super this;
 }
 
-struct EventValue
+struct LaValue
 {
     void* _super;
     alias _super this;

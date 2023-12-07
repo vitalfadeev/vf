@@ -23,7 +23,7 @@ class Window
 
 
     //
-    LRESULT event( Event e, EventCode code=EventCode(), EventValue value=EventValue() ) 
+    LRESULT la( La e, LaCode code=LaCode(), LaValue value=LaValue() ) 
     {
         return 0;
     }
@@ -71,7 +71,7 @@ class Window
 }
 
 
-LRESULT auto_route_event(THIS)( THIS This, Event e, EventCode code, EventValue value )
+LRESULT auto_route_la(THIS)( THIS This, La e, LaCode code, LaValue value )
 {
     import std.traits;
     import std.string;

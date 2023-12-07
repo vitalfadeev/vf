@@ -1,19 +1,17 @@
-module vf.input.evdev.device_queue;
-
-import vf.input.evdev.event : EvdevEvent;
+module vf.input.os.evdev.device_queue;
 
 
 struct DeviceQueue
 {
-    EvdevEvent front;
+    EvdevLa front;
 
-    string    _device;  // "/dev/input/event5"
+    string    _device;  // "/dev/input/la5"
     int       _fd;    
 
 
     this( string device )
     {
-        _device = device;
+        this._device = device;
         _init();
     }
 
@@ -42,10 +40,10 @@ struct DeviceQueue
     {
         import core.sys.linux.stdio : read;
 
-        auto size = read( _fd, &front.input_event, input_event.sizeof );
+        auto size = read( _fd, &front.input_la, input_la.sizeof );
 
-        if ( size < front.input_event.sizeof )
-            throw new InputException( format!"error reading: %s: expected %u bytes, got %u\n"( _device, front.input_event.sizeof, size ) );        
+        if ( size < front.input_la.sizeof )
+            throw new InputException( format!"error reading: %s: expected %u bytes, got %u\n"( _device, front.input_la.sizeof, size ) );        
     }
 
     bool empty()
@@ -54,27 +52,44 @@ struct DeviceQueue
         import core.sys.linux.errno : errno;
         import vf.input.exception   : InputException;
 
-        // n = total number of file descriptors that have events 
+        // n = total number of file descriptors that have las 
         int n = poll(
             &_fd, // file descriptors
             1,    // number of file descriptors
             0     // timeout ms
         );
 
-        // no events
+        // no las
         if ( n == 0 )
             return true;
 
         // check error
         if ( n < 0 )
         {
-            // soft error - no events
+            // soft error - no las
             if ( errno == EAGAIN || errno == EINTR )
                return true;
             else
                 throw new InputException( "EINVAL" );
         }
 
-        return false;  // has events
+        return false;  // has las
     }
 }
+
+struct EvdevLa
+{
+    Timeval time;
+    ushort  type;
+    ushort  code;
+    uint    value;
+}
+
+struct Timeval
+{
+    time_t      tv_sec;
+    suseconds_t tv_usec;
+}
+
+alias time_t      = ulong;  // c_long = 'ulong' on 64-bit systen
+alias suseconds_t = ulong;

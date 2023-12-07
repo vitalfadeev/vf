@@ -4,37 +4,37 @@ version(XCB):
 import xcb.xcb;
 import vf.base.fixed            : Fixed;
 import vf.base.world            : BaseWorld;
-import vf.platforms.xcb.event   : Event, EventType;
+import vf.platforms.xcb.la   : La, LaType;
 import vf.platforms.xcb.wx      : WX;
 import vf.platforms.xcb.element : Element;
 
 
-class World : BaseWorld!(Event,EventType,WX)
+class World : BaseWorld!(La,LaType,WX)
 {    
     alias THIS = typeof(this);
 
     override
-    void sense( Event* event, EventType event_type )
-    //      this       event             event_type
+    void sense( La* la, LaType la_type )
+    //      this       la             la_type
     //      RDI        RSI               RDX
     {
-        event.world = this;
+        la.world = this;
 
-        if ( event_type == XCB_EVENT_MASK_BUTTON_PRESS )
-            on_XCB_EVENT_MASK_BUTTON_PRESS( event, event_type );
+        if ( la_type == XCB_EVENT_MASK_BUTTON_PRESS )
+            on_XCB_EVENT_MASK_BUTTON_PRESS( la, la_type );
 
-        super.sense( event, event_type );
+        super.sense( la, la_type );
     }
 
-    void on_XCB_EVENT_MASK_BUTTON_PRESS( Event* event, EventType event_type )
+    void on_XCB_EVENT_MASK_BUTTON_PRESS( La* la, LaType la_type )
     {
-        WX _wx = WX( Fixed(event.button_press.event_x,0),
-                     Fixed(event.button_press.event_y,0)
-                ) + event.world_offset;
+        WX _wx = WX( Fixed(la.button_press.la_x,0),
+                     Fixed(la.button_press.la_y,0)
+                ) + la.world_offset;
 
-        event.button_press_wx = _wx;
+        la.button_press_wx = _wx;
 
-        super.on_XCB_EVENT_MASK_BUTTON_PRESS( event, event_type );
+        super.on_XCB_EVENT_MASK_BUTTON_PRESS( la, la_type );
     }
 
     // lazy World iterator
@@ -53,36 +53,36 @@ class World : BaseWorld!(Event,EventType,WX)
 }
 
 
-class EventRouter
+class LaRouter
 {
     World world;
 
-    void sense( Event* event, EventType event_type )
-    //      this       event             event_type
+    void sense( La* la, LaType la_type )
+    //      this       la             la_type
     //      RDI        RSI               RDX
     {
-        switch ( event_type )
+        switch ( la_type )
         {
-            case XCB_EVENT_MASK_BUTTON_PRESS: on_XCB_EVENT_MASK_BUTTON_PRESS( event, event_type ); break;
+            case XCB_EVENT_MASK_BUTTON_PRESS: on_XCB_EVENT_MASK_BUTTON_PRESS( la, la_type ); break;
             default:
-                world.sense( event, event_type );
+                world.sense( la, la_type );
         }
     }
 
-    void on_XCB_EVENT_MASK_BUTTON_PRESS( Event* event, EventType event_type )
+    void on_XCB_EVENT_MASK_BUTTON_PRESS( La* la, LaType la_type )
     {
-        auto element = find_element( event, world );
+        auto element = find_element( la, world );
         if ( element !is null )
-            element.sense( event, event_type );
+            element.sense( la, la_type );
     }    
 
-    Element find_element( Event* event, Element root )
+    Element find_element( La* la, Element root )
     {
         foreach( ref e; root.enter )
         {
-            if ( hit_test( event.button_press_wx ) )
+            if ( hit_test( la.button_press_wx ) )
             {
-                auto deep_e = find_element( event, e );
+                auto deep_e = find_element( la, e );
                 if ( deep_e !is null )
                     return deep_e;
                 else

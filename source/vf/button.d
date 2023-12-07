@@ -70,7 +70,7 @@ import vf.element : Element;
 import xcb.xcb                 : XCB_EVENT_MASK_BUTTON_PRESS;
 import xcb.xcb                 : XCB_EVENT_MASK_BUTTON_RELEASE;
 import vf.base.fixed           : Fixed;
-import vf.platforms.xcb.event  : Event, EventType;
+import vf.platforms.xcb.la  : La, LaType;
 import vf.platforms.xcb.wx     : WX;
 import vf.platforms.xcb.color  : Colors;
 
@@ -85,13 +85,13 @@ class Button : Element
     mixin StateAble!(typeof(this));
 
     override
-    void sense( Event* event, EventType event_type )
+    void sense( La* la, LaType la_type )
     {
-        super.sense( event, event_type );
+        super.sense( la, la_type );
 
         // try go to new state
         //static if( StateAble && hasMethod!"to" )
-        try_to_( this, event, event_type );
+        try_to_( this, la, la_type );
     }
 
 
@@ -105,55 +105,55 @@ class Button : Element
         point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );
     }
 
-    void to_pressed( Event* event, EventType event_type )
+    void to_pressed( La* la, LaType la_type )
     {
         //                 M32
-        if ( event_type == EV_KEY_KEY_A ) if ( hit_test( event.button_press_wx ) ) { to!Pressed(); redraw(); }
+        if ( la_type == EV_KEY_KEY_A ) if ( hit_test( la.button_press_wx ) ) { to!Pressed(); redraw(); }
 
         //                 M64
-        if ( event_type == EV_KEY_KEY_A_DOWN ) if ( hit_test( event.button_press_wx ) ) { to!Pressed(); redraw(); }
+        if ( la_type == EV_KEY_KEY_A_DOWN ) if ( hit_test( la.button_press_wx ) ) { to!Pressed(); redraw(); }
 
-        // key A down  - include/uapi/linux/input-event-codes.h
-        switch ( event_type.code ) {
-            case EV_KEY: switch ( event_type.detail ) {
-                case KEY_A: if ( value == 1 ) if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+        // key A down  - include/uapi/linux/input-la-codes.h
+        switch ( la_type.code ) {
+            case EV_KEY: switch ( la_type.detail ) {
+                case KEY_A: if ( value == 1 ) if ( hit_test( la.button_press_wx ) ) to!Pressed(); redraw(); break;
                 default:}
             default:
         }
 
         // key A down  - Winuser.h                   M16     M16
-        switch ( event_type.code ) { // WM_KEYDOWN = 0x0100, detail = wParam, VK_A = 0x41
-            case WM_KEYDOWN: switch ( event_type.detail ) {
-                case VK_A: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+        switch ( la_type.code ) { // WM_KEYDOWN = 0x0100, detail = wParam, VK_A = 0x41
+            case WM_KEYDOWN: switch ( la_type.detail ) {
+                case VK_A: if ( hit_test( la.button_press_wx ) ) to!Pressed(); redraw(); break;
                 default:}
             default:
         }
 
         // key A down  - X11/keysymdef.h
-        switch ( event_type.response_type ) { // XK_A = 0x0041
-            case XCB_EVENT_MASK_KEY_PRESS: switch ( event_type.detail ) {
-                case XK_A: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+        switch ( la_type.response_type ) { // XK_A = 0x0041
+            case XCB_EVENT_MASK_KEY_PRESS: switch ( la_type.detail ) {
+                case XK_A: if ( hit_test( la.button_press_wx ) ) to!Pressed(); redraw(); break;
                 default:}
             default:
         }
 
         // key A down  - SDL/include/SDL_scancode.h
-        switch ( event_type.response_type ) { // SDL_SCANCODE_A = 0x0004
-            case SDL_KEYDOWN: switch ( event_type.detail ) { // keysym.scancode
-                case SDL_SCANCODE_A: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+        switch ( la_type.response_type ) { // SDL_SCANCODE_A = 0x0004
+            case SDL_KEYDOWN: switch ( la_type.detail ) { // keysym.scancode
+                case SDL_SCANCODE_A: if ( hit_test( la.button_press_wx ) ) to!Pressed(); redraw(); break;
                 default:}
             default:
         }
 
         //
-        switch ( event_type )
+        switch ( la_type )
         {
-            case XCB_EVENT_MASK_BUTTON_PRESS: if ( hit_test( event.button_press_wx ) ) to!Pressed(); redraw(); break;
+            case XCB_EVENT_MASK_BUTTON_PRESS: if ( hit_test( la.button_press_wx ) ) to!Pressed(); redraw(); break;
             default:
         }
     }
 
-    void to_disabled( Event* event, EventType event_type )
+    void to_disabled( La* la, LaType la_type )
     {
         //
     }
@@ -174,9 +174,9 @@ class Button : Element
             point_at( -10, +10 ); point_at( 0, +10 ); point_at( +10, +10 );
         }
 
-        void to_normal( Event* event, EventType event_type )
+        void to_normal( La* la, LaType la_type )
         {
-            switch ( event_type )
+            switch ( la_type )
             {
                 case XCB_EVENT_MASK_BUTTON_RELEASE: to!Button(); break;
                 default:
@@ -210,14 +210,14 @@ class Button : Element
 
 //void init_world()
 //{
-//    import vf : DrawEvent;
+//    import vf : DrawLa;
 
 //    auto world = new World();
 //    world.enter.put( new Button() );
 
-//    Event event;
-//    event.draw = DrawEvent();
-//    world.sense( &event, event.type );
+//    La la;
+//    la.draw = DrawLa();
+//    world.sense( &la, la.type );
 //}
 
 // on PAINT
@@ -266,7 +266,7 @@ mixin template StateAble( T )
 //   to_Init()
 //   to_Hover()
 //pragma( inline, true )
-void try_to_(THIS)( THIS _this, Event* event, EventType event_type )
+void try_to_(THIS)( THIS _this, La* la, LaType la_type )
 {
     import std.string;
     import std.traits;
@@ -274,5 +274,5 @@ void try_to_(THIS)( THIS _this, Event* event, EventType event_type )
     static foreach( m; __traits( allMembers, THIS ) )
         static if ( isCallable!(__traits( getMember, THIS, m )) )
             static if ( m.startsWith( "to_" ) && m != "to_raster" )
-                __traits( getMember, _this, m )( event, event_type ); 
+                __traits( getMember, _this, m )( la, la_type ); 
 }

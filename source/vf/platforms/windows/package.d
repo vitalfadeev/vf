@@ -3,7 +3,7 @@ module vf.platforms.windows;
 version(WINDOWS):
 public import vf.platforms.windows.color;
 public import vf.platforms.windows.game;
-public import vf.platforms.windows.event;
+public import vf.platforms.windows.la;
 //public import vf.platforms.windows.painter;
 public import vf.platforms.windows.platform;
 public import vf.platforms.windows.queue;

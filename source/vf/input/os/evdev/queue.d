@@ -1,16 +1,16 @@
-module vf.input.evdev.queue;
+module vf.input.os.evdev.queue;
 
-import vf.input.cached_queue       : CachedQueue;
-import vf.input.evdev.event        : EvdevEvent;
-import vf.input.evdev.device_queue : DeviceQueue;
+import vf.input.cached_queue          : CachedQueue;
+import vf.input.os.evdev.la        : EvdevLa;
+import vf.input.os.evdev.la        : Timeval;
+import vf.input.os.evdev.device_queue : DeviceQueue;
 
-alias TCachedQueue = CachedQueue!(EvdevEvent,DeviceQueue);
-alias Timestamp    = typeof( EvdevEvent.input_event.time.tv_sec );
+alias TCachedQueue = CachedQueue!(EvdevLa,DeviceQueue);
 
 
 struct EvdevQueue
 {
-    EvdevEvent* front;
+    EvdevLa* front;
 
     TCachedQueue[] _queues;
 
@@ -22,21 +22,22 @@ struct EvdevQueue
 
     void popFront()
     {        
-        Timestamp min_timestamp;
-        size_t    min_queue_i;
+        Timeval min_timeval = Timeval.max;
+        size_t  min_queue_i;
+        bool    found;
 
         foreach ( i, q; _queues )
             if ( !q.empty )
-                if ( q.front.input_event.time.tv_sec < min_timestamp )
+                if ( q.front.input_la.time < min_timeval )
                 {
-                    min_timestamp = q.front.input_event.time.tv_sec;
-                    min_queue_i   = i;
+                    min_timeval = q.front.input_la.time;
+                    min_queue_i = i;
+                    found = true;
                     break;
                 }
 
         //
-        if ( min_timestamp )
-        {        
+        if ( found ) {
             auto queue = _queues[ min_queue_i ];
             front = &queue.front;
             queue.popFront();

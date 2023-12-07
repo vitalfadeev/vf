@@ -1,4 +1,4 @@
-module vf.platforms.sdl.event_codes;
+module vf.platforms.sdl.la_codes;
 
 version(SDL):
 static import winapi=core.sys.windows.windows;

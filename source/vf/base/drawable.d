@@ -5,7 +5,7 @@ import vf.base.types          : M16;
 import vf.platforms.xcb.color : Color;
 
 
-class DrawAble(Event,EventType,WX) : HitAble!(Event,EventType,WX)
+class DrawAble(La,LaType,WX) : HitAble!(La,LaType,WX)
 {
     alias THIS     = typeof(this);
     alias DrawAble = typeof(this);
@@ -449,9 +449,9 @@ void UPD_MIN_MAX(WX)( WX wx, ref WX a, ref WX b )
 // interface clickable
 //   click
 //   on_click
-//   event( ClickEvent* )
-//   event( Event* )
+//   la( ClickLa* )
+//   la( La* )
 // 
-// enum Events
+// enum Las
 //   click
 

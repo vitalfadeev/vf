@@ -75,7 +75,7 @@ auto Cast(TO,FROM)(FROM from)
 //  struct HandlerStruct
 //  {
 //      static
-//      void on_T1( REG edi, Event* event )
+//      void on_T1( REG edi, La* la )
 //      {
 //          //
 //      }
@@ -107,7 +107,7 @@ template Handlers(T)
 //   on_...
 // example of valid T:
 //   static
-//   void on_T1( REG edi, Event* event )
+//   void on_T1( REG edi, La* la )
 //   {
 //       //
 //   }
@@ -128,8 +128,8 @@ template isHandler(T, string name)
 }
 
 
-// Handled event types
-template HandledEvents(T)
+// Handled la types
+template HandledLas(T)
 {
     import std.meta : AliasSeq, Filter;
 
@@ -141,19 +141,19 @@ template HandledEvents(T)
     )
     {
         alias all_members = __traits( allMembers, T );
-        alias HandledEvents = AliasSeq!();
+        alias HandledLas = AliasSeq!();
 
         static foreach ( name; all_members )
             static if ( isHandler!(T,name) )
-                HandledEvents = AliasSeq!( HandledEvents, name[ 3..$ ] );  // strip "on_"
+                HandledLas = AliasSeq!( HandledLas, name[ 3..$ ] );  // strip "on_"
     }
     else
-        alias HandledEvents = AliasSeq!T;
+        alias HandledLas = AliasSeq!T;
 }
 
 
-// Handled event types returns enum values
-template HandledEventsE(T,alias E)
+// Handled la types returns enum values
+template HandledLasE(T,alias E)
 {
     import std.meta : AliasSeq, Filter;
 
@@ -165,14 +165,14 @@ template HandledEventsE(T,alias E)
     )
     {
         alias all_members = __traits( allMembers, T );
-        alias HandledEventsE = AliasSeq!();
+        alias HandledLasE = AliasSeq!();
 
         static foreach ( name; all_members )
             static if ( isHandler!(T,name) )
-                HandledEventsE = AliasSeq!( HandledEventsE, __traits(getMember, E, name[ 3..$ ]) );  // Event.ENUM_MEMBER
+                HandledLasE = AliasSeq!( HandledLasE, __traits(getMember, E, name[ 3..$ ]) );  // La.ENUM_MEMBER
     }
     else
-        alias HandledEventsE = AliasSeq!T;
+        alias HandledLasE = AliasSeq!T;
 }
 
 
@@ -256,4 +256,32 @@ template is_interface(alias T,string name)
 template interface_name(alias T)
 {
     enum interface_name = __traits( identifier, T );
+}
+
+
+// A a;
+// Switch!(A, A.ONE,A.TWO, xx)( A._ );
+// Switch!(A, A.ONE,A.TWO, xx)( A.ONE );
+// Switch!(A, A.ONE,A.TWO, xx)( A.TWO );
+//   xx()
+void
+Switch (T,ARGS...) (T a) {
+    mixin ( "switch (a) {\n" ~ _SwitchCases!(0,T,ARGS) ~ "  default:\n}" );
+}
+
+template
+_SwitchCases (size_t i,T,ARGS...) { 
+    import std.format : format;
+
+    static if (ARGS.length == 0)
+        enum _SwitchCases = "";
+    else
+    {
+        static if (is(typeof(ARGS[0]) == T))
+            enum _SwitchCases = format!"  case %s.%s:\n"(T.stringof,ARGS[0].stringof) ~
+                _SwitchCases !(i+1,T,ARGS[1..$]);
+        else
+            enum _SwitchCases = format!"    ARGS[%d](a); break;\n" (i) ~ 
+                _SwitchCases !(i+1,T,ARGS[1..$]);
+    }
 }

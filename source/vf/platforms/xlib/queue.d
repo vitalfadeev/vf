@@ -7,7 +7,7 @@ import x11.xlib;
 
 struct Queue
 {
-    XEvent front;
+    XLa front;
 
     Display *display;
     Window window;
@@ -29,7 +29,7 @@ struct Queue
         window = XCreateSimpleWindow(display, RootWindow(display, s), 10, 10, 200, 200, 1,
                                      BlackPixel(display, s), WhitePixel(display, s));
      
-        // select kind of events we are interested in
+        // select kind of las we are interested in
         XSelectInput(display, window, ExposureMask | KeyPressMask);
      
         // map (show) the window
@@ -44,7 +44,7 @@ struct Queue
 
     void popFront()
     {
-        XNextEvent(display, &front);
+        XNextLa(display, &front);
     }
 
     bool empty()

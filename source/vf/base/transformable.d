@@ -4,7 +4,7 @@ import vf.base.sizeable   : SizeAble;
 import vf.base.fixed      : Fixed;
 
 
-class TransformAble(Event,EventType,WX) : SizeAble!(Event,EventType,WX)
+class TransformAble(La,LaType,WX) : SizeAble!(La,LaType,WX)
 {
     alias THIS          = typeof(this);
     alias TransformAble = typeof(this);
